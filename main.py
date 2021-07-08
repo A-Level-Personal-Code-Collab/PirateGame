@@ -17,3 +17,6 @@
 
 def wills_sub(stuff):
     print("Will wrote this")
+
+def wills_new_sub(more_stuff):
+    print("Garbage")
