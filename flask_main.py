@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Jul 08 2021
-# Modified By: Adam O'Neill
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -21,6 +21,6 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "Hello Web"
+    return render_template("index.html")
 
 app.run(debug=True)
