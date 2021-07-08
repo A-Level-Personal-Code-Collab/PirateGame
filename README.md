@@ -5,6 +5,8 @@ Our A Level team are aiming to make a fully functioning prirate game!
 ---------------------------------------------------------------------
 Editor Notes:
 
+
+Currently not working
 To activate the virtual enviroment use: .\env\Scripts\activate.ps1
 If there is errors go to powershell and use:
     Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass -Force;
