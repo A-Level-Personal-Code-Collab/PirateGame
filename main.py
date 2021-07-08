@@ -20,10 +20,7 @@ def wills_sub(stuff):
 
 def wills_new_sub(more_stuff):
     print("Garbage")
-
-def wills_third(hjhj):
-    print("puh")
-    
+  
 def AddOne(x):
     x+=1
     return x
@@ -39,3 +36,4 @@ def addthree(x):
 def addfour(x):
     x=x+4
     return x
+ 
