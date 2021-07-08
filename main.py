@@ -20,3 +20,6 @@ def wills_sub(stuff):
 
 def wills_new_sub(more_stuff):
     print("Garbage")
+
+def wells_third(hjhj):
+    print("puh")
