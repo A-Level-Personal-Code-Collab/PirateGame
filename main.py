@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Jul 08 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -20,3 +20,7 @@ def wills_sub(stuff):
 
 def wills_new_sub(more_stuff):
     print("Garbage")
+
+def AddOne(x):
+    x+=1
+    return x
