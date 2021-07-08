@@ -23,3 +23,7 @@ def wills_new_sub(more_stuff):
 
 def wells_third(hjhj):
     print("puh")
+    
+def AddOne(x):
+    x+=1
+    return x
