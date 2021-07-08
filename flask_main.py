@@ -12,4 +12,15 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
+#Imports modules 
+from Flask import Flask, render_template
+
+app = flask(__name__)
+
+@app.route("/")
+def index():
+    return "Hello Web"
+
+app.run(debug=True)
