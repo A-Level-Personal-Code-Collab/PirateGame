@@ -31,3 +31,7 @@ def AddOne(x):
 def addtwo(x):
     x = x+2
     return x
+
+def addthree(x):
+    x=x+3
+    return x
