@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Jul 08 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -26,4 +26,8 @@ def wells_third(hjhj):
     
 def AddOne(x):
     x+=1
+    return x
+
+def addtwo(x):
+    x = x+2
     return x
