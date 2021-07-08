@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Jul 08 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -15,9 +15,9 @@
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
 #Imports modules 
-from Flask import Flask, render_template
+from flask import Flask, render_template
 
-app = flask(__name__)
+app = Flask(__name__)
 
 @app.route("/")
 def index():
