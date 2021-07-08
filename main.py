@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Jul 08 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -34,4 +34,8 @@ def addtwo(x):
 
 def addthree(x):
     x=x+3
+    return x
+
+def addfour(x):
+    x=x+4
     return x
