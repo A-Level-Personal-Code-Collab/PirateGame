@@ -7,10 +7,14 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Jul 08 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
 #---------------------------------------------------------------------#
 #Imports modules
+
+def addOne(x):
+    x = x+1
+    return 1
