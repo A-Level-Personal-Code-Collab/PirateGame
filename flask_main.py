@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Jul 08 2021
+# Last Modified: Fri Jul 09 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -23,4 +23,5 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
