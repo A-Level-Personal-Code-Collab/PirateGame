@@ -1,0 +1,33 @@
+/*
+ * File: /home/will/GitHub Repos/PirateGame/assets/css/play_sheet.css
+ * Project: /home/will/GitHub Repos/PirateGame/assets/css
+ * Created Date: Friday, July 9th 2021, 9:26:56 pm
+ * Description: The CSS for the actual page that will replace your paper playing sheet
+ * Author: Will Hall
+ * Copyright (c) 2021 Lime Parallelogram
+ * -----
+ * Last Modified: Fri Jul 09 2021
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+
+.gridSquare
+{
+    height: 30px;
+    width: 30px;
+    border: 1px solid black;
+    margin: 0;
+    padding: 5px;
+
+}
+
+#tbl_CoordinatesGrid
+{
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+
