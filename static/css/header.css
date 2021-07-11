@@ -64,9 +64,28 @@ body {
     font-family: sans-serif;
 }
 
+h1{
+    font-size: 300%; /* Increases size of the header */
+}
+
 p:link {
     color: lightblue;
     text-decoration: dimgrey;
 }
 
+/* Getting the boxes to flex next to eachother */
 
+
+.boxes{
+    border: 3px solid #fff;
+    padding: 50px; /* how far from the paragraph at the top */
+    font-size: larger;
+}
+
+.float-child{
+    width: 50%;
+    float: left;
+    padding: 40px; /* Length of box itself */
+
+    border: 2px solid yellow;
+}
