@@ -13,8 +13,47 @@
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
 
+a:link{
+    text-decoration: none;
+}
 
+.Header{
+    overflow: hidden;
+    background-color: #ffd900;
+    padding: 20px 10px;
+}
+
+.Header a {
+    float:left;
+    color: black;
+    text-align: center;
+    font-size: 18px;
+    padding: 12px;
+    line-height: 20px;
+    border-radius: 4px;
+    font-family: sans-serif;
+}
+
+.Header a:hover{
+    background-color: gray;
+    /*color: black;*/
+}
+/* Not working*/
+Header a.active{
+    background-color: blue;
+    color: blue;
+}
+
+.Header-right{
+    float: right;
+}
+
+/* Header */
 
 
 

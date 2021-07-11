@@ -13,9 +13,9 @@ HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
 -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html' %}
+
+{% block head %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,9 +31,15 @@ Date      	By	Comments
         <div id="div_itemBank">
             <p class="par_moneySquare">5000</p>
         </div>
+{% endblock %}
+{% block body %}
+    <div id="coordinateGrid_div">
+        {{grid}}
     </div>
-</body>
-</html>
+    <div id="div_itemBank">
+        <p class="par_moneySquare">5000</p>
+    </div>
+{% endblock %}
 
 
 
