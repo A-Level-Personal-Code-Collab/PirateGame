@@ -1,8 +1,8 @@
 #---------------------------------------------------------------------#
-# File: /home/will/GitHub Repos/PirateGame/flask_main.py
-# Project: /home/will/GitHub Repos/PirateGame
+# File: A-Level-Personal-Code-Collab/PirateGame/flask_main.py
+# Project: A-Level-Personal-Code-Collab/PirateGame
 # Created Date: Thursday, July 8th 2021, 4:38:56 pm
-# Description: Main flask wedserver root.
+# Description: Main flask webserver root.
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
 #Imports modules 
@@ -49,7 +50,7 @@ def buildGrid():
             else:
                 grid += f"<td class=\"{CLASS_NAME}\" id=\"tdt_grid{col}{row}\"></td>"
         grid += "</tr>"
-        
+
     grid += "</table>"
 
     #Return finnished grid as Markdown and not plain text
