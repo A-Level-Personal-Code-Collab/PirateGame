@@ -15,8 +15,10 @@
  */
 *{
     margin: 0;
-    box-sizing: border-box;
+    box-sizing: border-box
 }
+
+/* Header */
 
 a:link{
     text-decoration: none;
@@ -25,7 +27,7 @@ a:link{
 .Header{
     overflow: hidden;
     background-color: #ffd900;
-    padding: 20px 10px;
+    padding: 20px 10px; /* size of the header on the page */ 
 }
 
 .Header a {
@@ -36,25 +38,54 @@ a:link{
     padding: 12px;
     line-height: 20px;
     border-radius: 4px;
-    font-family: sans-serif;
+    font-family: sans-serif; /* Works for the whole header */ 
+    font-weight: bold;
 }
 
 .Header a:hover{
     background-color: gray;
     /*color: black;*/
 }
-/* Not working*/
-Header a.active{
-    background-color: blue;
-    color: blue;
+
+.Header a:active {
+    background-color: dimgrey;
+    color: white;
 }
+
 
 .Header-right{
     float: right;
 }
 
-/* Header */
+/* Body settings */ 
+
+body {
+    text-align: center;
+    font-family: sans-serif;
+}
+
+h1{
+    font-size: 300%; /* Increases size of the header */
+}
+
+p:link {
+    color: lightblue;
+    text-decoration: dimgrey;
+}
+
+/* Getting the boxes to flex next to eachother */
 
 
+.boxes{
+    border: 3px solid #fff;
+    padding: 50px; /* how far from the paragraph at the top */
+    font-size: larger;
+}
 
+.float-child{
+    width: 50%;
+    float: left;
+    padding: 40px; /* Length of box itself */
 
+    border: 2px solid yellow;
+}

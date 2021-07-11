@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Jul 09 2021
-# Modified By: Will Hall
+# Last Modified: Sun Jul 11 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -17,6 +17,7 @@
 #---------------------------------------------------------------------#
 #Imports modules 
 from flask import Flask, render_template, Markup
+from werkzeug.utils import redirect
 
 app = Flask(__name__)
 
@@ -62,11 +63,27 @@ def buildGrid():
 def index():
     return render_template("index.html")
 
-@app.route("/game")
+@app.route("/play_game")
+def play_game():
+    return render_template("pre_game.html")
+
+@app.route("/online_game")
+def online_game():
+    return render_template("online_game.html")
+
+@app.route("/sheet_game")
 def game_sheet():
     gridHTML = buildGrid()
     print(gridHTML)
     return render_template("game_sheet.html", grid = gridHTML)
+
+@app.route("/tutorial")
+def tutorial():
+    return render_template("tutorial.html")
+
+@app.route("/about")
+def about_page():
+    return render_template("about_page.html")
 
 #=========================================================#
 #Main app execution

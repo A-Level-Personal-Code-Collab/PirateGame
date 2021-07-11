@@ -1,0 +1,40 @@
+<!--
+File: c:\Adam\coding\1. VC Coding projects\PirateGame\templates\pre_game.html
+Project: c:\Adam\coding\1. VC Coding projects\PirateGame\templates
+Created Date: Sunday, July 11th 2021, 5:33:39 pm
+Description: 
+Author: Adam O'Neill
+Copyright (c) 2021 Adam O'Neill
+-----
+Last Modified: Sun Jul 11 2021
+Modified By: Adam O'Neill
+-----
+HISTORY:
+Date      	By	Comments
+----------	---	---------------------------------------------------------
+-->
+
+{% extends "base.html" %}
+
+{% block title %}Play Game{% endblock %}
+
+{% block body %}
+    <h1 id=pre_game_header> Play Pirate Game!</h1>
+    <p>Welcome to the 21 century pirate game. You may be thinking how to play? Visit the <a href="/tutorial">tutorial</a> to learn the ways of captain hook! <br> Now the tough decision, should you play "Game sheet" or should you play "Online Game". Read below to decide!</p>
+    <div class="boxes"> <!-- To align them centered -->
+        <div class ="float-child">
+            <div class=sheet_game>
+                            <a href="/sheet_game">GAME SHEET</a>
+                <p>Game sheet is where you use the sheet when playing with friends. You count your money. You play the game with your friends or in a group. This provides a digital version so you dont have to mess around with an ancient pencil.</p>
+            </div>
+        </div>
+        <div class=online_game>
+            <div class="float-child">
+                <a href="/online_game">ONLINE GAME</a>
+                <p>Online game is where you can play pirate game against other people online. Get your friends or random people to play pirate game against. Take turns with moves and use your abilities against one another!</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
