@@ -16,29 +16,21 @@ Date      	By	Comments
 {% extends 'base.html' %}
 
 {% block head %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Sheet</title>
-    <link rel="stylesheet" href="../static/css/play_sheet.css">
-    <script src="../static/javascript/game_sheet.js"></script>
-</head>
-<body>
-    <div id="div_sheetArea">
-        <div id="div_coordinateGrid">
-            {{grid}}
-        </div>
-        <div id="div_itemBank">
-            <p class="par_moneySquare">5000</p>
-        </div>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Sheet</title>
+<link rel="stylesheet" href="../static/css/play_sheet.css">
+<script src="../static/javascript/game_sheet.js"></script>
 {% endblock %}
 {% block body %}
-    <div id="coordinateGrid_div">
+<div id="div_sheetArea">
+    <div id="div_coordinateGrid">
         {{grid}}
     </div>
     <div id="div_itemBank">
         <p class="par_moneySquare">5000</p>
-    </div>
+</div>
 {% endblock %}
 
 
