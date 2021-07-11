@@ -15,7 +15,7 @@
  */
 *{
     margin: 0;
-    box-sizing: border-box;
+    box-sizing: border-box
 }
 
 /* Header */
@@ -38,7 +38,8 @@ a:link{
     padding: 12px;
     line-height: 20px;
     border-radius: 4px;
-    font-family: sans-serif;
+    font-family: sans-serif; /* Works for the whole header */ 
+    font-weight: bold;
 }
 
 .Header a:hover{
@@ -58,6 +59,14 @@ a:link{
 
 /* Body settings */ 
 
+body {
+    text-align: center;
+    font-family: sans-serif;
+}
 
+p:link {
+    color: lightblue;
+    text-decoration: dimgrey;
+}
 
 
