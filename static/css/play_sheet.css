@@ -12,23 +12,34 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-07-11	WH	Formatting for grid and grid draggable elements
  */
 
- #div_coordinateGrid, #div_itemBank
+ /*Page formatting*/
+ #div_coordinateGrid, #div_itemBank, #div_moneyStorage
  {
-    display: inline-block;
-    *display: inline;
+    float: left;
+    margin: 2vh;
     vertical-align: top;
  }
 
+ #div_sheetArea
+ {
+     width: 100%;
+     height: 100%;
+     display: flex;
+ }
 
+ /*Grid information*/
 .gridSquare
 {
     height: 10vh;
     width: 10vh;
     border: 3px solid black;
     margin: 0;
-    padding: 5px;
+    padding: 0.5vh;
+    text-align: center;
+    vertical-align: middle;
 
 }
 
@@ -38,14 +49,57 @@
     border-collapse: collapse;
 }
 
+.gridItems
+{
+    width: 8.6vh;
+    height: 8.6vh;
+    cursor: move;
+}
+
+.gridItems img
+{
+    pointer-events: none;
+    width: 8.5vh;
+    height: 8.5vh;
+    
+}
+
+.gridItems.dragging
+{
+    opacity: 0.5;
+}
+
+/*Item bank*/
 #div_itemBank
 {
     border: 3px solid black;
-    width: 15%;
+    width: 16vh;
+    text-align: center;
 }
 
-#div_sheetArea
+/*Money storage box*/
+.moneyBox
 {
+    border: black solid 3px;
+    position: absolute;
+    width: inherit;
+}
+
+#div_moneyStorage
+{
+    height: 70vh;
     width: 100%;
-    height: 100%;
+    position: relative;
+}
+
+#div_cashBox
+{
+    height: 70%;      
+    
+}
+
+#div_bankBox
+{
+    height: 20%;
+    bottom: 0;
 }

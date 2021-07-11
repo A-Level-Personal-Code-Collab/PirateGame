@@ -12,24 +12,39 @@ Modified By: Will Hall
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-07-11	WH	Added HTML that draws grid, money box and item bank
 -->
 {% extends 'base.html' %}
 
+{% block title %}Game Sheet{% endblock %}
+
 {% block head %}
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Sheet</title>
 <link rel="stylesheet" href="../static/css/play_sheet.css">
-<script src="../static/javascript/game_sheet.js"></script>
+<script src="../static/javascript/game_sheet.js" defer></script>
 {% endblock %}
+
 {% block body %}
 <div id="div_sheetArea">
+    <!--Draw grid based on code sent from python-->
     <div id="div_coordinateGrid">
         {{grid}}
     </div>
+
+    <!--Item bank for all the icons you will be adding to the grid (hidden in main play)-->
     <div id="div_itemBank">
-        <p class="par_moneySquare">5000</p>
+        Grid items:
+        <div draggable="true" class="gridItems"><img draggable="false" src="../static/img/tmp-asset.png" class="gridItems"/></div>
+    </div>
+
+    <!--Cash and Bank boxes (hidden by default)-->
+    <div id="div_moneyStorage" hidden=true>
+        <div class="moneyBox" id="div_cashBox">
+            Cash:
+        </div>
+        <div class="moneyBox" id="div_bankBox">
+            Bank:
+        </div>
+    </div>
 </div>
 {% endblock %}
 
