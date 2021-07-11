@@ -7,31 +7,30 @@ Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
 Last Modified: Sun Jul 11 2021
-Modified By: Will Hall
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
 -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
+{% extends 'base.html' %}
+
+{% block head %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Sheet</title>
     <link rel="stylesheet" href="../static/css/play_sheet.css">
     <script src="../static/javascript/game_sheet.js"></script>
-</head>
-<body>
+{% endblock %}
+{% block body %}
     <div id="coordinateGrid_div">
         {{grid}}
     </div>
     <div id="div_itemBank">
         <p class="par_moneySquare">5000</p>
     </div>
-</body>
-</html>
+{% endblock %}
 
 
 
