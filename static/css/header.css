@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Jul 11 2021
+ * Last Modified: Mon Jul 12 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -18,7 +18,11 @@
     box-sizing: border-box
 }
 
-/* Header */
+html {
+    box-sizing: border-box;
+}
+
+/* ----------------------- Header ----------------------- */
 
 a:link{
     text-decoration: none;
@@ -57,7 +61,7 @@ a:link{
     float: right;
 }
 
-/* Body settings */ 
+/* ----------------------- Body settings ----------------------- */ 
 
 body {
     text-align: center;
@@ -68,24 +72,12 @@ h1{
     font-size: 300%; /* Increases size of the header */
 }
 
-p:link {
-    color: lightblue;
-    text-decoration: dimgrey;
-}
-
-/* Getting the boxes to flex next to eachother */
+/* ----------------------- USED IN OTHER PAGES ------------------------*/
 
 
-.boxes{
-    border: 3px solid #fff;
-    padding: 50px; /* how far from the paragraph at the top */
-    font-size: larger;
-}
-
-.float-child{
-    width: 50%;
-    float: left;
-    padding: 40px; /* Length of box itself */
-
-    border: 2px solid yellow;
-}
+@media screen and (max-width: 650px) {
+    .column {
+      width: 100%;
+      display: block;
+    }
+  }

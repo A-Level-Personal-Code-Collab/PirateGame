@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sun Jul 11 2021
+Last Modified: Mon Jul 12 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -17,5 +17,81 @@ Date      	By	Comments
 
 {% block title %}About{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="../static/css/about_page.css">
+{% endblock %}
+
+{% block body %}
+<div class="about_section">
+    <h1>About Us</h1>
+    <p>Who are we? we are a team of sixth former attending a Hertfordshire Sixthform learning about computer design!</p>
+</div>
+<h2 style="text-align: center;">The Team</h2>
+<div class="about_row">
+    <div class="about_column">
+        <div class="about_card">
+            <img src="../static/img/tmp-asset.png" alt="Adam">
+            <div class="about_container"> <!-- Need to fill in the information -->
+                <h2>Adam O'Neill</h2>
+                <p class="subjects"><b>Subjects:</b> Maths, Physics, Computer Science</p>
+                <p>Text about Adam</p>
+                <br>
+                <h4>Get in touch...</h3>
+                <!--Contact info-->
+                <p>adamo.mark25@gmail.com</p>
+                <a href="https://github.com/Theocat321">Adam's GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="about_column">
+        <div class="about_card">
+            <img src="../static/img/tmp-asset.png" alt="Will">
+            <div class="about_container"> <!-- Need to fill in the information -->
+                <h2>Will Hall</h2>
+                <p class="subjects"><b>Subjects:</b> Computer Science, German, </p>
+                <p>Text about will</p>
+                <br>
+                <h4>Get in touch...</h3>
+                <!--Contact info-->
+                <p>Email: will@test.com</p>
+                <a href="https://github.com/Lime-Parallelogram">Will's GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="about_column">
+        <div class="about_card">
+            <img src="../static/img/tmp-asset.png" alt="Leo">
+            <div class="about_container"> <!-- Need to fill in the information -->
+                <h2>Leo Dobson</h2>
+                <p class="subjects"><b>Subjects:</b> Maths, Further Maths, physics, economics</p>
+                <p>Text about leo</p>
+                <br>
+                <h4>Get in touch...</h3>
+                <!--Contact info-->
+                <p>Email: leo@test.com</p>
+                <a href="https://github.com/OppBoyDobby">Leo's GitHub</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="about_column">
+        <div class="about_card">
+            <img src="../static/img/tmp-asset.png" alt="Leo">
+            <div class="about_container"> <!-- Need to fill in the information -->
+                <h2>Toby Cherry</h2>
+                <p class="subjects"><b>Subjects:</b> Maths, Physics, Computer Science</p>
+                <p>Text about toby</p>
+                <br>
+                <h4>Get in touch...</h3>
+                <!--Contact info-->
+                <p>Email: toby@test.com</p>
+                <a href="https://github.com/txbyc">Leo's GitHub</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+{% endblock %}

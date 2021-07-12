@@ -1,0 +1,47 @@
+/*
+ * File: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css\about_page.css
+ * Project: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css
+ * Created Date: Monday, July 12th 2021, 6:16:34 pm
+ * Description: 
+ * Author: Adam O'Neill
+ * Copyright (c) 2021 Adam O'Neill
+ * -----
+ * Last Modified: Mon Jul 12 2021
+ * Modified By: Adam O'Neill
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+
+/* About page */
+
+ .about_column{
+    float: left;
+    width: 25%;
+    margin-bottom: 16px;
+    padding: 0 8px;
+}
+
+.about_card{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin: 8px;
+}
+
+.about_section{
+    padding: 50px;
+    text-align: center;
+    background-color: #474e5d;
+    color: white;
+}
+
+.about_container{
+    padding: 0 16px;
+}
+
+.about_container::after, .about_row::after{
+    content: "";
+    clear: both;
+    display: table;
+}
+
