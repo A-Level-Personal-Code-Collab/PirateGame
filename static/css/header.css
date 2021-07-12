@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Adam O'Neill
  * -----
  * Last Modified: Mon Jul 12 2021
- * Modified By: Toby Cherry
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -30,7 +30,7 @@ a:link{
 
 .Header{
     overflow: hidden;
-    background-color: #d1f5a3;
+    background-color: #ffd900;
     padding: 20px 10px; /* size of the header on the page */ 
 }
 
