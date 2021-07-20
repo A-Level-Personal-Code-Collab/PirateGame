@@ -6,12 +6,13 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sun Jul 11 2021
+Last Modified: Tue Jul 20 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-07-20	WH	Added all other items to item back with correct img path names
 2021-07-11	WH	Added HTML that draws grid, money box and item bank
 -->
 {% extends 'base.html' %}
@@ -30,9 +31,23 @@ Date      	By	Comments
     </div>
 
     <!--Item bank for all the icons you will be adding to the grid (hidden in main play)-->
-    <div id="div_itemBank">
-        Grid items:
-        <div draggable="true" class="gridItems"><img draggable="false" src="../static/img/tmp-asset.png" class="gridItems"/></div>
+    <div id="div_itemBank" class="dragReceptical">
+        <h5>Item bank:</h5>
+        <div id="div_specialItems">
+            <div draggable="true" class="gridItems itmKill"><img draggable="false" src="../static/img/kill.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmSteal"><img draggable="false" src="../static/img/steal.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmSwap"><img draggable="false" src="../static/img/swap.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmGift"><img draggable="false" src="../static/img/gift.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmBomb"><img draggable="false" src="../static/img/bomb.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmShield"><img draggable="false" src="../static/img/shield.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmMirror"><img draggable="false" src="../static/img/mirror.png" class="gridItems"/></div>
+        </div>
+        <div id="div_moneyItems">
+            <div draggable="true" class="gridItems itmMoney mon5000"><img draggable="false" src="../static/img/M5000.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmMoney mon1000"><img draggable="false" src="../static/img/M1000.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmMoney mon500"><img draggable="false" src="../static/img/M500.png" class="gridItems"/></div>
+            <div draggable="true" class="gridItems itmMoney mon200"><img draggable="false" src="../static/img/M200.png" class="gridItems"/></div>
+        </div>
     </div>
 
     <!--Cash and Bank boxes (hidden by default)-->

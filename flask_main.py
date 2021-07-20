@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Jul 11 2021
-# Modified By: Adam O'Neill
+# Last Modified: Tue Jul 20 2021
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -15,7 +15,6 @@
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
-#Imports modules 
 from flask import Flask, render_template, Markup
 from werkzeug.utils import redirect
 
@@ -27,6 +26,7 @@ app = Flask(__name__)
 #---------------#
 #Builds the HTML syntax to draw the game grid - makes the grid easily exapandable + avoid typing repetative HTML code
 def buildGrid():
+#Imports modules 
     #Local Constants
     CLASS_NAME = "gridSquare" #The name of the class that all td objects will share
 
@@ -49,7 +49,7 @@ def buildGrid():
             if col == " ":
                 grid += f"<td class=\"{CLASS_NAME}\" id=\"tdt_gridLabelCol{row}\">{row}</td>"
             else:
-                grid += f"<td class=\"{CLASS_NAME}\" id=\"tdt_grid{col}{row}\"></td>"
+                grid += f"<td class=\"{CLASS_NAME} dragReceptical\" id=\"tdt_grid{col}{row}\"></td>"
         grid += "</tr>"
 
     grid += "</table>"
@@ -70,7 +70,7 @@ def play_game():
 @app.route("/online_game")
 def online_game():
     return render_template("online_game.html")
-
+#=========================================================#
 @app.route("/sheet_game")
 def game_sheet():
     gridHTML = buildGrid()
