@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Jul 12 2021
+ * Last Modified: Mon Jul 26 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -23,24 +23,24 @@
     color: white;
 }  
 
-.pre_game_column{
+.column{
     float: left;
     width: 50%;
     margin-bottom: 16px;
     padding: 5px 8px;
 }
 
-.pre_game_card{
+.card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 20px;
 }
 
 
-.pre_game_container{
+.container{
     padding: 45px 35px;
 }
 
-.pre_game_container::after, .pre_game_container::after{
+.container::after, .container::after{
     content: "";
     clear: both;
     display: table;

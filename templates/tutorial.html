@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sun Jul 11 2021
+Last Modified: Mon Jul 26 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -17,8 +17,107 @@ Date      	By	Comments
 
 {% block title %}Tutorial{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="../static/css/tutorial.css"> 
+{% endblock %}
+
 {% block body %}
-<h1>developing</h1>
+<div class="header">
+    <h1>How to Play</h1>
+</div>
+<div class="row">
+        <div class="card">
+            <div class="container">
+                <h3>Rules</h3>
+                <br>
+                <p>The Pirate Game is an activity where each person in the game, on their Pirate game
+                worksheet, places a set of symbols and values in a 7 by 7 blank grid. The grid is
+                labelled A-G across the columns and 1-7 down the rows. Therefore, you could place
+                a 'shield' in A6, a '1000' in C4 etc etc.  The activity then starts with the youngest
+                competitor selecting a grid reference, let’s say F1. Everyone then crosses off that
+                grid reference and gets whatever symbol/value is in that grid reffernce. If they get a value
+                they add this to their 'score' and this is kept as a running total throughout the game.
+                If they get a symbol, there is a particular purpose to each of these and they need to
+                act accordingly. Play continues in a clockwise direction (unless someone activates
+                their Choose option – see below).
+                Any of the actions listed can be adapted (or abandoned) according to the group size,
+                age of players or personal preference.
+                Oh, the winner is the player at the end of the activity that has the highest score when
+                both their 'bank' and their ongoing score are combined.</p>
+            </div>
+        </div>
+            <div class="card">
+                <div class="container">
+                    <div class="symbols">
+                        <h3> The Symbols</h3>
+                        <br>
+                        <table style="width: 100%;">
+                            <tr>
+                                <th id="symbol_header">Symbol</th>
+                                <th>Definiton</th>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/steal.png" alt="steal"></td>
+                                <td><span>Pirate Ship </span><p> - This allows the player to 'rob' someone else's points (they must put
+                                    their hand up if they get this symbol in their grid ref and say who they want to 'rob')</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/kill.png" alt="Dagger"></td>
+                                <td><span>Dagger </span><p> - This symbol allows the player to wipe out another player’s
+                                    points returning them to 0!.</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/gift.png" alt="gift"></td>
+                                <td><span>Gift </span><p>  - This allows the player to give a 'present' of 1000 points to another
+                                    individual (they must say who they want to give the 1000 points to)</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/swap.png" alt="Swap"></td>
+                                <td><span>Swap points </span><p> - This allows the play to swap their points with another person's.
+                                    Choose - this symbol allows the player to pick the next grid ref to be selected.</p></td>
+                            </tr>
+                            <tr?>
+                                <td><img src="../static/img/Next.png" alt="Next"></td>
+                                <td><span>Next </span><p> - This symbol allows the player to pick the next grid ref to be selected.</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/shield.png" alt="Shield"></td>
+                                <td><span>Shield </span><p> - This symbol allows the player to 'block' any wrong doing to them and once
+                                    this is crossed off in their grid should be placed in the 'shield' section on their
+                                    worksheet. It can be used at any time once got but only once!</p></td> <!--Update the gramma for the game-->
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/mirror.png" alt="Mirror"></td>
+                                <td><span>Mirror</span><p> - This symbol allows the player to 'mirror' any wrong doing to them back to the
+                                    person that was doing the wrong doing. Once this is crossed off in their grid it should
+                                    be placed in the 'mirror' section on their worksheet. It can be used at any time once
+                                    got but only once! The mirror allows whatever was going to happen to the individual
+                                    to happen to the attacking player. i.e. if someone wanted to 'rob' me of my points and
+                                    I used my mirror then I would 'rob' their points!</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/bomb.png" alt="Bomb"></td>
+                                <td><span>Bomb</span><p> - If the player is unlucky enough to get this symbol in their grid ref their points
+                                    will go to 0.</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/X2.png" alt ="X2"></td>
+                                <td><span>X2</span><p> - This symbol doubles the players current score</p></td>
+                            </tr>
+                            <tr>
+                                <td><img src="../static/img/bank.png" alt="Bank"></td>
+                                <td><span>Bank</span><p> - This symbol allows any points the player has to be banked (these points
+                                    are then safe for the rest of the game and cannot be stolen or wiped out!)</p></td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+</div>
 {% endblock %}
 
 
