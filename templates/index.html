@@ -6,8 +6,8 @@ Description: The main welcome file for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sun Jul 11 2021
-Modified By: Will Hall
+Last Modified: Fri Jul 30 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -17,12 +17,21 @@ Date      	By	Comments
 
 {% block title %} Home Page {% endblock %}
 {% block head %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/home.css">
 {% endblock %}
 {% block body %}
-    <h1>Welcome to the 21st Centuary Pirate Game</h1>
+    <div class="banner">
+        <div class="banner_text">
+            <h1>Pirate Game</h1>
+            <p>Welcome to the 21st century Pirate Game</p>
+            <form method="GET" action="/play_game.html">
+                <button type="submit" class="banner_button" style="vertical-align:middle ;"><span>Play Pirate Game </span></button>
+            </form>
+        </div>
+        <div class="banner_image">
+            <img src="../static/img/logo_sqaure.png">
+        </div>
+    </div>
 {% endblock %}
 
 
