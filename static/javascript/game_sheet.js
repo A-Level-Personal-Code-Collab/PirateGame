@@ -4,7 +4,7 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Thu Jul 29 2021
+ * Last Modified: Sat Jul 31 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-07-31	WH	Removed code that aimed to remove ghost image as this was casuing a notable resource catastrophy within browsers (See Issue#2)
  * 2021-07-29	WH	Money items now operate correctly in terms of duplicating themselves if they are allowed and re-combining when they are placed back into the bank
  * 2021-07-20	WH	Dropping may now occur in the bank section and items will return to the correct collum based on whether they are money or other items
  * 2021-07-20	WH	Modified drop script so items can oly be dropped in empty cells.
@@ -48,7 +49,7 @@ const maxMoneys =
  /*User subs*/
  /*Drag start event listener*/
  function dragstartevent(draggable, event) {
-  event.dataTransfer.setDragImage(draggable, -99999, -99999); /*Move ghost images away to very far away from screen so you can't see them*/
+  /*REMOVED DUE TO 'Tanking Effect' (See Issue#2) - event.dataTransfer.setDragImage(draggable, -99999, -99999); /*Move ghost images away to very far away from screen so you can't see them*/
   /*UNFINNISHED - Attemps to create new money item if more are available*/
   if(draggable.classList.contains("itmMoney") && draggable.parentNode.id == "div_moneyItems") {
     const classLists = draggable.classList
