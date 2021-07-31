@@ -1,0 +1,77 @@
+/*
+ * File: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css\home.css
+ * Project: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css
+ * Created Date: Friday, July 30th 2021, 7:42:35 pm
+ * Description: 
+ * Author: Adam O'Neill
+ * Copyright (c) 2021 Adam O'Neill
+ * -----
+ * Last Modified: Fri Jul 30 2021
+ * Modified By: Adam O'Neill
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+
+.banner{
+    background-color: #474e5d;
+    padding: 5%;
+}
+
+.banner_text{
+    position: absolute;
+    left:2.5%;
+    margin-left: 10%;
+    
+}
+
+.banner_image{
+    position: relative;
+    left: 30%;
+}
+
+.banner_text h1{
+    font-size: 400%;
+}
+
+
+/*        Button         */ 
+
+ .banner_button{ /* inital button settings */
+    display: inline-block;
+    text-align: center;
+    background-color: #ffd900;
+    border-radius: 4px;
+    border: none;
+    font-size: 15px;
+    transition: all 0.5s ;
+    color: rgb(145, 145, 145);
+    cursor: pointer;
+    margin: 20px;
+    font-size: 25px;
+    padding: 20px;
+    width: 300px;
+}
+
+.banner_button span{ /* span is used so the arrow is a seperate entity from the text */
+    transition: 0.5s;
+    display: inline-block;
+    position: relative;
+}
+
+.banner_button span:after{ /* adds the arrow to the <span> and hides it */
+    content: "\00bb"; /* arrow */
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px; /* movement of arrow*/
+}
+
+.banner_button:hover span{ /* Makes space for the arrow*/
+    padding-left: 15px;
+}
+
+.banner_button:hover span::after{ /* When it is hovered on it shows the arrow and moves it */ 
+    opacity: 1;
+}
