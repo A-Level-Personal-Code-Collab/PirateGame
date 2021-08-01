@@ -20,6 +20,7 @@ Date      	By	Comments
 {% block title %}Game Sheet{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="../static/css/play_sheet.css">
+<link rel="stylesheet" href="../static/css/popup.css">
 <script src="../static/javascript/game_sheet.js" defer></script>
 {% endblock %}
 
@@ -48,6 +49,19 @@ Date      	By	Comments
             <div draggable="true" class="gridItems itmMoney M1000"><img draggable="false" src="../static/img/M1000.png" class="gridItems"/></div>
             <div draggable="true" class="gridItems itmMoney M500"><img draggable="false" src="../static/img/M500.png" class="gridItems"/></div>
             <div draggable="true" class="gridItems itmMoney M200"><img draggable="false" src="../static/img/M200.png" class="gridItems"/></div>
+        </div>
+    </div>
+
+    <!--Pop up to confirm grid complete-->
+    <div class="popupbox" id="div_gridFullPopUp">
+        <div class="popupHeader">
+            Arrr You Ready?
+        </div>
+        <div class="popupBody">
+            If you've got your grid loaded, then lets hoist the sails and pillage your openents to bankruptcy!
+        </div>
+        <div class="popupFooter">
+            <input class="popupButton" type="button" value="Hoist the sails">
         </div>
     </div>
 
