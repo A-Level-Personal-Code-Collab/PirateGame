@@ -7,7 +7,11 @@ Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
 Last Modified: Sun Aug 01 2021
-Modified By: Leo Dobson
+<<<<<<< HEAD
+Modified By: Adam O'Neill
+=======
+Modified By: Adam O'Neill
+>>>>>>> 167d94094cecb6fb829ff30b46a2de1434789e0b
 -----
 HISTORY:
 Date      	By	Comments
@@ -31,24 +35,39 @@ Date      	By	Comments
         {{grid}}
     </div>
 
-    <!--Item bank for all the icons you will be adding to the grid (hidden in main play)-->
-    <div id="div_itemBank" class="dragReceptical">
-        <h5>Item bank:</h5>
-        <div id="div_specialItems">
-            <div draggable="true" class="gridItems itmShield" title='Shield'><img draggable="false" src="../static/img/shield.png" class="gridItems" alt="Shield"/></div>
-            <div draggable="true" class="gridItems itmKill" title='Kill'><img draggable="false" src="../static/img/kill.png" class="gridItems" alt="Kill"/></div>
-            <div draggable="true" class="gridItems itmSteal" title='Steal'><img draggable="false" src="../static/img/steal.png" class="gridItems" alt="Steal"/></div>
-            <div draggable="true" class="gridItems itmMirror" title='Mirror'><img draggable="false" src="../static/img/mirror.png" class="gridItems" alt="Mirror"/></div>
-            <div draggable="true" class="gridItems itmBomb" title='Bomb'><img draggable="false" src="../static/img/bomb.png" class="gridItems" alt="Bomb"/></div>
-            <div draggable="true" class="gridItems itmBank" title='Bank'><img draggable="false" src="../static/img/bank.png" class="gridItems" alt="Bank"/></div>
-            <div draggable="true" class="gridItems itmSwap" title='Swap'><img draggable="false" src="../static/img/swap.png" class="gridItems" alt="Swap"/></div>
-            <div draggable="true" class="gridItems itmGift" title='Gift'><img draggable="false" src="../static/img/gift.png" class="gridItems" alt="Gift"/></div>
+    <!-- Div allows banks to be hidden in play -->
+    <div id="div_banks">
+        <!--Item bank for all the icons you will be adding to the grid (hidden in main play)-->
+        <div id="div_itemBank" class="dragReceptical">
+            <h5>Item bank:</h5>
+            <div id="div_specialItems">
+                <div draggable="true" class="gridItems itmShield"><img draggable="false" src="../static/img/shield.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmKill"><img draggable="false" src="../static/img/kill.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmSteal"><img draggable="false" src="../static/img/steal.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmMirror"><img draggable="false" src="../static/img/mirror.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmBomb"><img draggable="false" src="../static/img/bomb.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmBank"><img draggable="false" src="../static/img/bank.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmSwap"><img draggable="false" src="../static/img/swap.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmGift"><img draggable="false" src="../static/img/gift.png" class="gridItems"/></div>
+            </div>
+            <div id="div_moneyItems">
+                <div draggable="true" class="gridItems itmMoney M5000"><img draggable="false" src="../static/img/M5000.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmMoney M1000"><img draggable="false" src="../static/img/M1000.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmMoney M500"><img draggable="false" src="../static/img/M500.png" class="gridItems"/></div>
+                <div draggable="true" class="gridItems itmMoney M200"><img draggable="false" src="../static/img/M200.png" class="gridItems"/></div>
+            </div>
         </div>
-        <div id="div_moneyItems">
-            <div draggable="true" class="gridItems itmMoney M5000"><img draggable="false" src="../static/img/M5000.png" class="gridItems"/></div>
-            <div draggable="true" class="gridItems itmMoney M1000"><img draggable="false" src="../static/img/M1000.png" class="gridItems"/></div>
-            <div draggable="true" class="gridItems itmMoney M500"><img draggable="false" src="../static/img/M500.png" class="gridItems"/></div>
-            <div draggable="true" class="gridItems itmMoney M200"><img draggable="false" src="../static/img/M200.png" class="gridItems"/></div>
+        <!-- Action box -->
+        <div id="div_actionsBank">
+            <h5>Actions Bank:</h5>
+            <form method="GET" onclick="fillGrid()"> <!-- Fill grid function needed -->
+                <button type="submit" style="vertical-align:middle ;" class="action_buttons">Fill grid square</button>
+            </form>
+            <!-- Need to add Tittle to switch -->
+            <label class="spinner_switch">
+                <input type="checkbox">
+                <span class="slider"></span>
+            </label>
         </div>
     </div>
 
