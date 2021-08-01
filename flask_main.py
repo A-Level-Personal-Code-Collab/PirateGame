@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Tue Jul 20 2021
+# Last Modified: Sun Aug 01 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -74,7 +74,6 @@ def online_game():
 @app.route("/sheet_game")
 def game_sheet():
     gridHTML = buildGrid()
-    print(gridHTML)
     return render_template("game_sheet.html", grid = gridHTML)
 
 @app.route("/tutorial")
