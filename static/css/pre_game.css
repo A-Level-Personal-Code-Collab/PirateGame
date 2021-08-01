@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Jul 26 2021
+ * Last Modified: Sun Aug 01 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -33,6 +33,7 @@
 .card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 20px;
+    height: 35vh;
 }
 
 
@@ -65,6 +66,8 @@
     font-size: 25px;
     padding: 20px;
     width: 300px;
+    bottom: -1vh;
+    position: relative;
 }
 
 .game_button span{ /* span is used so the arrow is a seperate entity from the text */
@@ -87,4 +90,11 @@
 
 .game_button:hover span::after{ /* When it is hovered on it shows the arrow and moves it */ 
     opacity: 1;
+}
+
+/* POPUP */
+
+.JoinGame_Popup{
+    border:  3px solid black;
+    text-align: center;
 }

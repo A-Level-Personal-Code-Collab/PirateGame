@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Jul 26 2021
+Last Modified: Sun Aug 01 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -20,6 +20,7 @@ Date      	By	Comments
 
 {% block head %}
     <link rel="stylesheet" href="../static/css/pre_game.css">
+    <script src="../static/javascript/pre_game.js" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -31,10 +32,11 @@ Date      	By	Comments
         <div class ="column">
             <div class="card">
                 <div class="container">
-                    <h2>Sheet Game</h2>
-                    <p>Game sheet is where you use the sheet when playing with friends. You count your money. You play the game with your friends or in a group. This provides a digital version so you dont have to mess around with an ancient pencil.</p>
-                    <form method="GET" action="/sheet_game">
-                        <button type="submit" class="game_button" style="vertical-align:middle ;"><span>Play Game Sheet </span></button>
+                    <h2>New Game</h2>
+                    <p>Play a new game of Pirate Game!. Later you will select whether the game will be online or offline. For the online game, you will be given a game ID which people will use to join and an input box for your username.</p>
+                    <br><br><br><br>
+                    <form method="GET" action="/new_game">
+                        <button type="submit" class="game_button" style="vertical-align:middle ;"><span>New Game </span></button>
                     </form>
                 </div>
             </div>
@@ -42,10 +44,19 @@ Date      	By	Comments
         <div class="column">
             <div class="card">
                 <div class="container">
-                    <h2>Online Game</h2>
-                    <p>Online game is where you can play pirate game against other people online. Get your friends or random people to play pirate game against. Take turns with moves and use your abilities against one another!</p>
-                    <form method="GET" action="/online_game">
-                        <button type="submit" class="game_button" style="vertical-align:middle ;"><span>Play Online Game </span></button>
+                    <h2>Join Game</h2>
+                    <p>Input details below to join an active Pirate Game!</p>
+                    <br>
+                    <form method="GET">
+                        <label for="gmae_ID">Game ID:</label>
+                        <input type="text" id="game_ID" name="game_ID">
+                        <br>
+                        <br>
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username">
+                        <br>
+                        <br>
+                        <button type="submit" class="game_button" style="vertical-align:middle ;"><span>Submit</span></button>
                     </form>
                 </div>
             </div>
