@@ -1,0 +1,28 @@
+/*
+ * File: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css\new_game.css
+ * Project: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css
+ * Created Date: Monday, August 2nd 2021, 12:49:44 pm
+ * Description: 
+ * Author: Adam O'Neill
+ * Copyright (c) 2021 Adam O'Neill
+ * -----
+ * Last Modified: Mon Aug 02 2021
+ * Modified By: Adam O'Neill
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+
+
+.container{
+    box-shadow:   0 4px 8px 0 rgba(0,0,0,0.2);
+    padding: 2vh;
+    margin: 2vh;
+    background-color:#7f848f ;
+    height: 85vh;
+
+}
+
+
+

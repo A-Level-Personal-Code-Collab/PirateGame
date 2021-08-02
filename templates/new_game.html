@@ -1,0 +1,51 @@
+<!--
+File: c:\Adam\coding\1. VC Coding projects\PirateGame\templates\new_game.html
+Project: c:\Adam\coding\1. VC Coding projects\PirateGame\templates
+Created Date: Monday, August 2nd 2021, 12:46:11 pm
+Description: 
+Author: Adam O'Neill
+Copyright (c) 2021 Adam O'Neill
+-----
+Last Modified: Mon Aug 02 2021
+Modified By: Adam O'Neill
+-----
+HISTORY:
+Date      	By	Comments
+----------	---	---------------------------------------------------------
+-->
+
+{% extends 'base.html' %}
+
+{% block title %}New Game{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="../static/css/new_game.css">
+{% endblock %}
+
+{% block body %} 
+    <div class="container">
+        <div class="header">
+            <h1>Create New Game</h1>
+            <p>Choose your settings for your pirate game...</p>
+        </div>
+        <div class="setting_body">
+            <!-- Grid size -->
+            <div class="div_gridSize">
+                <p>Choose grid size</p>
+                <div class="slider_container">
+                    <label for="x_slider">X coordinates</label>
+                    <input type="range" min="4" max="10" value="6" class="slider" id="x_slider">
+                </div>
+                
+            </div>
+            <!-- Secret Mode --------- Add desciption to secret mode... -->
+            <div id="div_secretMode">
+                <label for="secretMode_tick">Secret Mode</label>
+                <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox">
+            </div>
+            <!-- Item sliders -->
+        </div>
+    </div>
+    
+{% endblock%}
+
