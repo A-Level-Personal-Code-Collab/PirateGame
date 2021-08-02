@@ -6,12 +6,8 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sun Aug 01 2021
-<<<<<<< HEAD
+Last Modified: Mon Aug 02 2021
 Modified By: Will Hall
-=======
-Modified By: Will Hall
->>>>>>> 167d94094cecb6fb829ff30b46a2de1434789e0b
 -----
 HISTORY:
 Date      	By	Comments
@@ -72,7 +68,7 @@ Date      	By	Comments
     </div>
 
     <!--Pop up to confirm grid complete-->
-    <div class="popupbox" id="div_gridFullPopUp">
+    <div style="display: none;" class="popupbox" id="div_gridFullPopUp">
         <div class="popupHeader">
             Arrr You Ready?
         </div>
@@ -80,7 +76,7 @@ Date      	By	Comments
             If you've got your grid loaded, then lets hoist the sails and pillage your openents to bankruptcy!
         </div>
         <div class="popupFooter">
-            <input class="popupButton" type="button" value="Hoist the sails">
+            <input id="btn_grid_done" class="popupButton" type="button" value="Hoist the sails">
         </div>
     </div>
 

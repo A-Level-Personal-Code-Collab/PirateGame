@@ -27,6 +27,9 @@ function on_load()
     //Adds event listeners to various objects
     nicknameInput.addEventListener('input', check_data);
     gameIDInput.addEventListener('input', check_data);
+
+    //Checks data on load in case backspace has been pressed and data is already present
+    check_data();
 }
 
 /*=========================================================*/
@@ -43,22 +46,22 @@ function check_data()
     //Perform varifications
     var nicknameText = nicknameInput.value;
     var gameIDText = gameIDInput.value;
-    var varificationValue = 0; 
-    if (gameIDText.length == GAMECODE_LEN) {varificationValue ++;}
-    if (nicknameText.length <= NICKNAME_LEN && nicknameText.length >= NICKNAME_MIN) {varificationValue ++;}
-    try {Number(gameIDInput); varificationValue ++;} catch {}
+    var verificationValue = 0; 
+    if (gameIDText.length == GAMECODE_LEN) {verificationValue ++;}
+    if (nicknameText.length <= NICKNAME_LEN && nicknameText.length >= NICKNAME_MIN) {verificationValue ++;}
+    if (!isNaN(gameIDText)) {verificationValue ++;} //Check if game ID is a valied number
 
-    varificationValue ++;
+    verificationValue ++;
     for (var l = 0; l < nicknameText.length; l++)
     {
         var charcode = nicknameText.toUpperCase().charCodeAt(l);
-        if (charcode > 90 || charcode < 65) {varificationValue--;}
+        if (charcode > 90 || charcode < 65) {verificationValue--;}
     }
 
 
     /*---------------*/
     //Unlock button if data is accepted
-    if (varificationValue >= VARIFICATION_STAGES)
+    if (verificationValue >= VARIFICATION_STAGES)
     {
         submitButton.classList.remove("disallowed")
         submitButton.disabled = false;
