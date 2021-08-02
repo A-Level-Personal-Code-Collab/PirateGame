@@ -23,22 +23,39 @@
     padding: 2vh;
     margin: 2vh;
     background-color:#f1f0f0 ;
-    height: 85vh;
+    height: 110vh;
     border-radius: 4px;
 
 }
 
-.div_switches{
+.div_switches, .div_itemSliders{
     position: relative;
     left: 80vh;
     padding: 2vh;
 }
 
+.div_itemSliders p{
+    position: relative;
+    left: -80vh;
+}
 
-.div_itemSliders, .div_gridSize {
+.div_gridSize {
     position: relative;
     padding: 2vh;
 }
+
+
+th, td{
+    text-align: left;
+    padding: 0.5vh;
+}
+
+img {
+    width: 5vh;
+}
+
+
+
 
 /* The switches */
 

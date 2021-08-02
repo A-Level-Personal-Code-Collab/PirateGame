@@ -37,21 +37,33 @@ Date      	By	Comments
                         <td>Custom game mode</td>
                         <td>
                             <label class="gameMode_switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="custom_game_mode_button">
                             <span class="switch"></span>
                             </label>
                         </td>
+                    </tr> 
+                    <tr>
+                        <td>Offline or Online mode</td>
+                        <td>
+                            <label for="offline_online_switch" class="gameMode_switch">
+                            <input type="checkbox" id="offline_online_switch" name="offline_online_checkbox">
+                            <span class="switch"></span> 
+                            </label>
+                        </td>
                     </tr>
+<!-- Everything below should be disableable--> 
+
                     <!-- Secret Mode --------- Add desciption to secret mode... -->
                     <tr>
                         <td>Secret mode</td>
                         <td>
                             <label for="secretMode_tick" class="gameMode_switch">
-                            <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox">
+                            <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox" class="disablable" disabled>
                             <span class="switch"></span> 
                             </label>
                         </td>
                     </tr>
+                   
                 </table>
             </div>
             <!-- Grid size -->
@@ -59,11 +71,11 @@ Date      	By	Comments
                 <p>Choose grid size...</p>
                 <div class="slider_container">
                     <label for="x_slider">X coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider" id="x_slider" oninput="this.nextElementSibling.value = this.value">
+                    <input type="range" min="4" max="10" value="6" class="slider" id="x_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>
                     <output>6</output>
                     <br>
                     <label for="y_slider">Y coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider" id="y_slider" oninput="this.nextElementSibling.value = this.value">
+                    <input type="range" min="4" max="10" value="6" class="slider" id="y_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>
                     <output>6</output>
                 </div>
             </div>
@@ -72,9 +84,44 @@ Date      	By	Comments
             <!-- Item sliders -->
             <div class="div_itemSliders">
                 <p>Choose the amount of each item...</p>
-
+                <div class="slider_container">
+                    <table>
+                        <tr>
+                            <th><img src="../static/img/steal.png" alt="steal"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="steal_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>   <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/kill.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="kill_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/gift.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="gift_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/swap.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="swap_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/shield.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="shield_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/mirror.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="mirror_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/bomb.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="bomb_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                        <tr>
+                            <th><img src="../static/img/bank.png"></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider" id="bank_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                        </tr>
+                    </table>
+                </div>
             </div>
-        </div>
+        </div> <!-- Disabled div -->
     </div>
     
 {% endblock%}
