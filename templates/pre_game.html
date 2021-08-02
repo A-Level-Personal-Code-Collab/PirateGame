@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sun Aug 01 2021
+Last Modified: Mon Aug 02 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -33,9 +33,9 @@ Date      	By	Comments
             <div class="card">
                 <div class="container">
                     <h2>New Game</h2>
-                    <p>Play a new game of Pirate Game!. Later you will select whether the game will be online or offline. For the online game, you will be given a game ID which people will use to join and an input box for your username.</p>
-                    <br><br><br><br>
-                    <form method="GET" action="/new_game">
+                    <br>
+                    <p>Play a new game of Pirate Game!. Later you will select whether the game will be online or offline. For the online game, you will be given a game ID which people will use to join and an input box for your username. As can be seen on the right</p>
+                    <form method="GET" action="/new_game" id="new_game_button">
                         <button type="submit" class="game_button" style="vertical-align:middle ;"><span>New Game </span></button>
                     </form>
                 </div>
@@ -45,18 +45,20 @@ Date      	By	Comments
             <div class="card">
                 <div class="container">
                     <h2>Join Game</h2>
-                    <p>Input details below to join an active Pirate Game!</p>
                     <br>
+                    <p>Input details below to join an active Pirate Game!</p>
                     <form method="GET">
-                        <label for="gmae_ID">Game ID:</label>
-                        <input type="text" id="game_ID" name="game_ID">
-                        <br>
-                        <br>
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username">
-                        <br>
-                        <br>
-                        <button type="submit" class="game_button" style="vertical-align:middle ;"><span>Submit</span></button>
+                        <table>
+                            <tr>
+                                <td><label for="gmae_ID">Game ID:</label></td>
+                                <td><input type="text" id="game_ID" name="game_ID"></tr>
+                            </tr>                          
+                            <tr>
+                                <td><label for="username">Username:</label></td>
+                                <td><input type="text" id="username" name="username"></td>
+                            </tr>
+                        </table>
+                        <div id="submit_button"><button type="submit" class="game_button" style="vertical-align:middle ;"><span>Submit</span></button></div>
                     </form>
                 </div>
             </div>
