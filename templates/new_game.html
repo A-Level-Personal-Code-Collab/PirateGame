@@ -20,6 +20,7 @@ Date      	By	Comments
 
 {% block head %}
     <link rel="stylesheet" href="../static/css/new_game.css">
+    <script src="../static/javascript/new_game.js" defer></script>
 {% endblock %}
 
 {% block body %} 
@@ -29,21 +30,46 @@ Date      	By	Comments
             <p>Choose your settings for your pirate game...</p>
         </div>
         <div class="setting_body">
+            <!-- Vanilla/ custom game slider -->
+            <div class="div_gameMode">
+                <table>
+                    <tr>
+                        <td>Custom game mode</td>
+                        <td>
+                            <label class="gameMode_switch">
+                            <input type="checkbox">
+                            <span class="switch"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Secret mode</td>
+                        <td>
+                            <label for="secretMode_tick" class="gameMode_switch">
+                            <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox">
+                            <span class="switch"></span> 
+                            </label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
             <!-- Grid size -->
             <div class="div_gridSize">
                 <p>Choose grid size</p>
                 <div class="slider_container">
                     <label for="x_slider">X coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider" id="x_slider">
+                    <input type="range" min="4" max="10" value="6" class="slider" id="x_slider" oninput="this.nextElementSibling.value = this.value">
+                    <output>6</output>
+                    <br>
+                    <label for="y_slider">Y coordinates</label>
+                    <input type="range" min="4" max="10" value="6" class="slider" id="y_slider" oninput="this.nextElementSibling.value = this.value">
+                    <output>6</output>
                 </div>
-                
             </div>
             <!-- Secret Mode --------- Add desciption to secret mode... -->
-            <div id="div_secretMode">
-                <label for="secretMode_tick">Secret Mode</label>
-                <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox">
-            </div>
+            
             <!-- Item sliders -->
+            <div class=""
         </div>
     </div>
     
