@@ -7,7 +7,7 @@ Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
 Last Modified: Mon Aug 02 2021
-Modified By: Adam O'Neill
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
@@ -51,7 +51,7 @@ Date      	By	Comments
                             </label>
                         </td>
                     </tr>
-<!-- Everything below should be disableable--> 
+<!-- Everything below should be disablable--> 
 
                     <!-- Secret Mode --------- Add desciption to secret mode... -->
                     <tr>
@@ -71,11 +71,11 @@ Date      	By	Comments
                 <p>Choose grid size...</p>
                 <div class="slider_container">
                     <label for="x_slider">X coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider" id="x_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>
+                    <input type="range" min="4" max="10" value="6" class="slider disablable" id="x_slider" oninput="this.nextElementSibling.value = this.value" disabled>
                     <output>6</output>
                     <br>
                     <label for="y_slider">Y coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider" id="y_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>
+                    <input type="range" min="4" max="10" value="6" class="slider disablable" id="y_slider" oninput="this.nextElementSibling.value = this.value" disabled>
                     <output>6</output>
                 </div>
             </div>
@@ -88,35 +88,35 @@ Date      	By	Comments
                     <table>
                         <tr>
                             <th><img src="../static/img/steal.png" alt="steal"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="steal_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>   <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="steal_slider" oninput="this.nextElementSibling.value = this.value" disabled>   <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/kill.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="kill_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="kill_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/gift.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="gift_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="gift_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/swap.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="swap_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="swap_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/shield.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="shield_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="shield_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/mirror.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="mirror_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="mirror_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/bomb.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="bomb_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="bomb_slider" oninput="this.nextElementSibling.value = this.value" cdisabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/bank.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider" id="bank_slider" oninput="this.nextElementSibling.value = this.value" class="disablable" disabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="bank_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                     </table>
                 </div>

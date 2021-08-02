@@ -5,29 +5,39 @@
  * Author: Adam O'Neill
  * -----
  * Last Modified: Mon Aug 02 2021
- * Modified By: Adam O'Neill
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
- * Javascript will save your soul!
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2021-08-02	WH	Fixed disable item code and tidied File
+ * 2021-08-02	AO	Added basic code aiming to disabale game customisation if master slider off
  */
 
-const disablable = document.querySelectorAll(".disablable")
+const disablables = document.querySelectorAll(".disablable")
 const custom_game_mode_button = document.getElementById("custom_game_mode_button")
 
+/*=========================================================*/
 function onload() {
+    //Adds OnClick Listener
     custom_game_mode_button.addEventListener("change",disable)
 }
 
+/*=========================================================*/
+//Disables all sliders and switches if custom gamemode switch is toggled off
 function disable() {
     var button_status = custom_game_mode_button.checked /* boolean variable */ 
-    console.log(button_status)
     if (button_status == true) {
-        disablable.forEach(i => {i.classList.remove("disablable"); i.disabled = false; console.log(i)})
+        disablables.forEach(i => {i.classList.remove("disablable"); i.disabled = false})
     }
     else     {
-        disablable.forEach(i => {i.classList.add("disablable"); i.disable = true; console.log(i)})
+        disablables.forEach(i => {i.classList.add("disablable"); i.disabled = true})
     }
 }
 
+/*=========================================================*/
+//Executes onload
 onload()
