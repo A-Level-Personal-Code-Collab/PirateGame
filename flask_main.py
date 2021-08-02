@@ -7,18 +7,25 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Mon Aug 02 2021
-# Modified By: Adam O'Neill
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-02	WH	Added nickname validator routine which, if sucessful, redirects user to /sheet_builder
+# 2021-08-02	WH	Converted application to socketio application
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
-from flask import Flask, render_template, Markup
+from re import sub
+from flask import Flask, render_template, Markup, send_file, request
+from flask_socketio import SocketIO
+from flask.helpers import url_for
 from werkzeug.utils import redirect
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
+socketio = SocketIO(app)
 
 #=========================================================#
 #Slave subs
@@ -57,33 +64,99 @@ def buildGrid():
     #Return finnished grid as Markdown and not plain text
     return Markup(grid)
 
+#---------------#
+#Checks that the inputted nickname is valied
+def nicknameValidate(nickname):
+    NICKNAME_MAX_LEN = 15
+    NICKNAME_MIN_LEN = 3
+    BLACKLIST_FILE = "static/nickname-word-blacklist.csv"
+
+    nickname = nickname.lower()
+    #---------------#
+    #Simple length check (secconds javascript check)
+    nicknameLen = len(nickname)
+    if nicknameLen > NICKNAME_MAX_LEN or nicknameLen < NICKNAME_MIN_LEN:
+        return False
+    
+    #---------------#
+    #Checks banned words lists
+    blacklist = open(BLACKLIST_FILE, 'r')
+    rejectWords = blacklist.read().split(",")
+    blacklist.close()
+
+    #Loop through banned words and check them all
+    for word in rejectWords:
+        wordLen = len(word)
+        if not wordLen > nicknameLen: #If word in question is longer than nickname then ignore it
+            if word == nickname: #Check if word _is_ nickname
+                return False
+            numSubstrings = nicknameLen - wordLen + 1 #Calculated how many possible substrings there are of any given word
+            for i in range(numSubstrings): #Finds and checks all substrings of nickname to the length of the check word
+                substring = nickname[i:i+wordLen]
+                print(substring)
+                if substring == word:
+                    return False
+    return True
+
+#---------------#
+#Checks that the provided game ID exists
+def gameIDValidate(gameID):
+    ####TODO: Create databaselinkage####
+    return True
+
 #=========================================================#
 #URL routes
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/play_game")
+#---------------#
+@app.route("/play_game", methods=["GET","POST"])
 def play_game():
-    return render_template("pre_game.html")
+    #Below variables should be set to match the error class in the event of an error
+    nicknameError = ""
+    IDError = ""
 
+    #Get information from form
+    nickname = request.form.get("ipt_nickname")
+    gameID = request.form.get("ipt_game_ID")
+
+    if request.method == "POST":
+        if gameIDValidate(gameID):
+            if nicknameValidate(nickname):
+                return redirect("/sheet_builder") #Move on to sheet builder page
+            else:
+                nicknameError="inputError"
+        else:
+            IDError = "inputError"
+    else: #Ensure boxes are blank when page is loaded for the first time
+        nickname = ""
+        gameID = ""
+
+    return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID)
+
+#---------------#
 @app.route("/online_game")
 def online_game():
-    return render_template("online_game.html")
+    return render_template("online_game.hhtml")
 
+#---------------#
 @app.route('/new_game')
 def new_game():
     return render_template("new_game.html")
-#=========================================================#
-@app.route("/sheet_game")
+
+#---------------#
+@app.route("/sheet_builder")
 def game_sheet():
     gridHTML = buildGrid()
     return render_template("game_sheet.html", grid = gridHTML)
 
+#---------------#
 @app.route("/tutorial")
 def tutorial():
     return render_template("tutorial.html")
 
+#---------------#
 @app.route("/about")
 def about_page():
     return render_template("about_page.html")
@@ -91,4 +164,4 @@ def about_page():
 #=========================================================#
 #Main app execution
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app) #SocketIo required for two way communication

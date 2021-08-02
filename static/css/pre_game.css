@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Adam O'Neill
  * -----
  * Last Modified: Mon Aug 02 2021
- * Modified By: Adam O'Neill
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -15,7 +15,11 @@
  */
 /* Pre game page */
 
-
+ *
+ {
+     transition: 0.5s;
+ }
+ 
  .pre_game_header{
     padding: 50px;
     text-align: center;
@@ -77,6 +81,12 @@
     bottom: -120%;
 }
 
+#btn_submit_button.disallowed
+{
+    background-color: lightgrey;
+    cursor: not-allowed;
+}
+
 #new_game_button{
     position: absolute;
     left: 30%;
@@ -89,7 +99,7 @@
     position: relative;
 }
 
-.game_button span:after{ /* adds the arrow to the <span> and hides it */
+.game_button:not(.disallowed) span:after{ /* adds the arrow to the <span> and hides it */
     content: "\00bb"; /* arrow */
     position: absolute;
     opacity: 0;
@@ -97,7 +107,7 @@
     right: -20px; /* movement of arrow*/
 }
 
-.game_button:hover span{ /* Makes space for the arrow*/
+.game_button:hover:not(.disallowed) span{ /* Makes space for the arrow*/
     padding-left: 15px;
 }
 
@@ -123,3 +133,8 @@ th, td{
     text-align: left;
 }
 
+.inputError
+{
+    background-color: #C7536A;
+    border-radius: 7px;
+}
