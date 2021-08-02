@@ -14,28 +14,31 @@
  * ----------	---	---------------------------------------------------------
  */
 
+ *{
+    position: relative;
+ }
 
 .container{
     box-shadow:   0 4px 8px 0 rgba(0,0,0,0.2);
     padding: 2vh;
     margin: 2vh;
-    background-color:#7f848f ;
+    background-color:#f1f0f0 ;
     height: 85vh;
     border-radius: 4px;
 
 }
 
+.div_switches{
+    position: relative;
+    left: 80vh;
+    padding: 2vh;
+}
 
 
-
-
-
-
-
-
-
-
-
+.div_itemSliders, .div_gridSize {
+    position: relative;
+    padding: 2vh;
+}
 
 /* The switches */
 
@@ -50,8 +53,8 @@
 .gameMode_switch{
     position: relative;
     display: inline-block;
-    width: 60px;
-    height: 34px;
+    width: 6vh;
+    height: 3vh;
   }
 
 /* The ball in the switch */
@@ -69,10 +72,10 @@
   .switch:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
+    height: 2vh;
+    width: 2vh;
+    left: 6px;
+    bottom: 5px;
     background-color: white;
     transition: .4s;
   }
@@ -80,11 +83,7 @@
   input:checked + .switch {
     background-color: #2196F3;
   }
-  
-  input:focus + .switch {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
+
   input:checked + .switch:before {
     transform: translateX(26px);
   }
