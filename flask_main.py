@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Aug 02 2021
+# Last Modified: Wed Aug 04 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -93,7 +93,6 @@ def nicknameValidate(nickname):
             numSubstrings = nicknameLen - wordLen + 1 #Calculated how many possible substrings there are of any given word
             for i in range(numSubstrings): #Finds and checks all substrings of nickname to the length of the check word
                 substring = nickname[i:i+wordLen]
-                print(substring)
                 if substring == word:
                     return False
     return True
