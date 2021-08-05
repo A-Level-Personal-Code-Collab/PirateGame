@@ -4,7 +4,7 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Aug 02 2021
+ * Last Modified: Thu Aug 05 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-05	WH	Added stack counters to each item including their update routines
+ * 2021-08-05	WH	Completely rewrote bank system grey-out items when a stack is exhaused
  * 2021-08-02	WH	Added function to show and hide the finnished pop-up based on whether the grid is full or not
  * 2021-08-02	WH	Added grid builder function in preparation to send grid to server
  * 2021-08-01	WH	Tidied up code significantly including making stacking mechanic work for all items (not just money) and adding iteration to acheive this
@@ -23,15 +25,16 @@
  * 2021-07-11	WH	Created required javascript to allow for draggable grid elements
  */
 
- /*Get elements from the page*/
+ //=========================================================//
+ //^ Get elements from the page ^//
  const draggables = document.querySelectorAll('div.gridItems')
  const containers = document.querySelectorAll('.dragReceptical')
  const moneyItemBank = document.getElementById("div_moneyItems")
  const specialItemBank = document.getElementById("div_specialItems")
  const popupDiv = document.getElementById("div_gridFullPopUp")
 
- /*=========================================================*/
- /*Contant parameters*/
+ //=========================================================//
+ //^ Contant parameters ^//
  /*--*/
  /*Constant variable for the maximumum amount of each type of item*/
  const maxItems = 
@@ -51,11 +54,11 @@
  }
 
  /*--*/
- /*The order of items in the item bank (not this does not affect the actual rendering order)*/
- const itemOrder = ["itmShield","itmKill","itmSteal","itmMirror","itmBomb","itmBank","itmSwap","itmGift",null,"M5000","M1000","M500","M200",null]
+ const GRID_X = 6;
+ const GRID_Y = 6;
 
- /*=========================================================*/
- /*Program variables*/
+ //=========================================================//
+ //^ Program variables //
  /*--*/
  /*Keeps track of how many of each money type have been used*/
  var numItems = 
@@ -73,122 +76,93 @@
    itmBomb : 1,
    itmBank : 1
  }
- /*-*/
 
- const GRID_X = 6;
- const GRID_Y = 6;
+ /*--*/
+ var draggingCurrent = null; //Stores the items that is currently being moved around
 
- /*#=========================================================#*/
- /*User subs*/
- /*=========================================================*/
- /*Drag start event listener*/
- function dragstartevent(draggable, event) {
-  /*REMOVED DUE TO 'Tanking Effect' (See Issue#2) - event.dataTransfer.setDragImage(draggable, -99999, -99999); /*Move ghost images away to very far away from screen so you can't see them*/
-  if(draggable.parentNode.id == "div_specialItems" | draggable.parentNode.id == "div_moneyItems") {
-    const classList = draggable.classList
-    var duplicate = false /*Whether a duplication event is permitted*/
-    var afterItem = null /*The next item in the list that the duplicated item will be inserted before*/
-    var afterItemLocation = null /*The location within itemOrder of the item after the current one*/
-
+ //=========================================================//
+ //====================== User subs ========================//
+ //=========================================================//
+ //^ Drag start event listener //
+ function dragstartevent(event) {
+  var draggable = event.target;
+  /*REMOVED DUE TO 'Tanking Effect' (See Issue#2) */ ////event.dataTransfer.setDragImage(draggable, -99999, -99999); /*Move ghost images away to very far away from screen so you can't see them*/
+  if(draggable.parentNode.classList.contains("itemStack")) { //Checks if the item is coming from the bank
     /*--*/
-    classList.forEach(cssclass => {
-      if (maxItems[cssclass] != null) /*Igores other classes that don't determine item type*/
+    draggable.classList.forEach(cssclass => {
+      if (numItems[cssclass] != null) /*Igores other classes that don't determine item type*/
       {
-        if (numItems[cssclass] < maxItems[cssclass]) /*Checks if a new item can be created*/
+        if (numItems[cssclass] > 0) /*Checks if a new item can be created*/
         {
-          duplicate = true
-          numItems[cssclass] ++
-          afterItemLocation = itemOrder.indexOf(cssclass)+1
+          numItems[cssclass] --;
+          draggingCurrent = draggable.cloneNode(true);
+
+          //Adds event listeners to cloned item
+          draggingCurrent.addEventListener('dragstart', (event) => {dragstartevent(event)});
+          draggingCurrent.addEventListener('dragend', (event) => {dragendevent(event)});
         }
       }
     })
 
-    /*--*/
-    if (duplicate) {
-      /*Cone existing draggable and set up required listeners on new one*/
-      var newDraggable = draggable.cloneNode(true)
-      newDraggable.addEventListener('dragstart', (event) => {dragstartevent(newDraggable,event)})
-      newDraggable.addEventListener('dragend', () => {dragendevent(newDraggable)})
-
-      /*--*/
-      if (classList.contains('itmMoney')) {var itemContainer = moneyItemBank} else {var itemContainer = specialItemBank} /*Chose whether duplicated item will be in money or special item box*/
-      afterItem = itemContainer.querySelector("."+itemOrder[afterItemLocation])
-      /*Either put the duplicated item at the end of the box or at its proper location*/
-      if (afterItem == null) {itemContainer.appendChild(newDraggable)}
-      else {itemContainer.insertBefore(newDraggable,afterItem)}
-
-    }
     
-  }
-  draggable.classList.add('dragging') /*Add css class that styles the dragging item*/
+  } else {draggingCurrent = draggable;} //If item doesn't originate from bank, don't duplicate it
+  
+  /*--*/
+  draggingCurrent.classList.add('dragging'); /*Add css class that styles the dragging item*/
  }
  
- /*=========================================================*/
- /*Drag end function - when the user stops dragging an item*/
- function dragendevent(draggable) {
+ //=========================================================//
+ //^ Drag end function - when the user stops dragging an item //
+ function dragendevent(event) {
   /*Handles the restacking of the items if they are dropped over the item bank*/
-  if (draggable.parentNode.id == "div_moneyItems" | draggable.parentNode.id == "div_specialItems")
+  if (draggingCurrent.parentNode.id == "div_itemBank")
   {
-    if (draggable.classList.contains('itmMoney')) {var itemContainer = moneyItemBank} else {var itemContainer = specialItemBank} /*Chose whether duplicated item will be in money or special item box*/
-    draggable.classList.forEach(cssclass => {
-      if (maxItems[cssclass] != null)
+      draggingCurrent.classList.forEach(cssclass => {
+      if (numItems[cssclass] != null) //Ignores irrelevant classes
       {
-        if (itemContainer.querySelector(`.${cssclass}:not(.dragging)`) != null)
-        {
-          numItems[cssclass] --
-          draggable.remove()
-        }
-
+          //Removes item if is dragged over the bank
+          numItems[cssclass] ++; //Increments available items
+          draggingCurrent.remove();
       }
     })
-   
   }
-  try{draggable.classList.remove('dragging') /*Remove dragging css class*/} catch {} //Hides error generated by trying to remove class from deleted object
-  if (is_grid_full()) {popupDiv.style.display = "block"} else {popupDiv.style.display = "none"}
+
+  try{draggingCurrent.classList.remove('dragging') /*Remove dragging css class*/} catch {} //Hides error generated by trying to remove class from deleted object
+  
+  /*--*/
+  if (is_grid_full()) {popupDiv.style.display = "block"} else {popupDiv.style.display = "none"} //Checks if grid is full and pops up finnish popup
+
+  /*--*/
+  update_counters(null);
  }
 
- /*=========================================================*/
- /*Drag over function will detect when a user drags a draggable image over the top of a square*/
+ //=========================================================//
+ //^ Drag over function will detect when a user drags a draggable image over the top of a square //
  function dragoverevent(container) {
   if(container.innerHTML=="") { /*Prevents dragging into occupied squares*/
-    /*Add the itemem with the .dragging class if it is being dragged over a square*/
-    const draggable = document.querySelector('.dragging')
-    container.appendChild(draggable)
-    draggable.style.display="block"
+    container.appendChild(draggingCurrent)
+    draggingCurrent.style.display="block" //Ensures item is shown again
+    update_counters(null) //Updates counters with no extra 1
   }
-
-  /*Allow draggable item to be placed back into the item bank*/
-  if (container.id == "div_itemBank") {
-    const draggable = document.querySelector(".dragging")
-    var classList = draggable.classList
-
-    if (draggable.classList.contains('itmMoney')) {var recipientContainer = moneyItemBank} else {var recipientContainer = specialItemBank} /*Chose whether duplicated item will be in money or special item box*/
-    
-    /*--*/
-    classList.forEach(cssclass => {
-      if (maxItems[cssclass] != null)
-      {
-        if (recipientContainer.querySelector(`.${cssclass}:not(.dragging)`) != null) {draggable.style.display="none"} /*Hide element if it is being dragged over bank and the bank already contains this item*/
-      
-        /*Add item to correct place on dragover*/
-        var nextItemLocation = itemOrder.indexOf(cssclass) + 1 /*Finds current asset in order array in order to determine next one*/
-        var nextAsset = recipientContainer.querySelector("."+itemOrder[nextItemLocation])
-        if (nextAsset == null) {recipientContainer.appendChild(draggable)}
-        else {recipientContainer.insertBefore(draggable,nextAsset)}
-      }
-    })
+  /*--*/
+  if (container.id == "div_itemBank") //Handles item differently if dragged over bank
+  {
+    draggingCurrent.classList.forEach(cssclass => {if (numItems[cssclass] != null) {update_counters(cssclass)}}) //Updates counters, 1 is added to the cssclass to show where item will be added to without actually changing the numItems variable
+    container.appendChild(draggingCurrent)
+    draggingCurrent.style.display="none" //Hides item as it is dragged over the bank
+   
   }
  }
  
- /*=========================================================*/
- /*Perform all functions that should run when the space loads*/
+ //=========================================================//
+ //^ Perform all functions that should run when the space loads //
  function on_load() {
-   /*--*/
+  /*--*/
   /*Add event listeners*/
   /*Adds events to actual draggable items*/
   draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', (event) => {dragstartevent(draggable,event)})
-    draggable.addEventListener('dragend', () => {dragendevent(draggable)})
+    draggable.addEventListener('dragstart', (event) => {dragstartevent(event)})
+    draggable.addEventListener('dragend', (event) => {dragendevent(event)})
   })
 
   /*Add drag over event listeners to each of the grid sqaures*/
@@ -196,11 +170,18 @@
     container.addEventListener('dragover', () => {dragoverevent(container)})
   })
 
+  //Event listener for on completeion button
   document.getElementById("btn_grid_done").addEventListener("click", generate_grid);
+
+  /*--*/
+  numItems = maxItems; //Fills up numItems to max value
+
+  /*--*/
+  update_counters(null);
  }
  
- /*=========================================================*/
- /*Generate a grid matrix ready to send it back to the server*/
+ //=========================================================//
+ //^ Generate a grid matrix ready to send it back to the server //
  function generate_grid()
  {
    //Create empty 2D array in grid size
@@ -225,7 +206,7 @@
       
       //Find class of interest from class list
       item.classList.forEach(cssclass => {
-        if (maxItems[cssclass] != null) //Discard classes that do not determine item type
+        if (numItems[cssclass] != null) //Discard classes that do not determine item type
         {
           grid[squareRow][squareCol] = cssclass;
         }
@@ -238,8 +219,8 @@
     else {return grid;}
  }
 
- /*=========================================================*/
- /*Check if grid is full or not*/
+ //=========================================================//
+ //^ Check if grid is full or not //
  function is_grid_full()
  {
    for (var i = 0; i < containers.length; i++)
@@ -249,6 +230,31 @@
    return true;
  }
  
- /*=========================================================*/
- /*Run the on page load scrips*/
+ //=========================================================//
+ //^ Update all item stack counters//
+ function update_counters(plusOne)
+ {
+   draggables.forEach(itm => {
+     itm.classList.forEach(cssclass => {
+       if (numItems[cssclass] != null) //Ignores non-identifying css classes
+       {
+         var count = numItems[cssclass];
+         if (plusOne == cssclass) {count++;} //If the item is being dragged over the bank add one just to show where it would be added
+         document.getElementById(cssclass+"_counter").innerHTML = count; //Update counter spans
+         if (count == 0)
+         {
+           itm.classList.add("emptyStack") //Adds the empty stack class to show items have been exhaused
+           itm.draggable = false; //Prevents further dragging of items
+         } else
+         {
+          itm.classList.remove("emptyStack")
+          itm.draggable = true;
+         }
+       }
+     })
+   })
+ }
+
+ //=========================================================//
+ //^ Run the on page load scrips//
  on_load()
