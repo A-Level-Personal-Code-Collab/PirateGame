@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-05	WH	Converted application to use sqlite in-memory database to track active games
 # 2021-08-05	WH	Grid is addded to user database when sheet is submitted and user is redirected
 # 2021-08-05	WH	Adds user to active users database when they join a game from the join game screen
 # 2021-08-05	WH	Create system to query database when join game requested
@@ -36,19 +37,7 @@ app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 socketio = SocketIO(app)
 
 #---------------#
-#Allows easy switching of info based on user's system (for us while we test the application)
-WILL = ["/home/will/GitHub Repos/PirateGame_local/secrets.txt","mysql+pymysql://python:{secret}@192.168.2.120:33306/game_management"]
-user = WILL #Set your user here
-
-#Load secret files from their location
-FILE_PATH = user[0]
-with open(FILE_PATH) as file:
-    secret = file.read()
-    file.close()
-
-#Build address and connect
-DB_ADDRESS = user[1].replace("{secret}",secret)
-app.config["SQLALCHEMY_DATABASE_URI"] = DB_ADDRESS
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
 
 gameDB = SQLAlchemy(app)
 
@@ -215,7 +204,7 @@ def game_sheet():
     gameID = request.args.get("gid") #Loads from URL bar
 
     if userSID == None or gameID == None:
-        redirect("/new_game")
+        return redirect("/new_game")
 
     #-#
     #Queries and retries required data from database
@@ -238,7 +227,7 @@ def game_sheet():
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
             gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
             gameDB.session.commit()
-            return redirect(f"/waiting?gid={gameID}") #Moves user to next page
+            return redirect("/waiting")
 
     gridHTML = buildGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
 
@@ -257,9 +246,13 @@ def about_page():
 #---------------#
 @app.route("/waiting")
 def lobby():
-    return "PENDING WORK"
+    return render_template("about_page.html")
 
 #=========================================================#
 #Main app execution
 if __name__ == "__main__":
-    socketio.run(app) #SocketIo required for two way communication
+    testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}')
+    gameDB.create_all() #Creates all defined tables in in-memory database
+    gameDB.session.add(testGame)
+    gameDB.session.commit()
+    socketio.run(app, debug=True) #SocketIo required for two way communication

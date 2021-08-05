@@ -302,6 +302,11 @@
    var xhr = new XMLHttpRequest();
    var thisURL = window.location.href;
    xhr.open("POST",thisURL,true);
+   xhr.onreadystatechange = function() {
+    if (xhr.readyState == XMLHttpRequest.DONE) {
+      window.location.href = xhr.responseURL;
+    }
+}
    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
    xhr.send(`grid=${grid}`)
 
