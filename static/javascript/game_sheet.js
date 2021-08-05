@@ -173,6 +173,9 @@
   //Event listener for on completeion button
   document.getElementById("btn_grid_done").addEventListener("click", generate_grid);
 
+  //Adds double click listener to 200s
+  document.querySelector(".M200").addEventListener("dblclick", fill_200s, event)
+
   /*--*/
   numItems = maxItems; //Fills up numItems to max value
 
@@ -255,6 +258,36 @@
    })
  }
 
+ //=========================================================//
+ //^ Fill in remaining 200s ^//
+ function fill_200s(event)
+ {
+   var originalM200 = event.target;
+   containers.forEach(sqaure => {
+     if (numItems["M200"] > 0) //Checks if there are 200s left
+     {
+       if (sqaure.innerHTML == "") //Only adds to empty cells
+       {
+         var newNote = originalM200.cloneNode(true) //Clones from original
+
+         //Adds event listeners to cloned item
+         newNote.addEventListener('dragstart', (event) => {dragstartevent(event)});
+         newNote.addEventListener('dragend', (event) => {dragendevent(event)});
+
+         sqaure.appendChild(newNote) //Adds cloned item to empty square
+         numItems["M200"] --;
+       }
+     } else //Breaks loop if 200s have run out
+     {
+       return true;
+     }
+   })
+
+   /*--*/
+   update_counters();
+   if (is_grid_full()) {popupDiv.style.display = "block"} else {popupDiv.style.display = "none"} //Checks if grid is full and pops up finnish popup
+
+ }
  //=========================================================//
  //^ Run the on page load scrips//
  on_load()
