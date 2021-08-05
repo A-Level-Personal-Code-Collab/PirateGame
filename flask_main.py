@@ -6,33 +6,80 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Aug 04 2021
+# Last Modified: Thu Aug 05 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-05	WH	Grid is addded to user database when sheet is submitted and user is redirected
+# 2021-08-05	WH	Adds user to active users database when they join a game from the join game screen
+# 2021-08-05	WH	Create system to query database when join game requested
+# 2021-08-05	WH	Create link to MySQL database
 # 2021-08-02	WH	Added nickname validator routine which, if sucessful, redirects user to /sheet_builder
 # 2021-08-02	WH	Converted application to socketio application
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
 from re import sub
+import re
 from flask import Flask, render_template, Markup, send_file, request
 from flask_socketio import SocketIO
 from flask.helpers import url_for
 from werkzeug.utils import redirect
+from flask_sqlalchemy import SQLAlchemy
+import json
+import random
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 socketio = SocketIO(app)
 
+#---------------#
+#Allows easy switching of info based on user's system (for us while we test the application)
+WILL = ["/home/will/GitHub Repos/PirateGame_local/secrets.txt","mysql+pymysql://python:{secret}@192.168.2.120:33306/game_management"]
+user = WILL #Set your user here
+
+#Load secret files from their location
+FILE_PATH = user[0]
+with open(FILE_PATH) as file:
+    secret = file.read()
+    file.close()
+
+#Build address and connect
+DB_ADDRESS = user[1].replace("{secret}",secret)
+app.config["SQLALCHEMY_DATABASE_URI"] = DB_ADDRESS
+
+gameDB = SQLAlchemy(app)
+
 #=========================================================#
-#Slave subs
+#^ Database table models ^#
+#(these are required by SQL alchemy to interact with database so the variable names and info must correspond with your database)
+#---------------#
+#The table that stores a log of all currently active games
+class activeGame(gameDB.Model):
+    __tablename__ = 'activeGames'
+    gameID = gameDB.Column(gameDB.Integer, primary_key=True)
+    hostSID = gameDB.Column(gameDB.Integer)
+    gridSettings = gameDB.Column(gameDB.String(100))
+    itemSettings = gameDB.Column(gameDB.String(100))
 
 #---------------#
+#The table that stores a log of all active users and their grids
+class activeUsers(gameDB.Model):
+    __tablename__ = 'activeUsers'
+    userNickname = gameDB.Column(gameDB.String(15))
+    userSID = gameDB.Column(gameDB.Integer, primary_key=True)
+    userGameID = gameDB.Column(gameDB.Integer)
+    userGrid = gameDB.Column(gameDB.String(9999))
+    isHost = gameDB.Column(gameDB.Boolean)
+
+
+#=========================================================#
+#^ Slave subs ^#
+#---------------#
 #Builds the HTML syntax to draw the game grid - makes the grid easily exapandable + avoid typing repetative HTML code
-def buildGrid():
+def buildGrid(gridX,gridY):
 #Imports modules 
     #Local Constants
     CLASS_NAME = "gridSquare" #The name of the class that all td objects will share
@@ -40,8 +87,10 @@ def buildGrid():
     #Grid variable will acumulate the HTML table
     grid = "<table id=\"tbl_CoordinatesGrid\">"
 
-    collums = [" ","A","B","C","D","E","F"] #The lables on the X-Axis
-    rows = list(range(1,7)) #The Y-axis lables
+    collums = [" "] #The lables on the X-Axis
+    for l in range(gridX):
+        collums.append(chr(65+l)) #Generate X axis labels using ASCII character integers
+    rows = list(range(1,gridY+1)) #The Y-axis lables
 
     #Adds heading row
     grid += "<tr id=\"trw_gridHeading\">"
@@ -100,8 +149,10 @@ def nicknameValidate(nickname):
 #---------------#
 #Checks that the provided game ID exists
 def gameIDValidate(gameID):
-    ####TODO: Create databaselinkage####
-    return True
+    if activeGame.query.get(int(gameID)):
+        return True
+    else:
+        return False
 
 #=========================================================#
 #URL routes
@@ -123,7 +174,19 @@ def play_game():
     if request.method == "POST":
         if gameIDValidate(gameID):
             if nicknameValidate(nickname):
-                return redirect("/sheet_builder") #Move on to sheet builder page
+                #Saves user details to database
+                userSID = random.randint(0,999999)
+                while activeGame.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+                    userSID = random.randint(0,999999)
+
+                newUserActivate = activeUsers(userSID=userSID,userNickname=nickname,userGameID=gameID,isHost=False); #Build new database entry using base class
+                gameDB.session.add(newUserActivate);
+                gameDB.session.commit();
+
+                #-#
+                response =  redirect(f"/sheet_builder?gid={gameID}") #Move on to sheet builder page
+                response.set_cookie("SID",str(userSID)) #Save SID for later use
+                return response
             else:
                 nicknameError="inputError"
         else:
@@ -145,10 +208,41 @@ def new_game():
     return render_template("new_game.html")
 
 #---------------#
-@app.route("/sheet_builder")
+@app.route("/sheet_builder", methods=["GET","POST"])
 def game_sheet():
-    gridHTML = buildGrid()
-    return render_template("game_sheet.html", grid = gridHTML)
+    #Load values from client provided info
+    userSID = request.cookies.get("SID") #Loads from client cookies
+    gameID = request.args.get("gid") #Loads from URL bar
+
+    if userSID == None or gameID == None:
+        redirect("/new_game")
+
+    #-#
+    #Queries and retries required data from database
+    gameData = activeGame.query.get(int(gameID))
+
+    if gameData == None: #If an attempt is made to access page without correct ID
+        return "FATAL ERROR!"
+
+    #Gets raw strings
+    itemsString = gameData.itemSettings
+    gridString = gameData.gridSettings
+
+    #Converts strings to JSON form
+    gridJSON = json.loads(gridString)
+    itemsJSON = json.loads(itemsString)
+    
+    #Handles grid that gets sent back
+    if request.method == "POST":
+        retrievedGrid = request.form.get("grid")
+        if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
+            gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
+            gameDB.session.commit()
+            return redirect(f"/waiting?gid={gameID}") #Moves user to next page
+
+    gridHTML = buildGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
+
+    return render_template("game_sheet.html", grid = gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON)
 
 #---------------#
 @app.route("/tutorial")
@@ -159,6 +253,11 @@ def tutorial():
 @app.route("/about")
 def about_page():
     return render_template("about_page.html")
+
+#---------------#
+@app.route("/waiting")
+def lobby():
+    return "PENDING WORK"
 
 #=========================================================#
 #Main app execution

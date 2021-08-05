@@ -54,8 +54,8 @@
  }
 
  /*--*/
- const GRID_X = 6;
- const GRID_Y = 6;
+ var GRID_X = 6;
+ var GRID_Y = 6;
 
  //=========================================================//
  //^ Program variables //
@@ -171,13 +171,18 @@
   })
 
   //Event listener for on completeion button
-  document.getElementById("btn_grid_done").addEventListener("click", generate_grid);
+  document.getElementById("btn_grid_done").addEventListener("click", send_grid);
 
   //Adds double click listener to 200s
   document.querySelector(".M200").addEventListener("dblclick", fill_200s, event)
 
   /*--*/
-  numItems = maxItems; //Fills up numItems to max value
+  //Parse JSONs from server (data brought in in gameSheet.html script tag)
+  numItems = JSON.parse(itemsJSONString);
+  var gridJSON = JSON.parse(gridJSONString);
+
+  GRID_X = gridJSON["GRID_X"]
+  GRID_Y = gridJSON["GRID_Y"]
 
   /*--*/
   update_counters(null);
@@ -197,29 +202,29 @@
    /*--*/
    //Loop through all items and find the cell that they are in
    const placedItems = document.querySelectorAll("div.gridItems")
-   var incomplete = false;
 
    placedItems.forEach(item => 
     {
       
       var squareID = item.parentNode.id
-      if (squareID.substring(0,8) != "tdt_grid") {incomplete = true; return false;} //Check if any items left in bank and break if so break the loop
-      var squareCol = squareID.charCodeAt(8) - 65 //Convert the capital letter into a number by taking away the unicode value of 'A'
-      var squareRow = Number(squareID.substring(9)) - 1 //Convert remainder of ID to a number (should support 2 diget nums)
-      
-      //Find class of interest from class list
-      item.classList.forEach(cssclass => {
-        if (numItems[cssclass] != null) //Discard classes that do not determine item type
-        {
-          grid[squareRow][squareCol] = cssclass;
-        }
-      })
+      if (squareID.substring(0,8) == "tdt_grid") //Check if any items left in bank and break if so break the loop
+      {
+        var squareCol = squareID.charCodeAt(8) - 65 //Convert the capital letter into a number by taking away the unicode value of 'A'
+        var squareRow = Number(squareID.substring(9)) - 1 //Convert remainder of ID to a number (should support 2 diget nums)
+        
+        //Find class of interest from class list
+        item.classList.forEach(cssclass => {
+          if (numItems[cssclass] != null) //Discard classes that do not determine item type
+          {
+            grid[squareRow][squareCol] = cssclass;
+          }
+        })
+      }
     })
-
+    
     /*--*/
     //Return output
-    if (incomplete) {return false;}
-    else {return grid;}
+    return grid;
  }
 
  //=========================================================//
@@ -286,8 +291,22 @@
    /*--*/
    update_counters();
    if (is_grid_full()) {popupDiv.style.display = "block"} else {popupDiv.style.display = "none"} //Checks if grid is full and pops up finnish popup
+ }
+
+ //=========================================================//
+ //^ Send completed grid layout to server ^//
+ function send_grid()
+ {
+   var grid = generate_grid();
+
+   var xhr = new XMLHttpRequest();
+   var thisURL = window.location.href;
+   xhr.open("POST",thisURL,true);
+   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+   xhr.send(`grid=${grid}`)
 
  }
+
  //=========================================================//
  //^ Run the on page load scrips//
  on_load()

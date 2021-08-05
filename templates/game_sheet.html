@@ -23,6 +23,11 @@ Date      	By	Comments
 <link rel="stylesheet" href="../static/css/play_sheet.css">
 <link rel="stylesheet" href="../static/css/popup.css">
 <script src="../static/javascript/game_sheet.js" defer></script>
+<!--Load variables from python-->
+<script>
+    var itemsJSONString = '{{itemsMaxJSON | tojson | safe}}'
+    var gridJSONString = '{{gridSizeJSON | tojson | safe}}'
+</script>
 {% endblock %}
 
 {% block body %}
