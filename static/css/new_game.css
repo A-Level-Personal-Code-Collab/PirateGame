@@ -43,6 +43,11 @@ img {
     width: 5vh;
 }
 
+.info_circle {
+  font-weight: bold;
+  cursor: pointer;
+}
+
 
 
 
