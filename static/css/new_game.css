@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Aug 07 2021
+ * Last Modified: Sun Aug 08 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -27,15 +27,16 @@
     border-radius: 4px;
 }
 
-.div_switches, .div_gridSize, .div_itemSliders{
+
+
+.row {
   /*border: 1px solid black;*/  /* Useful to see the borders while testing */
   width: 25%;
   height: 55vh;
   display: inline-table;
-  padding: 0 12vh;
 }
 
-.div_switches{
+#div_switches{
   top: 1.9vh;
 }
 

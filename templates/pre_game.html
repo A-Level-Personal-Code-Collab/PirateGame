@@ -6,8 +6,8 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Wed Aug 04 2021
-Modified By: Will Hall
+Last Modified: Sat Aug 07 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -51,11 +51,11 @@ Date      	By	Comments
                     <form method="POST">
                         <table>
                             <tr>
-                                <td><label for="ipt_game_ID">Game ID:</label></td>
+                                <td><span class="info_circle" title="8 Digit numerical code provided by the game host">&#9432</span><label for="ipt_game_ID"> Game ID:</label> </td>
                                 <td><input value="{{gameID}}" type="text" id="ipt_game_ID" name="ipt_game_ID" class="{{gameIDErrClass}}"></tr>
                             </tr>                          
                             <tr>
-                                <td><label for="ipt_nickname">Nickname:</label></td>
+                                <td><span class="info_circle" title="Allows letters only. Some nicknames will be rejected due to explicity!">&#9432</span><label for="ipt_nickname"> Nickname:</label></td>
                                 <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}"></td>
                             </tr>
                         </table>

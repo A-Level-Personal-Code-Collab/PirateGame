@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Aug 05 2021
-# Modified By: Will Hall
+# Last Modified: Sun Aug 08 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -192,8 +192,34 @@ def online_game():
     return render_template("online_game.hhtml")
 
 #---------------#
-@app.route('/new_game')
+@app.route('/new_game', methods=["GET","POST"])
 def new_game():
+    if request.method == "POST":
+        # Colleting Item data from POST
+        gameData = request.form.get("game_data")
+        gameData = gameData.split("|")
+        sliderData = gameData[0]
+        itemData = gameData[1]
+        #Generate random ID
+        gameID = ""
+        for x in range(8):
+            gameID = gameID + str(random.randint(0,9))
+        while activeGame.query.get(int(gameID)) != None: #Check if chosen gameID already exists and keep regerating until it doesn't
+                    gameID = ""
+                    for x in range(8):
+                        gameID = gameID + str(random.randint(0,9))
+        gameID = int(gameID)
+        print(gameID)
+        userSID = random.randint(0,999999)
+        while activeGame.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+            userSID = random.randint(0,999999)
+
+        newGame = activeGame(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
+
+        gameDB.session.add(newGame)
+        gameDB.session.commit()
+
+
     return render_template("new_game.html")
 
 #---------------#
