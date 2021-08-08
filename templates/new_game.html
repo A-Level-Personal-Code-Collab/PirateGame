@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sat Aug 07 2021
+Last Modified: Sun Aug 08 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -31,7 +31,7 @@ Date      	By	Comments
         </div>
         <div class="setting_body">
             <!-- Vanilla/ custom game slider -->
-            <div class="div_switches">
+            <div class="row" id="div_switches">
                 <table id="switches_table">
                     <tr>
                         <td>Custom game mode</td>
@@ -68,7 +68,7 @@ Date      	By	Comments
                 </table>
             </div>
             <!-- Grid size -->
-            <div class="div_gridSize">
+            <div class="row" id="div_gridSize">
                 <p>Choose grid size...</p>
                 <br>
                 <div class="slider_container">
@@ -83,9 +83,9 @@ Date      	By	Comments
             </div>
             <!-- Secret Mode --------- Add desciption to secret mode... -->
             <!-- Item sliders -->
-            <div class="div_itemSliders">
+            <div class="row" id="div_itemSliders">
                 <p>Choose the amount of each item...</p>
-                <div class="slider_container">
+                <div id="slider_container">
                     <table>
                         <tr>
                             <th><img src="../static/img/steal.png" alt="steal"></th>
@@ -122,6 +122,10 @@ Date      	By	Comments
                     </table>
                 </div>
             </div>
+            <div class="" id="play_button">
+                <button id="start_game_button" type="submit">Start Game</button>
+            </div>
+
         </div> <!-- Disabled div -->
     </div>
 {% endblock%}
