@@ -253,7 +253,7 @@ def game_sheet():
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
             gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
             gameDB.session.commit()
-            return redirect("/waiting")
+            return redirect("/playing_online/lobby")
 
     gridHTML = buildGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
 
@@ -270,9 +270,20 @@ def about_page():
     return render_template("about_page.html")
 
 #---------------#
-@app.route("/waiting")
+@app.route("/playing_online/lobby")
 def lobby():
-    return "Waiting"
+    return render_template("lobby.html")
+
+#---------------#
+@app.route("/playing_online/lobby/active_users")
+def getActiveUsersList():
+    gameID = int(request.args.get("gid"))
+    allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID).all()
+    listElement = "<list>"
+    for user in allUsers:
+        listElement += f"<li>{user.userNickname}</li>"
+    listElement += "</list>"
+    return listElement
 
 #=========================================================#
 #Main app execution
