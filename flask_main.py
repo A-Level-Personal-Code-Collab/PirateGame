@@ -201,7 +201,9 @@ def new_game():
         gameData = request.form.get("game_data")
         gameData = gameData.split("|")
         sliderData = gameData[0]
+        print(sliderData)
         itemData = gameData[1]
+        print(itemData)
         #Generate random ID
         gameID = ""
         for x in range(8):
