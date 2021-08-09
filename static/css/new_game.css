@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Aug 08 2021
+ * Last Modified: Mon Aug 09 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -50,7 +50,28 @@ img {
 }
 
 
+/* ------------------- Start Game Button ------------------- */
 
+#start_game_button {
+  border: none;
+  cursor: pointer;
+  background-color: #ffd900;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  font-size: 4vh;
+  padding: 1.5vh;
+  color: rgb(145, 145, 145);
+  border-radius: 8px;
+}
+
+#start_game_button:hover{
+  background-color: #fade3d;
+}
+
+#start_game_button:active {
+  background-color: #fade3d;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
+  transform: translateY(0.1vh);
+}
 
 /* ------------------- The switches -------------------*/
 
