@@ -31,10 +31,10 @@ const shield_slider = document.getElementById("shield_slider")
 const mirror_slider = document.getElementById("mirror_slider")
 const bomb_slider = document.getElementById("bomb_slider")
 const bank_slider = document.getElementById("bank_slider")
-const M5000_slider = bank_slider // Change to elemet id
-const M1000_slider = bank_slider
-const M500_slider = bank_slider
-const M200_slider = bank_slider
+const M5000_slider = document.getElementById("5000_slider")
+const M1000_slider = document.getElementById("1000_slider")
+const M500_slider = document.getElementById("500_slider")
+const M200_slider = document.getElementById("200_slider")
 const start_game_button = document.getElementById("start_game_button")
 
 /*=========================================================*/
@@ -65,6 +65,10 @@ function disable() {
         mirror_slider.value = 1
         bomb_slider.value = 1
         bank_slider.value = 1
+        M5000_slider.value = 1
+        M1000_slider.value = 3
+        M500_slider.value = 5
+        M200_slider.value = 18
 
         // Need to change output boxes to corresponding number
         disablables.forEach(i => {output_update(i)})

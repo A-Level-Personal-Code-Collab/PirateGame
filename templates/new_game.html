@@ -7,7 +7,7 @@ Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
 Last Modified: Mon Aug 09 2021
-Modified By: Will Hall
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -68,7 +68,7 @@ Date      	By	Comments
                 </table>
             </div>
             <!-- Grid size -->
-            <div class="row" id="div_gridSize">
+            <div class="row" id="div_gridSize_moneySlider">
                 <p>Choose grid size...</p>
                 <br>
                 <div class="slider_container">
@@ -80,12 +80,32 @@ Date      	By	Comments
                     <input type="range" min="4" max="10" value="6" class="slider disablable" id="y_slider" oninput="this.nextElementSibling.value = this.value" disabled>
                     <output>6</output>
                 </div>
+                <br><br>
+                <p>Choose money types...</p>
+                <br>
+                <div class="slider_container">
+                    <label for="5000_slider">5000s</label>
+                    <input type="range" min="0" max="10" value="1" class="slider disablable" id="5000_slider" oninput="this.nextElementSibling.value = this.value" disabled>
+                    <output>1</output>
+                    <br><br>
+                    <label for="1000_slider">5000s</label>
+                    <input type="range" min="0" max="10" value="3" class="slider disablable" id="1000_slider" oninput="this.nextElementSibling.value = this.value" disabled>
+                    <output>3</output>
+                    <br><br>
+                    <label for="500_slider">5000s</label>
+                    <input type="range" min="0" max="10" value="5" class="slider disablable" id="500_slider" oninput="this.nextElementSibling.value = this.value" disabled>
+                    <output>5</output>
+                    <br><br>
+                    <label for="200_slider">5000s</label>
+                    <input type="range" min="0" max="25" value="18" class="slider disablable" id="200_slider" oninput="this.nextElementSibling.value = this.value" disabled>
+                    <output>18</output>
+                </div>
             </div>
             <!-- Secret Mode --------- Add desciption to secret mode... -->
             <!-- Item sliders -->
             <div class="row" id="div_itemSliders">
                 <p>Choose the amount of each item...</p>
-                <div id="slider_container">
+                <div class="slider_container">
                     <table>
                         <tr>
                             <th><img src="../static/img/steal.png" alt="steal"></th>
@@ -122,8 +142,8 @@ Date      	By	Comments
                     </table>
                 </div>
             </div>
-            <div class="" id="play_button">
-                <button id="start_game_button" type="submit">Start Game</button>
+            <div> <!-- Play button div -->
+                <button id="start_game_button" type="submit">Start Game</button> <!-- use this id in css -->
             </div>
 
         </div> <!-- Disabled div -->
