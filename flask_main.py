@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Aug 05 2021
+# Last Modified: Mon Aug 09 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -246,7 +246,7 @@ def about_page():
 #---------------#
 @app.route("/waiting")
 def lobby():
-    return render_template("about_page.html")
+    return "Waiting"
 
 #=========================================================#
 #Main app execution
@@ -255,4 +255,4 @@ if __name__ == "__main__":
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testGame)
     gameDB.session.commit()
-    socketio.run(app, debug=True) #SocketIo required for two way communication
+    socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem')) #SocketIo required for two way communication
