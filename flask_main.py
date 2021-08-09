@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Mon Aug 09 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -31,6 +31,8 @@ from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
 import json
 import random
+
+from werkzeug.wrappers import response
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
@@ -219,6 +221,10 @@ def new_game():
         gameDB.session.add(newGame)
         gameDB.session.commit()
 
+        response = redirect(f"/sheet_builder?gid={gameID}") # Redirects to sheet builder page
+        response.set_cookie("SID",str(userSID)) #Save SID for later use
+
+        return response
 
     return render_template("new_game.html")
 
