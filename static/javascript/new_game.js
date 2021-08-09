@@ -4,8 +4,8 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Sun Aug 08 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Mon Aug 09 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-09	WH	Fixed problem where output boxes failed to update on custom-mode-disable (issue#33)
  * 2021-08-02	WH	Fixed disable item code and tidied File
  * 2021-08-02	AO	Added basic code aiming to disabale game customisation if master slider off
  */
@@ -51,7 +52,7 @@ function disable() {
         disablables.forEach(i => {i.classList.remove("disablable"); i.disabled = false})
     }
     else     {
-        disablables.forEach(i => {i.classList.add("disablable"); i.disabled = true})
+        disablables.forEach(i => {i.classList.add("disablable"); i.disabled = true;})
         // Resets the switches to their defult positions
         secretmode_tick.checked=false
         x_slider.value = 6
@@ -64,7 +65,9 @@ function disable() {
         mirror_slider.value = 1
         bomb_slider.value = 1
         bank_slider.value = 1
+
         // Need to change output boxes to corresponding number
+        disablables.forEach(i => {output_update(i)})
 
     }
 }
@@ -97,6 +100,12 @@ function postdata(game_data){
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
     xhr.send(`game_data=${game_data}`)
 
+}
+
+//=========================================================//
+//^ Updates the output numbers ^//
+function output_update(element) {
+    element.nextElementSibling.value = element.value
 }
 
 /*=========================================================*/
