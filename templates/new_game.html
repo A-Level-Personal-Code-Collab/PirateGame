@@ -6,8 +6,8 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Aug 02 2021
-Modified By: Will Hall
+Last Modified: Sun Aug 08 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -31,19 +31,21 @@ Date      	By	Comments
         </div>
         <div class="setting_body">
             <!-- Vanilla/ custom game slider -->
-            <div class="div_switches">
-                <table>
+            <div class="row" id="div_switches">
+                <table id="switches_table">
                     <tr>
                         <td>Custom game mode</td>
+                        <td><span class="info_circle" title="Custom game mode enables other sliders and switches to be used in order to manipulate the game settings">&#9432</span></td></td>
                         <td>
                             <label class="gameMode_switch">
                             <input type="checkbox" id="custom_game_mode_button">
                             <span class="switch"></span>
                             </label>
                         </td>
-                    </tr> 
+                    </tr>
                     <tr>
                         <td>Offline or Online mode</td>
+                        <td></td>
                         <td>
                             <label for="offline_online_switch" class="gameMode_switch">
                             <input type="checkbox" id="offline_online_switch" name="offline_online_checkbox">
@@ -52,10 +54,10 @@ Date      	By	Comments
                         </td>
                     </tr>
 <!-- Everything below should be disablable--> 
-
                     <!-- Secret Mode --------- Add desciption to secret mode... -->
                     <tr>
                         <td>Secret mode</td>
+                        <td><span class="info_circle" title="Secret mode is when you can't see who peforms an action on someone within the log box">&#9432</span></td>
                         <td>
                             <label for="secretMode_tick" class="gameMode_switch">
                             <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox" class="disablable" disabled>
@@ -63,28 +65,27 @@ Date      	By	Comments
                             </label>
                         </td>
                     </tr>
-                   
                 </table>
             </div>
             <!-- Grid size -->
-            <div class="div_gridSize">
+            <div class="row" id="div_gridSize">
                 <p>Choose grid size...</p>
+                <br>
                 <div class="slider_container">
                     <label for="x_slider">X coordinates</label>
                     <input type="range" min="4" max="10" value="6" class="slider disablable" id="x_slider" oninput="this.nextElementSibling.value = this.value" disabled>
                     <output>6</output>
-                    <br>
+                    <br><br>
                     <label for="y_slider">Y coordinates</label>
                     <input type="range" min="4" max="10" value="6" class="slider disablable" id="y_slider" oninput="this.nextElementSibling.value = this.value" disabled>
                     <output>6</output>
                 </div>
             </div>
             <!-- Secret Mode --------- Add desciption to secret mode... -->
-            
             <!-- Item sliders -->
-            <div class="div_itemSliders">
+            <div class="row" id="div_itemSliders">
                 <p>Choose the amount of each item...</p>
-                <div class="slider_container">
+                <div id="slider_container">
                     <table>
                         <tr>
                             <th><img src="../static/img/steal.png" alt="steal"></th>
@@ -112,7 +113,7 @@ Date      	By	Comments
                         </tr>
                         <tr>
                             <th><img src="../static/img/bomb.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="bomb_slider" oninput="this.nextElementSibling.value = this.value" cdisabled>    <output>1</output></th>
+                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="bomb_slider" oninput="this.nextElementSibling.value = this.value" disabled>    <output>1</output></th>
                         </tr>
                         <tr>
                             <th><img src="../static/img/bank.png"></th>
@@ -121,8 +122,10 @@ Date      	By	Comments
                     </table>
                 </div>
             </div>
+            <div class="" id="play_button">
+                <button id="start_game_button" type="submit">Start Game</button>
+            </div>
+
         </div> <!-- Disabled div -->
     </div>
-    
 {% endblock%}
-
