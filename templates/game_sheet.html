@@ -6,8 +6,8 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Thu Aug 05 2021
-Modified By: Will Hall
+Last Modified: Mon Aug 09 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -59,18 +59,6 @@ Date      	By	Comments
                 <div class="itemStack" id="div_m200Stack"><div draggable="true" class="gridItems itmMoney M200"><img draggable="false" src="../static/img/M200.png" class="gridItems"/></div><span class="stackCounter" id="M200_counter">99</span></div>
             </div>
         </div>
-        <!-- Action box -->
-        <div id="div_actionsBank">
-            <h5>Actions Bank:</h5>
-            <form method="GET" onclick="fillGrid()"> <!-- Fill grid function needed -->
-                <button type="submit" style="vertical-align:middle ;" class="action_buttons">Fill grid square</button>
-            </form>
-            <!-- Need to add Tittle to switch -->
-            <label class="spinner_switch">
-                <input type="checkbox">
-                <span class="slider"></span>
-            </label>
-        </div>
     </div>
 
     <!--Pop up to confirm grid complete-->
@@ -83,16 +71,6 @@ Date      	By	Comments
         </div>
         <div class="popupFooter">
             <input id="btn_grid_done" class="popupButton" type="button" value="Hoist the sails">
-        </div>
-    </div>
-
-    <!--Cash and Bank boxes (hidden by default)-->
-    <div id="div_moneyStorage" hidden=true>
-        <div class="moneyBox" id="div_cashBox">
-            Cash:
-        </div>
-        <div class="moneyBox" id="div_bankBox">
-            Bank:
         </div>
     </div>
 </div>
