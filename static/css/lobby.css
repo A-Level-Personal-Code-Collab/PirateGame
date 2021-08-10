@@ -14,7 +14,13 @@
  * ----------	---	---------------------------------------------------------
  */
 
-
+#div_lobbyHeader{
+    background-color: #474e5d;
+    color: white;
+    height: 8vh;
+    padding: 2vh;
+    margin-bottom: 1vh;
+}
 
 
 
