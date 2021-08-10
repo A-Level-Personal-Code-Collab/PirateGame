@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Mon Aug 09 2021
-# Modified By: Adam O'Neill
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -25,7 +25,7 @@
 from re import sub
 import re
 from flask import Flask, render_template, Markup, send_file, request
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, join_room, send
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -144,6 +144,16 @@ def gameIDValidate(gameID):
         return True
     else:
         return False
+
+#---------------#
+#Returns the users that are currently part of a game 
+def getActiveUsersList(gameID):
+    allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID,activeUsers.userGrid!=None).all()
+    listElement = "<list class=\"names_list\">"
+    for user in allUsers:
+        listElement += f"<li>{user.userNickname}</li>"
+    listElement += "</list>"
+    return listElement
 
 #=========================================================#
 #URL routes
@@ -280,18 +290,14 @@ def about_page():
 #---------------#
 @app.route("/playing_online/lobby")
 def lobby():
-    return render_template("lobby.html")
+    return render_template("lobby.html", cors_allowed_origins='*')
 
-#---------------#
-@app.route("/playing_online/lobby/active_users")
-def getActiveUsersList():
-    gameID = int(request.args.get("gid"))
-    allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID).all()
-    listElement = "<list>"
-    for user in allUsers:
-        listElement += f"<li>{user.userNickname}</li>"
-    listElement += "</list>"
-    return listElement
+#=========================================================#
+#^ Socketio Functions ^#
+@socketio.on("join")
+def on_join(gameID):
+    join_room(gameID)
+    send(getActiveUsersList(gameID),room=gameID)
 
 #=========================================================#
 #Main app execution

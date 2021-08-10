@@ -22,19 +22,14 @@
  //Runs on-load
  function on_load()
  {
-     fetch_data();
-    setInterval(fetch_data, 550);
- }
-
- /*---------------*/
- //Fetch data about current users from server
- function fetch_data()
- {
-     fetch("https://localhost:5000/playing_online/lobby/active_users?gid=00000001") //Must do this dynamically based on ID
-     .then (function(response) {return response})
-     .then(data => {return data.text()})
-     .then(text => {listDiv.innerHTML=text;})
-     .catch(function(err) {console.log(err.message)})
+    var socket = io.connect('https://localhost:5000')
+    socket.on('connect', () => {
+        socket.emit("join","00000001")
+    })
+    
+    socket.on('message', msg => {
+        listDiv.innerHTML = msg;
+    })
  }
 
  //=========================================================//
