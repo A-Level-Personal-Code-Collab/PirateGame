@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Aug 09 2021
+# Last Modified: Tue Aug 10 2021
 # Modified By: Adam O'Neill
 # -----
 # HISTORY:
@@ -261,7 +261,7 @@ def game_sheet():
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
             gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
             gameDB.session.commit()
-            return redirect("/waiting")
+            return redirect("/play_game/lobby")
 
     gridHTML = buildGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
 
@@ -278,9 +278,9 @@ def about_page():
     return render_template("about_page.html")
 
 #---------------#
-@app.route("/waiting")
+@app.route("/play_game/lobby")
 def lobby():
-    return "Waiting"
+    return render_template("lobby.html")
 
 #=========================================================#
 #Main app execution
