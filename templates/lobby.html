@@ -1,10 +1,10 @@
 <!--
-File: c:\Adam\coding\1. VC Coding projects\PirateGame\templates\lobby.html
-Project: c:\Adam\coding\1. VC Coding projects\PirateGame\templates
-Created Date: Tuesday, August 10th 2021, 12:23:35 pm
-Description: 
-Author: Adam O'Neill
-Copyright (c) 2021 Adam O'Neill
+File: https://github.com/Lime-Parallelogram/PirateGame/templates/lobby.html
+Project: https://github.com/Lime-Parallelogram/PirateGame
+Created Date: Monday, August 9th 2021, 12:09:33 pm
+Description: The HTML file for the waiting lobby
+Author: Will Hall
+Copyright (c) 2021 Lime Parallelogram
 -----
 Last Modified: Tue Aug 10 2021
 Modified By: Adam O'Neill
@@ -12,23 +12,22 @@ Modified By: Adam O'Neill
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-08-09	WH	Added file an basic structure with no header or styling
 -->
-
 {% extends 'base.html' %}
 
-{% block title %}Lobby{% endblock %}
-
-{% block head %} 
+{% block title %} Online Lobby {% endblock %}
+{% block head %}
     <link rel="stylesheet" href="../static/css/lobby.css">
     <script src="../static/javascript/lobby.js" defer></script>
-{% endblock%}
-
-{% block body%}
-    <h1>Hi</h1>
-
 {% endblock %}
-
-
-
-
-
+{% block body %}
+    <div>
+        <div id="div_lobbyHeader">
+            Lobby Header Here
+        </div>
+        <div id="div_listContainer">
+            list
+        </div>
+    </div>
+{% endblock %}
