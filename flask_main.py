@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Tue Aug 10 2021
+# Last Modified: Wed Aug 11 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -25,7 +25,7 @@
 from re import sub
 import re
 from flask import Flask, render_template, Markup, send_file, request
-from flask_socketio import SocketIO, join_room, send
+from flask_socketio import SocketIO, join_room, send, emit
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -39,7 +39,7 @@ app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 socketio = SocketIO(app)
 
 #---------------#
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 
 gameDB = SQLAlchemy(app)
 
@@ -155,6 +155,16 @@ def getActiveUsersList(gameID):
     listElement += "</list>"
     return listElement
 
+#---------------#
+#Checks if a given user SID is the host of a game
+def isHost(SID,gameID):
+    qurRes = activeGame.query.filter(activeGame.hostSID==SID,activeGame.gameID==gameID).all()
+    print(qurRes)
+    if qurRes:
+        return True
+    else:
+        return False
+
 #=========================================================#
 #URL routes
 @app.route("/")
@@ -229,8 +239,10 @@ def new_game():
             userSID = random.randint(0,999999)
 
         newGame = activeGame(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
+        newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname="UNSET",isHost=True)
 
         gameDB.session.add(newGame)
+        gameDB.session.add(newUser)
         gameDB.session.commit()
 
         response = redirect(f"/sheet_builder?gid={gameID}") # Redirects to sheet builder page
@@ -271,7 +283,7 @@ def game_sheet():
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
             gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
             gameDB.session.commit()
-            return redirect("/playing_online/lobby")
+            return redirect(f"/playing_online/lobby?gid={gameID}")
 
     gridHTML = buildGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
 
@@ -290,19 +302,42 @@ def about_page():
 #---------------#
 @app.route("/playing_online/lobby")
 def lobby():
-    return render_template("lobby.html", cors_allowed_origins='*')
+    host_content = ""
+    if isHost(request.cookies.get("SID"),request.args.get("gid")): #Renders host-only controls if the user is the host
+        host_content = Markup(render_template("host_only_lobby.html"))
+
+    return render_template("lobby.html",host_only_content=host_content)
+
+#---------------#
+@app.route("/playing_online/game")
+def game():
+    gameID = request.args.get("gid")
+
+    return render_template("online_game.html")
 
 #=========================================================#
 #^ Socketio Functions ^#
+#---------------#
+#When a user joins a game they get added to the game's room
 @socketio.on("join")
 def on_join(gameID):
     join_room(gameID)
     send(getActiveUsersList(gameID),room=gameID)
 
+#---------------#
+#When a user joins a game they get added to the game's room
+@socketio.on("start")
+def start_game(data):
+    gameID = data["gameID"]
+    userSID = data ["userSID"]
+
+    if isHost(userSID,gameID): #Confirms if user is host and re-broadcasts start event
+        emit("start",room=gameID)
+
 #=========================================================#
 #Main app execution
 if __name__ == "__main__":
-    testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}')
+    testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testGame)
     gameDB.session.commit()

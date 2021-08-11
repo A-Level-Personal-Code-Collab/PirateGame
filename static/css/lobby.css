@@ -12,10 +12,12 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-10	WH	Added list item formatiing and list animation
  */
 
  /*//=========================================================//*/
- /*Css animation*/
+ /*^ Css animation ^*/
+ /*Pop in animation from the internet*/
  @-webkit-keyframes pop-in {
 0% { opacity: 0; -webkit-transform: scale(0.5); }
 100% { opacity: 1; -webkit-transform: scale(1); }
@@ -29,6 +31,8 @@
 100% { opacity: 1; transform: scale(1); }
 }
 
+ /*//=========================================================//*/
+ /*^ Names list ^*/
 .names_list
 {
     list-style: none;
@@ -36,13 +40,22 @@
 .names_list li
 {
     display: inline-flex;
-    padding: 10px;
-    font-size: 3vh;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgba(161, 161, 161, 0.767);
+    border-radius: 8px;
+    margin: 10px;
+    font-size: 40px;
     font-family: "Noto Sans ExtraBold";
     -webkit-animation:pop-in 0.5s;
     -moz-animation:pop-in 0.5s;
     -ms-animation:pop-in 0.5s;
+    color: white;
 }
+
+ /*//=========================================================//*/
+ /*^ Lobby Header ^*/
 #div_lobbyHeader{
     background-color: #474e5d;
     color: white;
@@ -51,6 +64,12 @@
     margin-bottom: 1vh;
 }
 
-
+ /*//=========================================================//*/
+ /*^ Page background ^*/
+body
+{
+    background-image: url("../img/NONFINAL-agedPaper.jpg"); /*Temoary background only - copyright to use*/
+    background-size: cover;
+}
 
 

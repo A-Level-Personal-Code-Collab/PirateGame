@@ -4,8 +4,8 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Mon Aug 09 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Wed Aug 11 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
@@ -64,7 +64,7 @@ function disable() {
         shield_slider.value = 1
         mirror_slider.value = 1
         bomb_slider.value = 1
-        bank_slider.value = 1
+        bank_slider.value = 2
         M5000_slider.value = 1
         M1000_slider.value = 3
         M500_slider.value = 5
