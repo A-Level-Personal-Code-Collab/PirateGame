@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Thu Aug 05 2021
+ * Last Modified: Wed Aug 18 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -221,4 +221,11 @@ input:checked + .slider { /* Changes the colour to blue */
 
 input:checked + .slider:before {
     transform: translateX(550%);
+}
+
+#div_gridFullPopUp
+{
+    top: 75vh;
+    left: 60vh;
+    width: 20vh;
 }

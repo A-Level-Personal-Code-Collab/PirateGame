@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Aug 11 2021
+# Last Modified: Thu Aug 19 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-19	WH	Added pop-upto warn users if they are already signed in in another tab
 # 2021-08-05	WH	Converted application to use sqlite in-memory database to track active games
 # 2021-08-05	WH	Grid is addded to user database when sheet is submitted and user is redirected
 # 2021-08-05	WH	Adds user to active users database when they join a game from the join game screen
@@ -177,12 +178,29 @@ def play_game():
     #Below variables should be set to match the error class in the event of an error
     nicknameError = ""
     IDError = ""
+    popupHTML = ""
 
     #Get information from form
     nickname = request.form.get("ipt_nickname")
     gameID = request.form.get("ipt_game_ID")
+    submitButton = request.form.get("submit_button") #The value on the submit button (changed if in answer to popup)
 
     if request.method == "POST":
+        userSID = request.cookies.get("SID") #Loads from client cookies
+
+        if submitButton == "Playing here instead": #Check if the user has answered that they wish to use a new SID (in which case delete all reference to old SID)
+            queryData = activeUsers.query.filter(activeUsers.userSID==userSID).first()
+            if queryData.isHost == True:
+                activeGame.query.filter(activeGame.gameID==queryData.userGameID).delete()
+            activeUsers.query.filter(activeUsers.userSID==userSID).delete()
+
+        #Check if the SID stored in the user's cookies is still present in the active database
+        if userSID != None:
+            if activeUsers.query.get(userSID) != None:
+                popupHTML = render_template("popups/user_still_active_popup.html")
+                return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
+
+        #---------------#
         if gameIDValidate(gameID):
             if nicknameValidate(nickname):
                 #Saves user details to database
@@ -206,7 +224,7 @@ def play_game():
         nickname = ""
         gameID = ""
 
-    return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID)
+    return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
 
 #---------------#
 @app.route("/online_game")
@@ -261,6 +279,10 @@ def game_sheet():
 
     if userSID == None or gameID == None:
         return redirect("/new_game")
+
+    #If a user's sheet is already full, move them on
+    if activeUsers.query.filter(activeUsers.userGrid!=None,activeUsers.userSID==userSID).first() != None:
+        return redirect(f"/playing_online/lobby?gid={gameID}")
 
     #-#
     #Queries and retries required data from database

@@ -6,8 +6,8 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sat Aug 07 2021
-Modified By: Adam O'Neill
+Last Modified: Thu Aug 19 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
@@ -20,6 +20,7 @@ Date      	By	Comments
 
 {% block head %}
     <link rel="stylesheet" href="../static/css/pre_game.css">
+    <link rel="stylesheet" href="../static/css/popup.css">
     <script src="../static/javascript/verification_routines.js"></script> <!--Load nickname verification routine from file-->
     <script src="../static/javascript/pre_game.js" defer></script>
 {% endblock %}
@@ -48,7 +49,7 @@ Date      	By	Comments
                     <h2>Join Game</h2>
                     <br>
                     <p>Input details below to join an active Pirate Game!</p>
-                    <form method="POST">
+                    <form name="joinform" method="POST">
                         <table>
                             <tr>
                                 <td><span class="info_circle" title="8 Digit numerical code provided by the game host">&#9432</span><label for="ipt_game_ID"> Game ID:</label> </td>
@@ -59,11 +60,12 @@ Date      	By	Comments
                                 <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}"></td>
                             </tr>
                         </table>
-                        <div id="submit_button"><button disabled id="btn_submit_button" type="submit" class="game_button disallowed" style="vertical-align:middle ;"><span>Submit</span></button></div>
+                        <div id="submit_button"><button disabled id="btn_submit_button" value="Join" name="submit_button" type="submit" class="game_button disallowed" style="vertical-align:middle ;"><span>Submit</span></button></div>
                     </form>
                 </div>
             </div>
         </div>
+        {{ CSSPopup }}
     </div>
 {% endblock %}
 

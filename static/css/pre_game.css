@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Aug 07 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Wed Aug 18 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -32,6 +32,10 @@
     width: 50%;
     margin-bottom: 16px;
     padding: 5px 8px;
+}
+.row
+{
+    position: relative;
 }
 
 .card{
@@ -144,4 +148,12 @@ th, td{
 .info_circle {
     font-weight: bold; 
     cursor: pointer;
+}
+
+/* Game error popup */
+#div_gameopen_popup
+{
+    width: 30vw;
+    margin-top: 30vh;
+    left: 35%;
 }
