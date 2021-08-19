@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Wed Aug 18 2021
+ * Last Modified: Thu Aug 19 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -30,8 +30,8 @@
 .column{
     float: left;
     width: 50%;
-    margin-bottom: 16px;
-    padding: 5px 8px;
+    margin-bottom: 1.9vh;
+    padding:  0.6vh 1vh;
 }
 .row
 {
@@ -40,13 +40,13 @@
 
 .card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    margin: 20px;
-    height: 35vh;
+    margin: 2vh;
+    height: 40vh;
 }
 
 
 .container{
-    padding: 45px 35px;
+    padding: 5vh 4vh;
     position: relative;
 }
 
@@ -71,18 +71,16 @@
     transition: all 0.5s ;
     color: rgb(145, 145, 145);
     cursor: pointer;
-    margin: 20px;
-    font-size: 25px;
-    padding: 20px;
-    width: 300px;
+    margin: 2.5vh;
+    font-size: 3.1vh;
+    padding: 2.5vh;
+    width: 37.8vh;
 
    
 }
 
 #submit_button{
-    position: absolute;
-    left: 30%;
-    bottom: -120%;
+    position: relative
 }
 
 #btn_submit_button.disallowed
@@ -92,9 +90,8 @@
 }
 
 #new_game_button{
-    position: absolute;
-    left: 30%;
-    bottom: -79%;
+    position: relative
+    
 }
 
 .game_button span{ /* span is used so the arrow is a seperate entity from the text */
@@ -129,11 +126,11 @@ form input{
 
 table{
     left: 30%;
-    position: absolute;
+    position: relative
 }
 
 th, td{
-    padding: 15px;    
+    padding: 1.8vh;    
     text-align: left;
 }
 
