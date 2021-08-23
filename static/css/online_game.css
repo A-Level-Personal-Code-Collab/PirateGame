@@ -1,0 +1,36 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/static/css/online_game.css
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Monday, August 23rd 2021, 10:34:52 pm
+ * Description: The CSS for the main online play module
+ * Author: Will Hall
+ * Copyright (c) 2021 Lime Parallelogram
+ * -----
+ * Last Modified: Mon Aug 23 2021
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2021-08-23	WH	Created file
+ */
+
+  /*Grid information*/
+.gridSquare
+{
+    height: 10vh;
+    width: 10vh;
+    border: 3px solid black;
+    margin: 0;
+    padding: 0.5vh;
+    text-align: center;
+    vertical-align: middle;
+
+}
+ .gridItems
+ {
+     pointer-events: none;
+     width: 8.5vh;
+     height: 8.5vh;
+     
+ }

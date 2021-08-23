@@ -6,17 +6,23 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sun Jul 11 2021
-Modified By: Adam O'Neill
+Last Modified: Mon Aug 23 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-08-23	WH	Added CSS and added link for grid file
 -->
 
 {% extends "base.html" %}
 
+{% block head %}
+<link rel="stylesheet" href="../static/css/online_game.css">
+{% endblock %}
+
 {% block body%}
     <h1> Developing</h1>
+    {{ grid }}
 {% endblock %}
 

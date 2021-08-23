@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Aug 19 2021
+# Last Modified: Mon Aug 23 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-23	WH	Began work on online play draw grid function
 # 2021-08-19	WH	Added pop-upto warn users if they are already signed in in another tab
 # 2021-08-05	WH	Converted application to use sqlite in-memory database to track active games
 # 2021-08-05	WH	Grid is addded to user database when sheet is submitted and user is redirected
@@ -32,6 +33,7 @@ from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
 import json
 import random
+from string import Template
 
 from werkzeug.wrappers import response
 
@@ -165,6 +167,46 @@ def isHost(SID,gameID):
         return True
     else:
         return False
+
+#---------------#
+#Draws the grid but this time in the form of an uneditable play board
+def drawGameplayGrid(xSize,gridSerial):
+    gridList = gridSerial.split(",")
+    gridHTML = "<table>"
+    gridSquareHTMLTemplate = Template('<td id="$id" class="gridSquare">$inner</td>')
+    gridImageTemplate = Template('<img class="gridItems" src="$url"/>')
+    IMAGE_URLS = {
+        "M5000" : "../static/img/M5000.png",
+        "M1000" : "../static/img/M1000.png",
+        "M500" : "../static/img/M500.png",
+        "M200" : "../static/img/M200.png",
+        "itmSwap" : "../static/img/swap.png",
+        "itmSteal" : "../static/img/steal.png",
+        "itmGift" : "../static/img/gift.png",
+        "itmBank" : "../static/img/bank.png",
+        "itmBomb" : "../static/img/bomb.png",
+        "itmShield" : "../static/img/shield.png",
+        "itmMirror" : "../static/img/mirror.png"
+    }
+
+    if len(gridList) % xSize != 0:
+        raise "GRID DIMENSION ERROR"
+    ySize = int(len(gridList) / xSize)
+
+    colLabels = [""] + list(map(chr, range(65,65+xSize)))
+    gridHTML += "<tr>"
+    for col in colLabels:
+        gridHTML += gridSquareHTMLTemplate.substitute(id=None,inner=col)
+    for y in range(1,ySize+1):
+        gridHTML += "</tr><tr>"
+        gridHTML += gridSquareHTMLTemplate.substitute(id=None, inner=str(y))
+        for x in range(1,xSize+1):
+            print(x*y)
+            itemName = gridList[(x*y)-1]
+            imageUrl = IMAGE_URLS[itemName]
+            gridHTML += gridSquareHTMLTemplate.substitute(id=colLabels[x]+str(y),inner=gridImageTemplate.substitute(url=imageUrl))
+    gridHTML += "</tr></table>"
+    return Markup(gridHTML)
 
 #=========================================================#
 #URL routes
@@ -334,8 +376,16 @@ def lobby():
 @app.route("/playing_online/game")
 def game():
     gameID = request.args.get("gid")
+    userID = request.cookies.get("SID")
 
-    return render_template("online_game.html")
+    #Gets grid information from relevant database
+    gridSerial = activeUsers.query.get(userID).userGrid
+    gridSettingsJSON = json.loads(activeGame.query.get(gameID).gridSettings)
+    gridX = int(gridSettingsJSON["GRID_X"])
+    
+    usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
+
+    return render_template("online_game.html", grid=usersGrid)
 
 #=========================================================#
 #^ Socketio Functions ^#
