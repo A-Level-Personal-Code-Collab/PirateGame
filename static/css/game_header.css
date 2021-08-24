@@ -1,0 +1,28 @@
+/*
+ * File: https://github.com/Lime-Parallelogram/PirateGame/static/css/game_header.css
+ * Project: https://github.com/Lime-Parallelogram/PirateGame
+ * Created Date: Tuesday, August 24th 2021, 9:01:32 pm
+ * Description: The CSS styling for the in-game sub-header
+ * Author: Will Hall
+ * Copyright (c) 2021 Lime Parallelogram
+ * -----
+ * Last Modified: Tue Aug 24 2021
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+
+ .gameSubheader
+ {
+    background-color: #474e5d;
+    color: white;
+    height: 8vh;
+    padding: 2vh;
+    margin-bottom: 1vh;
+ }
+
+
+
+

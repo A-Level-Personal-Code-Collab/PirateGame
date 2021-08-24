@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Aug 23 2021
+# Last Modified: Tue Aug 24 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-24	WH	Playing game draw-grid function now operates as inteded
 # 2021-08-23	WH	Began work on online play draw grid function
 # 2021-08-19	WH	Added pop-upto warn users if they are already signed in in another tab
 # 2021-08-05	WH	Converted application to use sqlite in-memory database to track active games
@@ -172,10 +173,10 @@ def isHost(SID,gameID):
 #Draws the grid but this time in the form of an uneditable play board
 def drawGameplayGrid(xSize,gridSerial):
     gridList = gridSerial.split(",")
-    gridHTML = "<table>"
-    gridSquareHTMLTemplate = Template('<td id="$id" class="gridSquare">$inner</td>')
-    gridImageTemplate = Template('<img class="gridItems" src="$url"/>')
-    IMAGE_URLS = {
+    gridHTML = '<table id="tbl_playGrid">'
+    gridSquareHTMLTemplate = Template('<td id="$id" class="gridSquare">$inner</td>') #Creates template strings for the individual HTML td elements
+    gridImageTemplate = Template('<img class="gridItems" src="$url"/>') #Template string for the images that go inside the td elements
+    IMAGE_URLS = { #Defines the locations of the images ascoiated with the following items
         "M5000" : "../static/img/M5000.png",
         "M1000" : "../static/img/M1000.png",
         "M500" : "../static/img/M500.png",
@@ -189,22 +190,27 @@ def drawGameplayGrid(xSize,gridSerial):
         "itmMirror" : "../static/img/mirror.png"
     }
 
+    #Calculated the y-size as only the X was provided
     if len(gridList) % xSize != 0:
         raise "GRID DIMENSION ERROR"
     ySize = int(len(gridList) / xSize)
 
-    colLabels = [""] + list(map(chr, range(65,65+xSize)))
+    colLabels = [""] + list(map(chr, range(65,65+xSize))) #Creates a list of collum lables using capital letters
     gridHTML += "<tr>"
+
+    #Creates the collum lables row
     for col in colLabels:
         gridHTML += gridSquareHTMLTemplate.substitute(id=None,inner=col)
-    for y in range(1,ySize+1):
+
+    #Runs through all other rows
+    for y in range(ySize):
         gridHTML += "</tr><tr>"
-        gridHTML += gridSquareHTMLTemplate.substitute(id=None, inner=str(y))
-        for x in range(1,xSize+1):
-            print(x*y)
-            itemName = gridList[(x*y)-1]
+        gridHTML += gridSquareHTMLTemplate.substitute(id=None, inner=str(y)) #Adds the row lable
+        for x in range(xSize): #Runs through all other collums in that row
+            itemName = gridList[(x+y*xSize)] #Loads the item name from serial list corresponding to the coordinate in question
             imageUrl = IMAGE_URLS[itemName]
-            gridHTML += gridSquareHTMLTemplate.substitute(id=colLabels[x]+str(y),inner=gridImageTemplate.substitute(url=imageUrl))
+            gridHTML += gridSquareHTMLTemplate.substitute(id=colLabels[x]+str(y),inner=gridImageTemplate.substitute(url=imageUrl)) #Adds new td object based on template string
+
     gridHTML += "</tr></table>"
     return Markup(gridHTML)
 
@@ -377,6 +383,8 @@ def lobby():
 def game():
     gameID = request.args.get("gid")
     userID = request.cookies.get("SID")
+    hostSID = activeGame.query.get(gameID).hostSID
+    hostNick = activeUsers.query.get(hostSID).userNickname
 
     #Gets grid information from relevant database
     gridSerial = activeUsers.query.get(userID).userGrid
@@ -385,7 +393,7 @@ def game():
     
     usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
 
-    return render_template("online_game.html", grid=usersGrid)
+    return render_template("online_game.html", grid=usersGrid, hostNick=hostNick)
 
 #=========================================================#
 #^ Socketio Functions ^#
@@ -410,7 +418,9 @@ def start_game(data):
 #Main app execution
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="",isHost=True)
     gameDB.create_all() #Creates all defined tables in in-memory database
+    gameDB.session.add(testUser)
     gameDB.session.add(testGame)
     gameDB.session.commit()
     socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem')) #SocketIo required for two way communication

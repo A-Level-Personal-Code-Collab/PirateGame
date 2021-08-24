@@ -1,17 +1,18 @@
 <!--
-File: c:\Adam\coding\1. VC Coding projects\PirateGame\templates\online_game.html
-Project: c:\Adam\coding\1. VC Coding projects\PirateGame\templates
+File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/templates/online_game.html
+Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame/templates
 Created Date: Sunday, July 11th 2021, 5:31:49 pm
-Description: 
+Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Aug 23 2021
+Last Modified: Tue Aug 24 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-08-24	WH	Added cash, bank and log boxes to game screen
 2021-08-23	WH	Added CSS and added link for grid file
 -->
 
@@ -19,10 +20,30 @@ Date      	By	Comments
 
 {% block head %}
 <link rel="stylesheet" href="../static/css/online_game.css">
+<link rel="stylesheet" href="../static/css/game_header.css">
 {% endblock %}
 
 {% block body%}
-    <h1> Developing</h1>
-    {{ grid }}
+    <div class="gameSubheader" id="div_gameHeader">
+        <h1 class="gameHeaderTitle">{{ hostNick }}'s Pirate Game</h1>
+    </div>
+    <div id="div_gameDataGroup">
+        {{ grid }}
+        <div class="gameContainer">
+            <div id="div_cashBox">
+                Your Cash
+            </div>
+            <hr>
+            <div id="div_bankBox">
+                Your bank
+            </div>
+        </div>
+        <div class="gameContainer">
+            <div id="currentTask">Awaiting development</div>
+            <div id="gameLog">
+                Game log
+            </div>
+        </div>
+    </div>
 {% endblock %}
 

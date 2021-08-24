@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Aug 10 2021
+ * Last Modified: Tue Aug 24 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-24	WH	Moved lobby header styling to game_header.css so the same styles can be applied in the game screen also
  * 2021-08-10	WH	Added list item formatiing and list animation
  */
 
@@ -52,16 +53,6 @@
     -moz-animation:pop-in 0.5s;
     -ms-animation:pop-in 0.5s;
     color: white;
-}
-
- /*//=========================================================//*/
- /*^ Lobby Header ^*/
-#div_lobbyHeader{
-    background-color: #474e5d;
-    color: white;
-    height: 8vh;
-    padding: 2vh;
-    margin-bottom: 1vh;
 }
 
  /*//=========================================================//*/

@@ -6,31 +6,72 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Mon Aug 23 2021
+ * Last Modified: Tue Aug 24 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-24	WH	Added CSS for cash, bank and log boxes (outer container)
  * 2021-08-23	WH	Created file
  */
 
   /*Grid information*/
-.gridSquare
-{
-    height: 10vh;
-    width: 10vh;
-    border: 3px solid black;
-    margin: 0;
-    padding: 0.5vh;
-    text-align: center;
-    vertical-align: middle;
+ .gridSquare
+ {
+     height: 10vh;
+     width: 10vh;
+     border: 3px solid black;
+     margin: 0;
+     padding: 0.5vh;
+     text-align: center;
+     vertical-align: middle;
 
-}
+ }
+ #tbl_playGrid
+ {
+     border-spacing: 0;
+     border-collapse: collapse;
+ }
  .gridItems
  {
      pointer-events: none;
      width: 8.5vh;
      height: 8.5vh;
      
+ }
+
+ .selected
+ {
+     background-color: rgb(228, 135, 135);
+ }
+
+ /*//=========================================================//*/
+ /*^Game info boxes^*/
+
+ .gameContainer
+ {
+     border: black solid 3px;
+     flex-grow: 1;
+     margin-left: 20px;
+     text-align: center;
+ }
+
+ #div_gameDataGroup
+ {
+     margin-left: 2%;
+     margin-right: 2%;
+     display: inline-flex;
+     width: 96%;
+ }
+
+ /*---------------*/
+ /*The info box showing what the user is currently waiting for*/
+ #currentTask
+ {
+     color: red;
+     background-color: rgba(211, 211, 211, 0.473);
+     padding: 5px;
+     border-radius: 5px;
+     position: relative;
  }
