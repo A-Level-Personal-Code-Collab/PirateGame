@@ -6,12 +6,13 @@ Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Tue Aug 24 2021
+Last Modified: Sat Aug 28 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-08-28	WH	Added means to link with host settings file
 2021-08-24	WH	Added cash, bank and log boxes to game screen
 2021-08-23	WH	Added CSS and added link for grid file
 -->
@@ -21,11 +22,19 @@ Date      	By	Comments
 {% block head %}
 <link rel="stylesheet" href="../static/css/online_game.css">
 <link rel="stylesheet" href="../static/css/game_header.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="../static/javascript/online_game.js" defer></script>
+
+{% block headXtra %}
+{% endblock %}
+
 {% endblock %}
 
 {% block body%}
     <div class="gameSubheader" id="div_gameHeader">
         <h1 class="gameHeaderTitle">{{ hostNick }}'s Pirate Game</h1>
+        {% block hostHeader %}
+        {% endblock %}
     </div>
     <div id="div_gameDataGroup">
         {{ grid }}
@@ -39,6 +48,8 @@ Date      	By	Comments
             </div>
         </div>
         <div class="gameContainer">
+            {% block hostControls %}
+            {% endblock %}
             <div id="currentTask">Awaiting development</div>
             <div id="gameLog">
                 Game log

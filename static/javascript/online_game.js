@@ -1,7 +1,7 @@
 /**
- * File: https://github.com/Lime-Parallelogram/PirateGame/static/javascript/lobby.js
- * Project:https://github.com/Lime-Parallelogram/PirateGame
- * Created Date: Monday, August 9th 2021, 12:12:44 pm
+ * File: /home/will/GitHub Repos/PirateGame/static/javascript/online_game.js
+ * Project: /home/will/GitHub Repos/PirateGame/static/javascript
+ * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
  * Last Modified: Sat Aug 28 2021
@@ -13,39 +13,50 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
- * 2021-08-28	WH	Join event now sends userID to server also
- * 2021-08-09	WH	Added fetch function to pull data from the active users
+ * 2021-08-28	WH	Added handling for new_square event
  */
- const listDiv = document.getElementById("div_listContainer");
-
- var socket = io.connect('https://localhost:5000'); //Connects to server's socket server
- 
  //=========================================================//
- //^ Performs user functions ^//
- //Runs on-load
+ //^ Gets elements from page ^//
+
+ //=========================================================//
+ //^ Variables ^//
+ var socket = io.connect('https://localhost:5000');
+ var previousSquare = null;
+
+ //=========================================================//
+ //^ OnLoad Function ^//
  function on_load()
  {
     var gameID = getUrlVar("gid")
     var userSID = getCookie("SID")
 
     /*---------------*/
-    //Adds event listeners for socket event
+    //Adds event listeners for socket events
     socket.on('connect', () => {
         socket.emit("join",{userSID: userSID, gameID: gameID}) //Sends join event to server which causes the user to get added to a room
     })
-    
-    socket.on('message', msg => { //Updates list to match incomming messahe
-        listDiv.innerHTML = msg;
-    })
 
-    socket.on('start', function () {window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is recieved
+    socket.on('new_square', select_sqaure)
  }
 
+ //=========================================================//
+ //^ Slave Subs ^//
  /*---------------*/
- //Sends start game event when start button is clicked (HOST ONLY)
- function start_game()
+ //Lights up a selected square and greys-out the old one
+ function select_sqaure(serialSquareNum)
  {
-     socket.emit("start",{userSID: getCookie("SID"), gameID: getUrlVar("gid")})
+    var square = document.getElementById(`square${serialSquareNum}`);
+
+    square.classList.add("selected"); //Lights up currently selected square
+
+    //Greys-out passed squares
+    if (previousSquare)
+    {
+        previousSquare.classList.remove("selected");
+        previousSquare.classList.add("completed");
+    }
+
+    previousSquare = square;
  }
 
  //=========================================================//
@@ -72,5 +83,5 @@ function getUrlVar(name) {
 }
 
  //=========================================================//
- //^ Runs onload functions ^//
+ //^ Starts onLoad ^//
  on_load();

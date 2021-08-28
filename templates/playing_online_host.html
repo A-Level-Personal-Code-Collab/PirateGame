@@ -1,0 +1,26 @@
+<!--
+File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/templates/playing_online_host.html
+Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+Created Date: Saturday, August 28th 2021, 1:30:53 pm
+Description: The HTML Template that will be rendered to the host
+Author: Will Hall
+Copyright (c) 2021 Lime Parallelogram
+-----
+Last Modified: Sat Aug 28 2021
+Modified By: Will Hall
+-----
+HISTORY:
+Date      	By	Comments
+----------	---	---------------------------------------------------------
+2021-08-28	WH	Added next-round button and linked JS file
+-->
+{% extends "online_game.html" %}
+
+{% block headXtra %}
+<script src="../static/javascript/online_game_host.js" defer></script>
+{% endblock %}
+
+{% block hostHeader %}
+<input type="button" value="NEXT ROUND >>" id="ipt_NextRoundButton">
+
+{% endblock %}

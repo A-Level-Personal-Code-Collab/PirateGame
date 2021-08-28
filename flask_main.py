@@ -6,12 +6,14 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Tue Aug 24 2021
+# Last Modified: Sat Aug 28 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-28	WH	Added method to respond to the pushing of the NEXT-ROUND button
+# 2021-08-28	WH	Added function to generate the squence of squares
 # 2021-08-24	WH	Playing game draw-grid function now operates as inteded
 # 2021-08-23	WH	Began work on online play draw grid function
 # 2021-08-19	WH	Added pop-upto warn users if they are already signed in in another tab
@@ -28,7 +30,7 @@
 from re import sub
 import re
 from flask import Flask, render_template, Markup, send_file, request
-from flask_socketio import SocketIO, join_room, send, emit
+from flask_socketio import SocketIO, join_room, rooms, send, emit
 from flask.helpers import url_for
 from werkzeug.utils import redirect
 from flask_sqlalchemy import SQLAlchemy
@@ -48,7 +50,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 gameDB = SQLAlchemy(app)
 
 #=========================================================#
-#^ Database table models ^#
+#^ Database table models ^#in
 #(these are required by SQL alchemy to interact with database so the variable names and info must correspond with your database)
 #---------------#
 #The table that stores a log of all currently active games
@@ -58,6 +60,8 @@ class activeGame(gameDB.Model):
     hostSID = gameDB.Column(gameDB.Integer)
     gridSettings = gameDB.Column(gameDB.String(100))
     itemSettings = gameDB.Column(gameDB.String(100))
+    currentRound = gameDB.Column(gameDB.Integer)
+    squareOrder = gameDB.Column(gameDB.String(300))
 
 #---------------#
 #The table that stores a log of all active users and their grids
@@ -65,6 +69,7 @@ class activeUsers(gameDB.Model):
     __tablename__ = 'activeUsers'
     userNickname = gameDB.Column(gameDB.String(15))
     userSID = gameDB.Column(gameDB.Integer, primary_key=True)
+    socketioSID = gameDB.Column(gameDB.String(100))
     userGameID = gameDB.Column(gameDB.Integer)
     userGrid = gameDB.Column(gameDB.String(9999))
     isHost = gameDB.Column(gameDB.Boolean)
@@ -203,16 +208,29 @@ def drawGameplayGrid(xSize,gridSerial):
         gridHTML += gridSquareHTMLTemplate.substitute(id=None,inner=col)
 
     #Runs through all other rows
+    counter = 0 #Allows for IDs to be named serially
     for y in range(ySize):
         gridHTML += "</tr><tr>"
         gridHTML += gridSquareHTMLTemplate.substitute(id=None, inner=str(y)) #Adds the row lable
         for x in range(xSize): #Runs through all other collums in that row
             itemName = gridList[(x+y*xSize)] #Loads the item name from serial list corresponding to the coordinate in question
             imageUrl = IMAGE_URLS[itemName]
-            gridHTML += gridSquareHTMLTemplate.substitute(id=colLabels[x]+str(y),inner=gridImageTemplate.substitute(url=imageUrl)) #Adds new td object based on template string
+            gridHTML += gridSquareHTMLTemplate.substitute(id=f"square{counter}",inner=gridImageTemplate.substitute(url=imageUrl)) #Adds new td object based on template string
+            counter += 1
 
     gridHTML += "</tr></table>"
     return Markup(gridHTML)
+
+#=========================================================#
+#^ Gameplay Routines Class ^#
+class gameplay:
+    #---------------#
+    #Generates a random order for the gameplay grid
+    def generate_playOrder(self,gridArea):
+        self.playOrder = list(map(str,range(0,gridArea)))
+        random.shuffle(self.playOrder)
+        self.csvString = ",".join(self.playOrder)
+        return self.csvString
 
 #=========================================================#
 #URL routes
@@ -351,6 +369,7 @@ def game_sheet():
     if request.method == "POST":
         retrievedGrid = request.form.get("grid")
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
+            print(retrievedGrid)
             gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
             gameDB.session.commit()
             return redirect(f"/playing_online/lobby?gid={gameID}")
@@ -393,19 +412,28 @@ def game():
     
     usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
 
-    return render_template("online_game.html", grid=usersGrid, hostNick=hostNick)
+    if isHost(userID,gameID):
+        return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick)
+    else:
+        return render_template("online_game.html", grid=usersGrid, hostNick=hostNick)
 
 #=========================================================#
 #^ Socketio Functions ^#
 #---------------#
 #When a user joins a game they get added to the game's room
 @socketio.on("join")
-def on_join(gameID):
+def on_join(data):
+    gameID = data["gameID"]
+    userSID = data["userSID"]
     join_room(gameID)
     send(getActiveUsersList(gameID),room=gameID)
 
+    #Stores user's current socketio SID in database 
+    activeUsers.query.get(int(userSID)).socketioSID = request.sid
+    gameDB.session.commit()
+
 #---------------#
-#When a user joins a game they get added to the game's room
+#When the host opts to start the game
 @socketio.on("start")
 def start_game(data):
     gameID = data["gameID"]
@@ -414,11 +442,47 @@ def start_game(data):
     if isHost(userSID,gameID): #Confirms if user is host and re-broadcasts start event
         emit("start",room=gameID)
 
+        #Load grid data from database
+        gameData = activeGame.query.get(int(gameID))
+        gridJSON = json.loads(gameData.gridSettings)
+        gridSize = int(gridJSON["GRID_X"])*int(gridJSON["GRID_Y"])
+
+        #Generate grid order
+        gpClass = gameplay()
+        order = gpClass.generate_playOrder(gridSize)
+
+        #Add selection order ro database
+        gameData.squareOrder = order
+        gameData.currentRound = 0
+        gameDB.session.commit()
+
+        
+
+#---------------#
+# When the host presses button to move on to next round
+@socketio.on("next_round")
+def next_round():
+    requestSID = request.sid
+    gameID = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first().userGameID #Find game ID by querying based on sid
+    gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
+    gameObject = activeGame.query.get(gameID) #Load game information from database
+    currentRound = gameObject.currentRound +1
+    square = gameObject.squareOrder.split(",")[currentRound-1]
+
+    emit("new_square", square, room=gameIDString) #Send selected square to clients
+
+    ## HANDLE Money here
+
+    #Update values in database to newest
+    gameObject.currentRound = currentRound
+    gameDB.session.commit()
+
+
 #=========================================================#
-#Main app execution
+#^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="",isHost=True)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M200,M200,M200,M200,M5000,M200,M200,itmShield,M200,M200,M200,M200,itmMirror,itmBomb,itmBomb,M200,M200,M200,itmBank,M200,M200,itmSwap,M200,M200,M200",isHost=True)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testGame)

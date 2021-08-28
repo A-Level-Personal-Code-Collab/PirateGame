@@ -6,12 +6,15 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Aug 24 2021
+ * Last Modified: Sat Aug 28 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-28	WH	Added .completed class
+ * 2021-08-28	WH	Added next-round button styling
+ * 2021-08-28	WH	Added host-only next round button styling
  * 2021-08-24	WH	Added CSS for cash, bank and log boxes (outer container)
  * 2021-08-23	WH	Created file
  */
@@ -46,6 +49,11 @@
      background-color: rgb(228, 135, 135);
  }
 
+ .completed
+ {
+     background-color: rgb(135, 135, 135);
+ }
+
  /*//=========================================================//*/
  /*^Game info boxes^*/
 
@@ -74,4 +82,35 @@
      padding: 5px;
      border-radius: 5px;
      position: relative;
+ }
+
+ /*//=========================================================//*/
+ /*^ Host only styles ^*/
+ #ipt_NextRoundButton /*The button that will move to the next round*/
+ {
+     border: none;
+     border-radius: 3px;
+     background-color: #ffd900;
+     transition: all 0.5s;
+     cursor: pointer;
+     font-size: 20px;
+     display: inline-block;
+     vertical-align: middle;
+     height: 4vh;
+     font-size: 2vh;
+     line-height: 4vh;
+     position: absolute;
+     transform: translate(0,-50%);
+     top: 50%;
+     right: 5%;
+     font-family: 'Rock Salt', cursive;
+     padding: 0 1vh;
+     color: crimson;
+
+     
+ }
+
+ #ipt_NextRoundButton:hover
+ {
+     padding: 0 0.5vh;
  }

@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Aug 24 2021
+ * Last Modified: Sat Aug 28 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
- * Date      	By	Comments
+ * Date      	By 	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-28	WH	   Added title styling
  */
 
  .gameSubheader
@@ -19,10 +20,17 @@
     background-color: #474e5d;
     color: white;
     height: 8vh;
-    padding: 2vh;
+    min-height: max-content;
     margin-bottom: 1vh;
+    position: relative;
+    line-height: 8vh;
  }
 
+ .gameHeaderTitle
+ {
+    display: inline-block;
+    vertical-align: middle;
+ }
 
 
 
