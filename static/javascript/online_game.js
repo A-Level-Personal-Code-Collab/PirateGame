@@ -13,15 +13,23 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-08-28	WH	Added handling for cash and bank updates
  * 2021-08-28	WH	Added handling for new_square event
  */
  //=========================================================//
  //^ Gets elements from page ^//
+ const cashBox = document.getElementById("p_cashText")
+ const bankBox = document.getElementById("p_bankText")
+ const logBox = document.getElementById("p_logText")
 
  //=========================================================//
  //^ Variables ^//
  var socket = io.connect('https://localhost:5000');
  var previousSquare = null;
+ var cashTotal = 0;
+ var recordedCash = 0;
+ var bankTotal = 0;
+ var recordedBank = 0; //Keeps track of the last value recorded on the page
 
  //=========================================================//
  //^ OnLoad Function ^//
@@ -37,6 +45,8 @@
     })
 
     socket.on('new_square', select_sqaure)
+    socket.on('cash_update', newsum => {cashTotal = newsum})
+    socket.on('bank_update', newsum => {bankTotal = newsum; recordedBank = 999}) //Change recorded bank variable to impossible value to force recording of bank value
  }
 
  //=========================================================//
@@ -56,7 +66,18 @@
         previousSquare.classList.add("completed");
     }
 
+
     previousSquare = square;
+    setTimeout(update_money, 2000) //Delay here immitates the time that animation would be taking
+ }
+
+ //Updates values in cash and bank boxes
+ function update_money()
+ {
+     if (cashTotal != recordedCash) {if (cashBox.innerHTML == "") {cashBox.innerHTML = cashTotal} else {cashBox.innerHTML = cashBox.innerHTML + `, ${cashTotal}`}} //Adds commas only if box is not empty
+     if (bankTotal != recordedBank) {if (bankBox.innerHTML == "") {bankBox.innerHTML = bankTotal} else {bankBox.innerHTML = bankBox.innerHTML + `, ${bankTotal}`}}
+     recordedBank = bankTotal
+     recordedCash = cashTotal
  }
 
  //=========================================================//

@@ -12,6 +12,7 @@ Modified By: Will Hall
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-08-28	WH	Moved actual log information into sepearte p tag for ease of JS
 2021-08-28	WH	Added means to link with host settings file
 2021-08-24	WH	Added cash, bank and log boxes to game screen
 2021-08-23	WH	Added CSS and added link for grid file
@@ -40,11 +41,13 @@ Date      	By	Comments
         {{ grid }}
         <div class="gameContainer">
             <div id="div_cashBox">
-                Your Cash
+                <h5>Your Cash</h5>
+                <p id="p_cashText"></p>
             </div>
             <hr>
             <div id="div_bankBox">
-                Your bank
+                <h5>Your bank</h5>
+                <p id="p_bankText"></p>
             </div>
         </div>
         <div class="gameContainer">
@@ -52,7 +55,8 @@ Date      	By	Comments
             {% endblock %}
             <div id="currentTask">Awaiting development</div>
             <div id="gameLog">
-                Game log
+                <h5>Game log</h5>
+                <p id="p_logText"></p>
             </div>
         </div>
     </div>

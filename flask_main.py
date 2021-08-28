@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-08-28	WH	Added handling for Money, Bank and Bomb items being selected
 # 2021-08-28	WH	Added method to respond to the pushing of the NEXT-ROUND button
 # 2021-08-28	WH	Added function to generate the squence of squares
 # 2021-08-24	WH	Playing game draw-grid function now operates as inteded
@@ -72,7 +73,11 @@ class activeUsers(gameDB.Model):
     socketioSID = gameDB.Column(gameDB.String(100))
     userGameID = gameDB.Column(gameDB.Integer)
     userGrid = gameDB.Column(gameDB.String(9999))
-    isHost = gameDB.Column(gameDB.Boolean)
+    isHost = gameDB.Column(gameDB.Boolean, default=False)
+    userCash = gameDB.Column(gameDB.Integer, default=0)
+    userBank = gameDB.Column(gameDB.Integer, default=0)
+    hasShield = gameDB.Column(gameDB.Boolean, default=False)
+    hasMirror = gameDB.Column(gameDB.Boolean, default=False)
 
 
 #=========================================================#
@@ -471,7 +476,29 @@ def next_round():
 
     emit("new_square", square, room=gameIDString) #Send selected square to clients
 
-    ## HANDLE Money here
+    all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString).all()
+    for player in all_players:
+        playerGrid = player.userGrid.split(",")
+        item = playerGrid[int(square)]
+
+        #---------------#
+        #This is the location in which it is decided what happens with each type of file
+        if item[0] == 'M': #Handle money type items
+            amount = int(item[1:]) #Gets the value of the money item
+            player.userCash += amount
+            emit("cash_update", player.userCash, room=player.socketioSID)
+        elif item == "itmBank": #Saves money safely in the bank
+            player.userBank = player.userCash
+            player.userCash = 0
+            emit("cash_update", player.userCash, room=player.socketioSID)
+            emit("bank_update", player.userBank, room=player.socketioSID)
+        elif item == "itmBomb": #Wipe all money with bomb
+            player.userCash = 0
+            emit("cash_update", 0, room=player.socketioSID)
+        elif item == "itmShield": #Give the user shield
+            player.hasShield = True
+        elif item == "itmMirror": #Give the user mirror
+            player.hasMirror = True
 
     #Update values in database to newest
     gameObject.currentRound = currentRound
@@ -482,7 +509,7 @@ def next_round():
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M200,M200,M200,M200,M5000,M200,M200,itmShield,M200,M200,M200,M200,itmMirror,itmBomb,itmBomb,M200,M200,M200,itmBank,M200,M200,itmSwap,M200,M200,M200",isHost=True)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M200,M200,M200,M200,M5000,M200,M200,itmShield,M200,M200,M200,M200,itmMirror,itmBomb,itmBomb,M200,M200,M200,itmBank,M200,M200,itmSwap,M200,M200,M200",isHost=True,userCash=0,userBank=0,hasMirror=False,hasShield=False)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testGame)
