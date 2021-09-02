@@ -6,12 +6,14 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Aug 28 2021
+# Last Modified: Thu Sep 02 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-02	WH	Now handles Kill, Gift, Swap and Steal
+# 2021-09-02	WH	Added handling for special action declaration
 # 2021-08-28	WH	Added handling for Money, Bank and Bomb items being selected
 # 2021-08-28	WH	Added method to respond to the pushing of the NEXT-ROUND button
 # 2021-08-28	WH	Added function to generate the squence of squares
@@ -191,6 +193,7 @@ def drawGameplayGrid(xSize,gridSerial):
         "M1000" : "../static/img/M1000.png",
         "M500" : "../static/img/M500.png",
         "M200" : "../static/img/M200.png",
+        "itmKill" : "../static/img/kill.png",
         "itmSwap" : "../static/img/swap.png",
         "itmSteal" : "../static/img/steal.png",
         "itmGift" : "../static/img/gift.png",
@@ -409,6 +412,7 @@ def game():
     userID = request.cookies.get("SID")
     hostSID = activeGame.query.get(gameID).hostSID
     hostNick = activeUsers.query.get(hostSID).userNickname
+    myNick = activeUsers.query.get(userID).userNickname #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
 
     #Gets grid information from relevant database
     gridSerial = activeUsers.query.get(userID).userGrid
@@ -417,10 +421,22 @@ def game():
     
     usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
 
+    #-#
+    #Gets list of all users from database and builds the target selector dropdown
+    all_users = activeUsers.query.filter(activeUsers.userGameID==gameID).all()
+    dropdown = '<select class="popupDropdown" id="sel_target">'
+    for user in all_users:
+        if not user.userSID == int(userID): #Excludes you from the list as you can't act on yourself
+            nickname = user.userNickname
+            dropdown += f'<option value="{nickname}">{nickname}</option>'
+    dropdown += "</select>"
+    dropdown = Markup(dropdown)
+
+    #-#
     if isHost(userID,gameID):
-        return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick)
+        return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick, target_dropdown=dropdown, myNick=myNick)
     else:
-        return render_template("online_game.html", grid=usersGrid, hostNick=hostNick)
+        return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, target_dropdown=dropdown, myNick=myNick)
 
 #=========================================================#
 #^ Socketio Functions ^#
@@ -499,17 +515,63 @@ def next_round():
             player.hasShield = True
         elif item == "itmMirror": #Give the user mirror
             player.hasMirror = True
+        elif item == "itmKill": #Sends the client the signal that it can enable the declare button
+            emit('perpetrate_kill',room=player.socketioSID)
+        elif item == "itmSteal":
+            emit('perpetrate_steal',room=player.socketioSID)
+        elif item == "itmSwap":
+            emit('perpetrate_swap',room=player.socketioSID)
+        elif item == "itmGift":
+            emit('perpetrate_gift',room=player.socketioSID)
 
     #Update values in database to newest
     gameObject.currentRound = currentRound
     gameDB.session.commit()
 
+#---------------#
+#Handles when somone declares their item
+@socketio.on("action_declare")
+def action_declared(data):
+    requestSID = request.sid
+    target = data["target"]
+    action = data["action"]
+    perpetrator = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the perpetrator's information
+    gameID = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first().userGameID #Find game ID by querying based on sid
+    gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
+    
+    if target != "": #If the declaration includes the target
+        targetDBObj = activeUsers.query.filter(activeUsers.userNickname==target).first() #Gets a table object of the target
+
+        #Dictates what happens during each of the special items
+        if action == "kill":
+            targetDBObj.userCash = 0
+            logEntry = f"⚔ <b>{target}</b> was murder'd by <b>{perpetrator.userNickname}</b> ⚔"
+        elif action == "swap":
+            targetDBObj.userCash, perpetrator.userCash = perpetrator.userCash, targetDBObj.userCash
+            logEntry = f"🤝 <b>{perpetrator.userNickname}</b> swapped with <b>{target}</b> 🤝"
+        elif action == "steal":
+            perpetrator.userCash += targetDBObj.userCash
+            targetDBObj.userCash = 0
+            logEntry = f"💰 <b>{target}</b> was pillaged by <b>{perpetrator.userNickname}</b> 💰"
+        elif action == "gift":
+            targetDBObj.userCash += 1000
+            logEntry = f"🎁 <b>{target}</b> was gifted by <b>{perpetrator.userNickname}</b> 🎁"
+        
+        #Updates the cash boxes of both the perpetrator and victim
+        emit("cash_update", targetDBObj.userCash, room=targetDBObj.socketioSID)
+        emit("cash_update", perpetrator.userCash, room=perpetrator.socketioSID)
+        gameDB.session.commit()
+
+        #Updates the log
+        emit('log_update', logEntry, room=gameIDString)
+
+    emit('action_declare', {"target" : target, "action": action, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Send event to enforce popup
 
 #=========================================================#
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M200,M200,M200,M200,M5000,M200,M200,itmShield,M200,M200,M200,M200,itmMirror,itmBomb,itmBomb,M200,M200,M200,itmBank,M200,M200,itmSwap,M200,M200,M200",isHost=True,userCash=0,userBank=0,hasMirror=False,hasShield=False)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=0,userBank=0,hasMirror=False,hasShield=False)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testGame)

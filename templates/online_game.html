@@ -6,12 +6,15 @@ Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sat Aug 28 2021
+Last Modified: Thu Sep 02 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-09-02	WH	Added target selector popup
+2021-09-02	WH	Added action waiting popup
+2021-09-02	WH	Added declare button to Header
 2021-08-28	WH	Moved actual log information into sepearte p tag for ease of JS
 2021-08-28	WH	Added means to link with host settings file
 2021-08-24	WH	Added cash, bank and log boxes to game screen
@@ -23,8 +26,15 @@ Date      	By	Comments
 {% block head %}
 <link rel="stylesheet" href="../static/css/online_game.css">
 <link rel="stylesheet" href="../static/css/game_header.css">
+<link rel="stylesheet" href="../static/css/popup.css">
+<link href="https://fonts.googleapis.com/css2?family=Frijole&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet"> 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
 <script src="../static/javascript/online_game.js" defer></script>
+
+<script>
+    const MY_NICKNAME = "{{ myNick }}";
+</script>
 
 {% block headXtra %}
 {% endblock %}
@@ -34,8 +44,11 @@ Date      	By	Comments
 {% block body%}
     <div class="gameSubheader" id="div_gameHeader">
         <h1 class="gameHeaderTitle">{{ hostNick }}'s Pirate Game</h1>
-        {% block hostHeader %}
-        {% endblock %}
+        <div id="div_headerControls">
+            <input type="button" value="🖐 - Declare Action" id="ipt_declare" class="actionButton disabled" disabled>
+            {% block hostHeader %}
+            {% endblock %}
+        </div>
     </div>
     <div id="div_gameDataGroup">
         {{ grid }}
@@ -57,6 +70,34 @@ Date      	By	Comments
             <div id="gameLog">
                 <h5>Game log</h5>
                 <p id="p_logText"></p>
+            </div>
+        </div>
+    </div>
+    <div style="display:none;" class="popupHousing" id="div_waitingPopup">
+        <div class="popupbox actionPopUp">
+            <div class="popupHeader">
+                Raise your kutless, there be drama on deck!
+            </div>
+            <div class="popupBody">
+               <h3 id="h3_perpetrator_text">__perpetrator__</h3> is attempting to <h3 id="h3_action_emphasis_text">💰 steal from 💰</h3><h3 id="h3_target_text"></h3><div id="div_loadingdots"><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div></div> 
+            </div>
+            <div class="popupFooter">
+                Wait for your crewmates to pick their target
+            </div>
+        </div>
+    </div>
+    <div style="display:none;" class="popupHousing" id="div_targetPickerPopup">
+        <div class="popupbox actionPopUp">
+            <div class="popupHeader">
+                Take a shot of rum and ready yourself for mutany
+            </div>
+            <div class="popupBody">
+                Choose a target to...
+               <h3 id="h3_targetPickerAction">⚔ KILL ⚔</h3>
+               {{ target_dropdown }}
+            </div>
+            <div class="popupFooter">
+                <input type="button" value="Choose" class="popupButton" id="ipt_chooseTarget">
             </div>
         </div>
     </div>

@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Aug 28 2021
+ * Last Modified: Thu Sep 02 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By 	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-02	WH	   Added CSS for new controls housing DIV
  * 2021-08-28	WH	   Added title styling
  */
 
@@ -23,14 +24,23 @@
     min-height: max-content;
     margin-bottom: 1vh;
     position: relative;
+    text-align: center;
     line-height: 8vh;
  }
 
  .gameHeaderTitle
  {
-    display: inline-block;
     vertical-align: middle;
+    display: inline-block;
  }
 
+ #div_headerControls
+ {
+    position: absolute;
+    top: -50%;
+    transform: translate(0,50%);
+    display: inline-block;
+    right: 3%;
+ }
 
 

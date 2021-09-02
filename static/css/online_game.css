@@ -6,20 +6,22 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Aug 28 2021
+ * Last Modified: Thu Sep 02 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-02	WH	Added animation for some loading dots
+ * 2021-09-02	WH	Added code for page-specifc popup settings
  * 2021-08-28	WH	Added .completed class
  * 2021-08-28	WH	Added next-round button styling
  * 2021-08-28	WH	Added host-only next round button styling
  * 2021-08-24	WH	Added CSS for cash, bank and log boxes (outer container)
  * 2021-08-23	WH	Created file
  */
-
-  /*Grid information*/
+ /*//=========================================================//*/
+ /*^ Grid Settings ^*/
  .gridSquare
  {
      height: 10vh;
@@ -85,32 +87,119 @@
  }
 
  /*//=========================================================//*/
- /*^ Host only styles ^*/
- #ipt_NextRoundButton /*The button that will move to the next round*/
+ /*^ Game action buttons ^*/
+ .actionButton 
  {
-     border: none;
-     border-radius: 3px;
-     background-color: #ffd900;
-     transition: all 0.5s;
-     cursor: pointer;
-     font-size: 20px;
-     display: inline-block;
-     vertical-align: middle;
-     height: 4vh;
-     font-size: 2vh;
-     line-height: 4vh;
-     position: absolute;
-     transform: translate(0,-50%);
-     top: 50%;
-     right: 5%;
-     font-family: 'Rock Salt', cursive;
-     padding: 0 1vh;
-     color: crimson;
-
-     
+    transition: all 0.5s;
+    cursor: pointer;
+    font-size: 20px;
+    vertical-align: middle;
+    height: 4vh;
+    font-size: 2vh;
+    line-height: 4vh;
+    font-family: 'Rock Salt', cursive;
+    padding: 0 1vh;
+    border: none;
+    border-radius: 3px;
  }
 
- #ipt_NextRoundButton:hover
+ .actionButton.disabled
+ {
+     filter: blur(1px) grayscale(100%);
+     pointer-events: none;
+     opacity: (0.6);
+ }
+
+ .actionButton:hover
  {
      padding: 0 0.5vh;
  }
+
+ #ipt_declare
+ {
+     background-color: #DFDACD;
+     color: #161459;
+ }
+
+
+ /*//=========================================================//*/
+ /*^ Host only styles ^*/
+ #ipt_NextRoundButton /*The button that will move to the next round*/
+ {
+     background-color: #ffd900;
+     color: crimson;
+ }
+
+ /*//=========================================================//*/
+ /*^ Action popup ^*/
+ .popupHousing
+ {
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     background-color: rgba(128, 128, 128, 0.6);
+ }
+
+ .actionPopUp
+ {
+     opacity: 1;
+     width: 40%;
+     height: 40%;
+     top: 30%;
+     left: 30%;
+     font-size: 3vh;
+ }
+
+ #h3_action_emphasis_text
+ {
+     font-family: "Frijole", Arial;
+ }
+
+ /*//=========================================================//*/
+ /*^ Loading dots animation ^*/
+ #div_loadingdots
+ {
+     margin-top: 3%;
+ }
+
+ .loadingdot
+ {
+     height: 4vh;
+     width: 4vh;
+     border-radius: 50%;
+     display: inline-block;
+     animation: scaling 2.5s ease-in-out infinite;
+
+ }
+
+ @keyframes scaling
+ {
+     0%, 100% {
+         transform: scale(0.2);
+         background-color: #F9CE71;
+     }
+     50% {
+         transform: scale(0.7);
+         background-color: #F4AC1A;
+     }
+ }
+
+ .loadingdot:nth-child(0){
+     animation-delay: 0s;
+ }
+ .loadingdot:nth-child(1){
+    animation-delay: 0.2s;
+}
+.loadingdot:nth-child(2){
+    animation-delay: 0.4s;
+}
+.loadingdot:nth-child(3){
+    animation-delay: 0.6s;
+}
+.loadingdot:nth-child(4){
+    animation-delay: 0.8s;
+}
+.loadingdot:nth-child(5){
+    animation-delay: 1s;
+}

@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sat Aug 28 2021
+ * Last Modified: Thu Sep 02 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -21,6 +21,10 @@
  const cashBox = document.getElementById("p_cashText")
  const bankBox = document.getElementById("p_bankText")
  const logBox = document.getElementById("p_logText")
+ const declareButton = document.getElementById("ipt_declare")
+ const chooseButton = document.getElementById("ipt_chooseTarget")
+ const waitingForActionPopup =  document.getElementById("div_waitingPopup")
+ const targetPickerPopup = document.getElementById("div_targetPickerPopup")
 
  //=========================================================//
  //^ Variables ^//
@@ -30,6 +34,8 @@
  var recordedCash = 0;
  var bankTotal = 0;
  var recordedBank = 0; //Keeps track of the last value recorded on the page
+ var declareAction = ""; //The name of the action that is going to be declared
+ var targetSelector = false; //Tracks if the user is currently selecting a target
 
  //=========================================================//
  //^ OnLoad Function ^//
@@ -47,6 +53,19 @@
     socket.on('new_square', select_sqaure)
     socket.on('cash_update', newsum => {cashTotal = newsum})
     socket.on('bank_update', newsum => {bankTotal = newsum; recordedBank = 999}) //Change recorded bank variable to impossible value to force recording of bank value
+    socket.on('log_update', log_update)
+
+    socket.on('perpetrate_kill', perpetrate_kill);
+    socket.on('perpetrate_steal', perpetrate_steal);
+    socket.on('perpetrate_swap', perpetrate_swap);
+    socket.on('perpetrate_gift', perpetrate_gift);
+
+    socket.on('action_declare', action_popup);
+
+    /*---------------*/
+    //Adds event listeners for page events
+    declareButton.addEventListener("click", declare_action);
+    chooseButton.addEventListener("click", declare_target);
  }
 
  //=========================================================//
@@ -69,8 +88,10 @@
 
     previousSquare = square;
     setTimeout(update_money, 2000) //Delay here immitates the time that animation would be taking
+    setTimeout(function () {if (declareAction != "") {update_declare(false);}}, 2000)
  }
 
+ /*---------------*/
  //Updates values in cash and bank boxes
  function update_money()
  {
@@ -78,6 +99,132 @@
      if (bankTotal != recordedBank) {if (bankBox.innerHTML == "") {bankBox.innerHTML = bankTotal} else {bankBox.innerHTML = bankBox.innerHTML + `, ${bankTotal}`}}
      recordedBank = bankTotal
      recordedCash = cashTotal
+ }
+
+ /*---------------*/
+ //Updates the game log panel
+ function log_update(text)
+ {
+     text = text.replace(MY_NICKNAME,"YOU") //Replaces your name with 'YOU'
+     logBox.innerHTML += text + "<br>"; //Appends entry to LOG
+ }
+
+ /*---------------*/
+ //Update declaration button
+ function update_declare(state)
+ {
+     declareButton.disabled = state; //Disables button
+     //Add / Remove CSS class
+     if (state) {declareButton.classList.add("disabled")}
+     else {declareButton.classList.remove("disabled")}
+ }
+
+ /*---------------*/
+ //Sends a declaration to server that an event has been declared (called when declare button pressed)
+ function declare_action()
+ {
+     socket.emit('action_declare', {target : "", action : declareAction}); //Declares that an action has been called but doesn't have a target
+     targetSelector = true; //Target selector variable prevents other waiting pop-up from showing
+     target_picker(declareAction); //Shows target picker popup
+ }
+
+ /*---------------*/
+ //Sends target information to server (Called when Choose button on popup is clicked)
+ function declare_target()
+ {
+     var target = document.getElementById("sel_target").value; //Get the value from the target picker
+     socket.emit('action_declare', {target : target, action : declareAction}); //Send over another declaration event but including target
+     targetPickerPopup.style.display="none"; //Hide target picker popup again
+     targetSelector = false; //Disable other popup inhibiting
+     update_declare(true) //Update the declare button back to disabled state
+     declare_action = "";
+
+ }
+
+ //=========================================================//
+ //^ Defines popups ^//
+ //The popup showing the current happening of other users
+ function action_popup(data)
+ {
+     if (targetSelector == false) //Do not show popup who currently is picking the target
+     {
+         var target = data["target"];
+         var perpetrator = data["perpetrator"];
+         var action = data["action"];
+
+         //Get HTML elements from page
+         var actionText = document.getElementById("h3_action_emphasis_text");
+         var perpetratorText = document.getElementById("h3_perpetrator_text");
+         waitingForActionPopup.style.display = "block";
+
+        //Update the perpatrator text
+         perpetratorText.innerHTML = perpetrator
+
+         //Set the action that is shown
+         if (action == "kill") {actionText.innerHTML = "⚔ KILL ⚔"}
+         if (action == "steal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
+         if (action == "swap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
+         if (action == "gift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+
+         //Loading dots or target shown
+         var loadingDots = document.getElementById("div_loadingdots");
+         var targetText = document.getElementById("h3_target_text");
+         if (target != "") //If target has been decided
+         {
+             targetText.innerHTML = target; //Show who the target is
+             loadingDots.style.display = "none"; //Hide loading dots
+             update_money(); //Update all user's cash box in case they are the target
+             setTimeout(function () {waitingForActionPopup.style.display="none"}, 3000) //Close the popup after 3s
+         } else //Show loading circles
+         {
+            targetText.innerHTML = ""
+            loadingDots.style.display = "block";
+         }
+
+         
+     }
+ }
+
+ /*---------------*/
+ //The popup for the perpetrator to select a target
+ function target_picker(action)
+ {
+     var actionText = document.getElementById("h3_targetPickerAction")
+     if (action == "kill") {actionText.innerHTML = "⚔ KILL ⚔"}
+     if (action == "steal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
+     if (action == "swap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
+     if (action == "gift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+
+     targetPickerPopup.style.display="block" //Show the popup
+ }
+
+ //=========================================================//
+ //^ Defines what happens for different actions when you are the perpetrator ^//
+ //Determines what happens on kill
+ function perpetrate_kill()
+ {
+     declareAction = "kill";
+ }
+
+ /*---------------*/
+ //Detmines what happens when you get a steal
+ function perpetrate_steal()
+ {
+     declareAction = "steal";
+ }
+
+ /*---------------*/
+ //Detrmines what happens when you get a swap
+ function perpetrate_gift()
+ {
+     declareAction = "gift";
+ }
+
+ /*---------------*/
+ //Determines what happens when you get a swap
+ function perpetrate_swap()
+ {
+     declareAction = "swap";
  }
 
  //=========================================================//

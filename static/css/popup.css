@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Thu Aug 19 2021
+ * Last Modified: Thu Sep 02 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date          By    Comments
  * ----------    ---    ---------------------------------------------------------
+ * 2021-09-02	 WH	    Added dropdown CSS
  */
  
  .popupHeader
@@ -30,6 +31,12 @@
      margin-top: 10px;
  }
 
+ .popupFooter
+ {
+     position: absolute;
+     bottom: 4%;
+     width: 100%;
+ }
 
 
  .popupButton
@@ -51,6 +58,21 @@
  .popupButton:hover
  {
      font-size: 22px;
+ }
+
+ .popupDropdown
+ {
+     border: 2px solid #ffd900;
+     width:40%;
+     height: 40px;
+     font-size: 26px;
+     color: #2c270b;
+     background-color: #f0f0f0;
+     border-radius: 5px;
+     text-align: center;
+     font-family: "ZCOOL KuaiLe", sans-serif;
+     margin-top: 5%;
+
  }
 
  .popupbox
