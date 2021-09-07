@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Thu Sep 02 2021
+ * Last Modified: Tue Sep 07 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,10 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-02	WH	Added handling for log updates
+ * 2021-09-02	WH	Added target picker popup
+ * 2021-09-02	WH	Added handling for waiting for decision popups
+ * 2021-09-02	WH	Added handling for special item updates
  * 2021-08-28	WH	Added handling for cash and bank updates
  * 2021-08-28	WH	Added handling for new_square event
  */
@@ -75,7 +79,8 @@
  function select_sqaure(serialSquareNum)
  {
     var square = document.getElementById(`square${serialSquareNum}`);
-
+    var allSquares = document.querySelector("")
+    
     square.classList.add("selected"); //Lights up currently selected square
 
     //Greys-out passed squares
