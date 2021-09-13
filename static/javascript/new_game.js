@@ -4,8 +4,8 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Wed Aug 11 2021
- * Modified By: Will Hall
+ * Last Modified: Mon Sep 13 2021
+ * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
@@ -36,6 +36,7 @@ const M1000_slider = document.getElementById("1000_slider")
 const M500_slider = document.getElementById("500_slider")
 const M200_slider = document.getElementById("200_slider")
 const start_game_button = document.getElementById("start_game_button")
+const nickname_input = document.getElementById("name_inputbox")
 
 /*=========================================================*/
 function onload() {

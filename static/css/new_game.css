@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Aug 09 2021
+ * Last Modified: Mon Sep 13 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -128,4 +128,12 @@ img {
   
   .switch:before {
     border-radius: 50%;
+  }
+
+  /* ------------------- Input box css ------------------- */
+
+  input[type=text] {
+    border: 0.5px dotted black;
+    background-color: #f1f0f0;
+    width: 5vh;
   }
