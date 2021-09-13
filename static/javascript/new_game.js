@@ -43,8 +43,29 @@ function onload() {
     //Adds OnClick Listener
     custom_game_mode_button.addEventListener("change",disable)
     start_game_button.addEventListener("click",return_settings)
+    nickname_input.addEventListener('input', () => {check_data(); gameIDInput.classList.remove("inputError")});
 }
 
+/*=========================================================*/
+// Checks data in the nickname box
+{
+    /*---------------*/
+    //Get data from forms
+    var nicknameText = nicknameInput.value;
+
+    /*---------------*/
+    //Unlock button if data is accepted
+    if (check_nickname(nicknameText))
+    {
+        submitButton.classList.remove("disallowed")
+        submitButton.disabled = false;
+    }
+    else
+    {
+        submitButton.classList.add("disallowed")
+        submitButton.disabled = true;
+    }
+}
 /*=========================================================*/
 //Disables all sliders and switches if custom gamemode switch is toggled off
 function disable() {
