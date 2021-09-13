@@ -36,7 +36,7 @@ const M1000_slider = document.getElementById("1000_slider")
 const M500_slider = document.getElementById("500_slider")
 const M200_slider = document.getElementById("200_slider")
 const start_game_button = document.getElementById("start_game_button")
-const nicknameinput = document.getElementById("name_inputbox")
+const nicknameinput = document.getElementById("ipt_nickname")
 
 /*=========================================================*/
 function onload() {
@@ -52,7 +52,7 @@ function check_data()
 {
     /*---------------*/
     //Get data from forms
-    var nicknameText = nicknameInput.value;
+    var nicknameText = nicknameinput.value;
 
     /*---------------*/
     //Unlock button if data is accepted
