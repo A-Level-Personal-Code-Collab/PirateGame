@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Sep 02 2021
-# Modified By: Will Hall
+# Last Modified: Mon Sep 13 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -316,6 +316,8 @@ def new_game():
         print(sliderData)
         itemData = gameData[1]
         print(itemData)
+        nickname = request.form.get("nickname")
+        print(nickname)
         #Generate random ID
         gameID = ""
         for x in range(8):
@@ -331,7 +333,7 @@ def new_game():
             userSID = random.randint(0,999999)
 
         newGame = activeGame(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
-        newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname="UNSET",isHost=True)
+        newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname=nickname,isHost=True)
 
         gameDB.session.add(newGame)
         gameDB.session.add(newUser)

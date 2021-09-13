@@ -105,17 +105,18 @@ function disable() {
 function return_settings() {
     var grid_sliders = {GRID_X:Number(x_slider.value), GRID_Y:Number(y_slider.value)}
     var item_settings = {M5000:Number(M5000_slider.value), M1000:Number(M1000_slider.value), M500:Number(M500_slider.value), M200:Number(M200_slider.value), itmShield:Number(shield_slider.value), itmKill:Number(kill_slider.value), itmSteal:Number(steal_slider.value), itmMirror:Number(mirror_slider.value), itmBomb:Number(bomb_slider.value), itmBank:Number(bank_slider.value), itmSwap:Number(swap_slider.value), itmGift:Number(gift_slider.value)}
+    var nickname = nicknameinput.value
     var grid_sliders_string = JSON.stringify(grid_sliders)
     var item_settings_string = JSON.stringify(item_settings)
     var game_data = (grid_sliders_string + "|" + item_settings_string)
     console.log(game_data)
-    postdata(game_data)
+    postdata(game_data,nickname)
 }
 
 /*=========================================================*/
 //Posting data to server
 
-function postdata(game_data){
+function postdata(game_data,nickname){
     var xhr = new XMLHttpRequest()
     var thisURL = window.location.href
     xhr.open("POST",thisURL,true)
@@ -125,7 +126,7 @@ function postdata(game_data){
         }
     }
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    xhr.send(`game_data=${game_data}`)
+    xhr.send(`game_data=${game_data}&nickname=${nickname}`)
 
 }
 
