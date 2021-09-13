@@ -137,3 +137,15 @@ img {
     background-color: #f1f0f0;
     width: 5vh;
   }
+
+  .inputError
+{
+    background-color: #C7536A;
+    border-radius: 7px;
+}
+
+#start_game_button.disallowed
+{
+    background-color: lightgrey;
+    cursor: not-allowed;
+}

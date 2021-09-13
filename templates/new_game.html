@@ -21,6 +21,7 @@ Date      	By	Comments
 {% block head %}
     <link rel="stylesheet" href="../static/css/new_game.css">
     <script src="../static/javascript/new_game.js" defer></script>
+    <script src="../static/javascript/verification_routines.js"></script> <!--Load nickname verification routine from file-->
 {% endblock %}
 
 {% block body %} 
@@ -68,7 +69,7 @@ Date      	By	Comments
                     <tr>
                         <td>Nickname</td>
                         <td><span class="info_circle" title="Allows letters only. Some nicknames will be rejected due to explicity!">&#9432</span></td>
-                        <td><input type="text" id="name_inputbox"></td>
+                        <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}"</td>
                     </tr>
                 </table>
             </div>
@@ -148,8 +149,8 @@ Date      	By	Comments
                     </table>
                 </div>
             </div>
-            <div> <!-- Play button div -->
-                <button id="start_game_button" type="submit">Start Game</button> <!-- use this id in css -->
+            <div id="submit_button"> <!-- Play button div -->
+                <button id="start_game_button" type="submit" disabled class="game_button disallowed">Start Game</button> <!-- use this id in css -->
             </div>
 
         </div> <!-- Disabled div -->

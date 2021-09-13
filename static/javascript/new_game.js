@@ -36,18 +36,19 @@ const M1000_slider = document.getElementById("1000_slider")
 const M500_slider = document.getElementById("500_slider")
 const M200_slider = document.getElementById("200_slider")
 const start_game_button = document.getElementById("start_game_button")
-const nickname_input = document.getElementById("name_inputbox")
+const nicknameinput = document.getElementById("name_inputbox")
 
 /*=========================================================*/
 function onload() {
     //Adds OnClick Listener
     custom_game_mode_button.addEventListener("change",disable)
     start_game_button.addEventListener("click",return_settings)
-    nickname_input.addEventListener('input', () => {check_data(); gameIDInput.classList.remove("inputError")});
+    nicknameinput.addEventListener('input', () => {check_data(); nicknameinput.classList.remove("inputError")});
 }
 
 /*=========================================================*/
 // Checks data in the nickname box
+function check_data()
 {
     /*---------------*/
     //Get data from forms
@@ -57,13 +58,13 @@ function onload() {
     //Unlock button if data is accepted
     if (check_nickname(nicknameText))
     {
-        submitButton.classList.remove("disallowed")
-        submitButton.disabled = false;
+        start_game_button.classList.remove("disallowed")
+        start_game_button.disabled = false;
     }
     else
     {
-        submitButton.classList.add("disallowed")
-        submitButton.disabled = true;
+        start_game_button.classList.add("disallowed")
+        start_game_button.disabled = true;
     }
 }
 /*=========================================================*/
