@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Sep 13 2021
+Last Modified: Wed Sep 15 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -79,16 +79,12 @@ Date      	By	Comments
                 <p>Choose grid size...</p>
                 <br>
                 <div class="slider_container">
-                    <label for="x_slider">X coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider disablable" id="x_slider" oninput="this.nextElementSibling.value = this.value" disabled>
-                    <output>6</output>
-                    <br><br>
-                    <label for="y_slider">Y coordinates</label>
-                    <input type="range" min="4" max="10" value="6" class="slider disablable" id="y_slider" oninput="this.nextElementSibling.value = this.value" disabled>
+                    <label for="grid_slider">Grid size</label>
+                    <input type="range" min="4" max="10" value="6" class="slider disablable" id="grid_slider" oninput="this.nextElementSibling.value = this.value" disabled>
                     <output>6</output>
                 </div>
                 <br><br>
-                <p>Choose money types...</p>
+                <p>Quantity of money...</p>
                 <br>
                 <div class="slider_container">
                     <label for="5000_slider">5000s</label>
@@ -111,8 +107,8 @@ Date      	By	Comments
             <!-- Secret Mode --------- Add desciption to secret mode... -->
             <!-- Item sliders -->
             <div class="row" id="div_itemSliders">
-                <p>Choose the amount of each item...</p>
-                <div class="slider_container">
+                <p>Quantity of each item...</p>
+                <div class="slider_container" id="item_sliders">
                     <table>
                         <tr>
                             <th><img src="../static/img/steal.png" alt="steal"></th>

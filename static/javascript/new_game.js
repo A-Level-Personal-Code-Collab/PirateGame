@@ -4,7 +4,7 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Mon Sep 13 2021
+ * Last Modified: Wed Sep 15 2021
  * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Adam O'Neill
@@ -21,8 +21,7 @@
 const disablables = document.querySelectorAll(".disablable")
 const custom_game_mode_button = document.getElementById("custom_game_mode_button")
 const secretmode_tick = document.getElementById("secretMode_tick")
-const x_slider = document.getElementById("x_slider")
-const y_slider = document.getElementById("y_slider")
+const grid_slider = document.getElementById("grid_slider")
 const steal_slider = document.getElementById("steal_slider")
 const kill_slider = document.getElementById("kill_slider")
 const gift_slider = document.getElementById("gift_slider")
@@ -78,8 +77,7 @@ function disable() {
         disablables.forEach(i => {i.classList.add("disablable"); i.disabled = true;})
         // Resets the switches to their defult positions
         secretmode_tick.checked=false
-        x_slider.value = 6
-        y_slider.value = 6
+        grid_slider.value = 6
         steal_slider.value = 1
         kill_slider.value = 1
         gift_slider.value = 1
@@ -103,7 +101,7 @@ function disable() {
 // Collect data from page
 
 function return_settings() {
-    var grid_sliders = {GRID_X:Number(x_slider.value), GRID_Y:Number(y_slider.value)}
+    var grid_sliders = {GRID_X:Number(grid_slider.value), GRID_Y:Number(grid_slider.value)}
     var item_settings = {M5000:Number(M5000_slider.value), M1000:Number(M1000_slider.value), M500:Number(M500_slider.value), M200:Number(M200_slider.value), itmShield:Number(shield_slider.value), itmKill:Number(kill_slider.value), itmSteal:Number(steal_slider.value), itmMirror:Number(mirror_slider.value), itmBomb:Number(bomb_slider.value), itmBank:Number(bank_slider.value), itmSwap:Number(swap_slider.value), itmGift:Number(gift_slider.value)}
     var nickname = nicknameinput.value
     var grid_sliders_string = JSON.stringify(grid_sliders)
