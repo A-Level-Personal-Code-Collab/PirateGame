@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Tue Sep 07 2021
+ * Last Modified: Fri Sep 17 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-17	WH	item_available event replaces perpetrate_kill and perpetrate_steel etc. events
+ * 2021-09-17	WH	Changed item names to match the python naming and their names in the dtabase (E.g) kill is now itmKill
  * 2021-09-02	WH	Added handling for log updates
  * 2021-09-02	WH	Added target picker popup
  * 2021-09-02	WH	Added handling for waiting for decision popups
@@ -59,10 +61,7 @@
     socket.on('bank_update', newsum => {bankTotal = newsum; recordedBank = 999}) //Change recorded bank variable to impossible value to force recording of bank value
     socket.on('log_update', log_update)
 
-    socket.on('perpetrate_kill', perpetrate_kill);
-    socket.on('perpetrate_steal', perpetrate_steal);
-    socket.on('perpetrate_swap', perpetrate_swap);
-    socket.on('perpetrate_gift', perpetrate_gift);
+    socket.on('itm_available', item_available);
 
     socket.on('action_declare', action_popup);
 
@@ -79,7 +78,7 @@
  function select_sqaure(serialSquareNum)
  {
     var square = document.getElementById(`square${serialSquareNum}`);
-    var allSquares = document.querySelector("")
+    //var allSquares = document.querySelector("")
     
     square.classList.add("selected"); //Lights up currently selected square
 
@@ -166,10 +165,10 @@
          perpetratorText.innerHTML = perpetrator
 
          //Set the action that is shown
-         if (action == "kill") {actionText.innerHTML = "⚔ KILL ⚔"}
-         if (action == "steal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
-         if (action == "swap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
-         if (action == "gift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+         if (action == "itmKill") {actionText.innerHTML = "⚔ KILL ⚔"}
+         if (action == "itmSteal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
+         if (action == "itmSwap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
+         if (action == "itmGift") {actionText.innerHTML = "🎁 GIFT 🎁"}
 
          //Loading dots or target shown
          var loadingDots = document.getElementById("div_loadingdots");
@@ -195,10 +194,10 @@
  function target_picker(action)
  {
      var actionText = document.getElementById("h3_targetPickerAction")
-     if (action == "kill") {actionText.innerHTML = "⚔ KILL ⚔"}
-     if (action == "steal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
-     if (action == "swap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
-     if (action == "gift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+     if (action == "itmKill") {actionText.innerHTML = "⚔ KILL ⚔"}
+     if (action == "itmSteal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
+     if (action == "itmSwap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
+     if (action == "itmGift") {actionText.innerHTML = "🎁 GIFT 🎁"}
 
      targetPickerPopup.style.display="block" //Show the popup
  }
@@ -206,30 +205,10 @@
  //=========================================================//
  //^ Defines what happens for different actions when you are the perpetrator ^//
  //Determines what happens on kill
- function perpetrate_kill()
+ function item_available(data)
  {
-     declareAction = "kill";
- }
 
- /*---------------*/
- //Detmines what happens when you get a steal
- function perpetrate_steal()
- {
-     declareAction = "steal";
- }
-
- /*---------------*/
- //Detrmines what happens when you get a swap
- function perpetrate_gift()
- {
-     declareAction = "gift";
- }
-
- /*---------------*/
- //Determines what happens when you get a swap
- function perpetrate_swap()
- {
-     declareAction = "swap";
+     declareAction = data["type"];
  }
 
  //=========================================================//

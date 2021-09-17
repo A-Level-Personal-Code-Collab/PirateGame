@@ -6,12 +6,15 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Sep 02 2021
+# Last Modified: Fri Sep 17 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-17	WH	tandardised refrence to item names so, for example, kill is refrenced as itmKill everywhere
+# 2021-09-17	WH	Changed perpetrate_<action> events to notify events as this makes more sense
+# 2021-09-17	WH	Major overhaul of action definitions as they are now in data classes 
 # 2021-09-02	WH	Now handles Kill, Gift, Swap and Steal
 # 2021-09-02	WH	Added handling for special action declaration
 # 2021-08-28	WH	Added handling for Money, Bank and Bomb items being selected
@@ -77,9 +80,157 @@ class activeUsers(gameDB.Model):
     userGrid = gameDB.Column(gameDB.String(9999))
     isHost = gameDB.Column(gameDB.Boolean, default=False)
     userCash = gameDB.Column(gameDB.Integer, default=0)
+    userCashPending = gameDB.Column(gameDB.Integer, default=-1)
     userBank = gameDB.Column(gameDB.Integer, default=0)
+    userBankPending = gameDB.Column(gameDB.Integer, default=-1)
     hasShield = gameDB.Column(gameDB.Boolean, default=False)
     hasMirror = gameDB.Column(gameDB.Boolean, default=False)
+
+
+#=========================================================#
+#^ Data classes to define the action's model ^#
+class actionItem():
+    '''The base class for any action obejct that is created'''
+    ACTION_EMOJI = "❔"
+    ACTION_IDENTIFIER = "itmUNDEF"
+    LOG_MESSAGE = "{emoji} {perpetrator} did undefined action on {victim} {emoji}"
+    CAN_MIRROR = True
+    CAN_SHIELD = True
+
+    def get_log(self, perpetrator, victim):
+        return self.LOG_MESSAGE.format(emoji=self.ACTION_EMOJI,perpetrator=perpetrator,victim=victim)
+
+    def identify(self,test):
+        if test == self.ACTION_IDENTIFIER:
+            return True
+        else:
+            return False
+
+    def get_itemNotify(self):
+        return "itm_available", {"type": self.ACTION_IDENTIFIER}
+
+#=========================================================#
+#^ Action Data classes ^#
+class itmKill(actionItem):
+    '''Class for kill item (victim's money is set to 0)'''
+    IMAGE_LOCATION = "../static/img/kill.png"
+    ACTION_EMOJI = "⚔"
+    ACTION_IDENTIFIER = "itmKill"
+    LOG_MESSAGE = "{emoji} {perpetrator} killed {victim} {emoji}"
+    CAN_MIRROR = True
+    CAN_SHIELD = True
+    TARGETTED = True
+
+    def calculate_money(self, vCash, pCash, vBank, pBank):
+        return 0, pCash, vBank, pBank
+
+#---------------#
+class itmSteal(actionItem):
+    '''Class for steal item (victim's money is given to perpetrator)'''
+    IMAGE_LOCATION = "../static/img/steal.png"
+    ACTION_EMOJI = "💰"
+    ACTION_IDENTIFIER = "itmSteal"
+    LOG_MESSAGE = "{emoji} {perpetrator} has stolen from {victim} {emoji}"
+    CAN_MIRROR = True
+    CAN_SHIELD = True
+    TARGETTED = True
+
+    def calculate_money(self, vCash, pCash, vBank, pBank):
+        return 0, pCash+vCash, vBank, pBank
+
+#---------------#
+class itmGift(actionItem):
+    '''Class for gift item (victim recieves 1000M from nowhere)'''
+    IMAGE_LOCATION = "../static/img/gift.png"
+    ACTION_EMOJI = "🎁"
+    ACTION_IDENTIFIER = "itmGift"
+    LOG_MESSAGE = "{emoji} {perpetrator} gifted {victim} {emoji}"
+    CAN_MIRROR = True
+    CAN_SHIELD = True
+    TARGETTED = True
+
+    def calculate_money(self, vCash, pCash, vBank, pBank):
+        return vCash+1000, pCash, vBank, pBank
+
+#---------------#
+class itmSwap(actionItem):
+    '''Class for swap item (perpetrator and victim swap cash)'''
+    IMAGE_LOCATION = "../static/img/swap.png"
+    ACTION_EMOJI = "🤝"
+    ACTION_IDENTIFIER = "itmSwap"
+    LOG_MESSAGE = "{emoji} {perpetrator} has swapped with {victim} {emoji}"
+    CAN_MIRROR = False
+    CAN_SHIELD = True
+    TARGETTED = True
+
+    def calculate_money(self, vCash, pCash, vBank, pBank):
+        return pCash, vCash, vBank, pBank
+
+#---------------#
+class itmBomb(actionItem):
+    '''Class for bomb item'''
+    IMAGE_LOCATION = "../static/img/bomb.png"
+    ACTION_EMOJI = "💣"
+    ACTION_IDENTIFIER = "itmBomb"
+    LOG_MESSAGE = ""
+    CAN_MIRROR = False
+    CAN_SHIELD = False
+    TARGETTED = False
+
+    def calculate_money(self, vCash, vBank):
+        return 0, vBank
+
+#---------------#
+class itmBank(actionItem):
+    '''Class for bank item'''
+    IMAGE_LOCATION = "../static/img/bank.png"
+    ACTION_EMOJI = "🏦"
+    ACTION_IDENTIFIER = "itmBank"
+    LOG_MESSAGE = ""
+    CAN_MIRROR = False
+    CAN_SHIELD = False
+    TARGETTED = False
+
+    def calculate_money(self, vCash, vBank):
+        return 0, vBank+vCash
+
+#---------------#
+class itmMirror:
+    '''Class for mirror modifier item'''
+    IMAGE_LOCATION = "../static/img/mirror.png"
+    ACTION_EMOJI = "🪞"
+    ACTION_IDENTIFIER = "itmMirror"
+    LOG_MESSAGE = "{emoji} {victim} mirrored that {emoji}"
+
+#---------------#
+class itmShield:
+    '''Class for shield modifier item'''
+    IMAGE_LOCATION = "../static/img/shield.png"
+    ACTION_EMOJI = "🛡"
+    ACTION_IDENTIFIER = "itmShield"
+    LOG_MESSAGE = "{emoji} {victim} blocked that {emoji}"
+
+#=========================================================#
+#^ Money Data Class ^#
+class money:
+    '''Class that defines the behavior of money items'''
+    IMAGE_LOCATION = "../static/img/M{denom}.png"
+    IDENTIFIER = "M{denom}"
+    DENOMINATION = 200
+
+    def __init__(self, denomination):
+        self.DENOMINATION = denomination
+        self.IDENTIFIER = self.IDENTIFIER.format(denom=str(denomination))
+        self.IMAGE_LOCATION = self.IMAGE_LOCATION.format(denom=str(denomination))
+
+    def identify(self,value):
+        if value[0] == "M":
+            return True
+        else:
+            return False
+
+    def cash_update(self,old_cash):
+        return old_cash + self.DENOMINATION
 
 
 #=========================================================#
@@ -189,18 +340,18 @@ def drawGameplayGrid(xSize,gridSerial):
     gridSquareHTMLTemplate = Template('<td id="$id" class="gridSquare">$inner</td>') #Creates template strings for the individual HTML td elements
     gridImageTemplate = Template('<img class="gridItems" src="$url"/>') #Template string for the images that go inside the td elements
     IMAGE_URLS = { #Defines the locations of the images ascoiated with the following items
-        "M5000" : "../static/img/M5000.png",
-        "M1000" : "../static/img/M1000.png",
-        "M500" : "../static/img/M500.png",
-        "M200" : "../static/img/M200.png",
-        "itmKill" : "../static/img/kill.png",
-        "itmSwap" : "../static/img/swap.png",
-        "itmSteal" : "../static/img/steal.png",
-        "itmGift" : "../static/img/gift.png",
-        "itmBank" : "../static/img/bank.png",
-        "itmBomb" : "../static/img/bomb.png",
-        "itmShield" : "../static/img/shield.png",
-        "itmMirror" : "../static/img/mirror.png"
+        "M5000" : money(5000).IMAGE_LOCATION,
+        "M1000" : money(1000).IMAGE_LOCATION,
+        "M500" : money(500).IMAGE_LOCATION,
+        "M200" : money(200).IMAGE_LOCATION,
+        "itmKill" : itmKill.IMAGE_LOCATION,
+        "itmSwap" : itmSwap.IMAGE_LOCATION,
+        "itmSteal" : itmSteal.IMAGE_LOCATION,
+        "itmGift" : itmGift.IMAGE_LOCATION,
+        "itmBank" : itmBank.IMAGE_LOCATION,
+        "itmBomb" : itmBomb.IMAGE_LOCATION,
+        "itmShield" : itmShield.IMAGE_LOCATION,
+        "itmMirror" : itmMirror.IMAGE_LOCATION
     }
 
     #Calculated the y-size as only the X was provided
@@ -499,30 +650,23 @@ def next_round():
 
         #---------------#
         #This is the location in which it is decided what happens with each type of file
-        if item[0] == 'M': #Handle money type items
-            amount = int(item[1:]) #Gets the value of the money item
-            player.userCash += amount
+        if money(200).identify(item): #Handle money type items
+            denomination = item[1:]
+            note = money(int(denomination))
+            player.userCash = note.cash_update(player.userCash)
             emit("cash_update", player.userCash, room=player.socketioSID)
-        elif item == "itmBank": #Saves money safely in the bank
-            player.userBank = player.userCash
-            player.userCash = 0
-            emit("cash_update", player.userCash, room=player.socketioSID)
-            emit("bank_update", player.userBank, room=player.socketioSID)
-        elif item == "itmBomb": #Wipe all money with bomb
-            player.userCash = 0
-            emit("cash_update", 0, room=player.socketioSID)
-        elif item == "itmShield": #Give the user shield
-            player.hasShield = True
-        elif item == "itmMirror": #Give the user mirror
-            player.hasMirror = True
-        elif item == "itmKill": #Sends the client the signal that it can enable the declare button
-            emit('perpetrate_kill',room=player.socketioSID)
-        elif item == "itmSteal":
-            emit('perpetrate_steal',room=player.socketioSID)
-        elif item == "itmSwap":
-            emit('perpetrate_swap',room=player.socketioSID)
-        elif item == "itmGift":
-            emit('perpetrate_gift',room=player.socketioSID)
+
+        #Iterate through all action classes and process them
+        for action in actionItem.__subclasses__():
+            if action().identify(item):
+                instance = action()
+                if not action.TARGETTED:
+                    player.userCash, player.userBank= instance.calculate_money(player.userCash, player.userBank)
+                    emit("cash_update", player.userCash, room=player.socketioSID)
+                    emit("bank_update", player.userBank, room=player.socketioSID)
+                else:
+                    event, data = instance.get_itemNotify()
+                    emit(event, data,room=player.socketioSID)
 
     #Update values in database to newest
     gameObject.currentRound = currentRound
@@ -533,39 +677,54 @@ def next_round():
 @socketio.on("action_declare")
 def action_declared(data):
     requestSID = request.sid
-    target = data["target"]
-    action = data["action"]
+    targetNickname = data["target"]
+    actionIdentifier = data["action"]
     perpetrator = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the perpetrator's information
-    gameID = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first().userGameID #Find game ID by querying based on sid
+    gameID = perpetrator.userGameID #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     
-    if target != "": #If the declaration includes the target
-        targetDBObj = activeUsers.query.filter(activeUsers.userNickname==target).first() #Gets a table object of the target
+    if targetNickname != "": #If the declaration includes the target
+        target = activeUsers.query.filter(activeUsers.userNickname==targetNickname).first() #Gets a table object of the target
 
-        #Dictates what happens during each of the special items
-        if action == "kill":
-            targetDBObj.userCash = 0
-            logEntry = f"⚔ <b>{target}</b> was murder'd by <b>{perpetrator.userNickname}</b> ⚔"
-        elif action == "swap":
-            targetDBObj.userCash, perpetrator.userCash = perpetrator.userCash, targetDBObj.userCash
-            logEntry = f"🤝 <b>{perpetrator.userNickname}</b> swapped with <b>{target}</b> 🤝"
-        elif action == "steal":
-            perpetrator.userCash += targetDBObj.userCash
-            targetDBObj.userCash = 0
-            logEntry = f"💰 <b>{target}</b> was pillaged by <b>{perpetrator.userNickname}</b> 💰"
-        elif action == "gift":
-            targetDBObj.userCash += 1000
-            logEntry = f"🎁 <b>{target}</b> was gifted by <b>{perpetrator.userNickname}</b> 🎁"
+        for actionType in actionItem.__subclasses__():
+            if actionType().identify(actionIdentifier):
+                instance = actionType()
+                target.userCashPending, perpetrator.userCashPending, target.userBankPending, perpetrator.userBankPending = instance.calculate_money(target.userCash, perpetrator.userCash, target.userBank, perpetrator.userBank)
+                logEntry = instance.get_log(targetNickname,perpetrator.userNickname)
         
-        #Updates the cash boxes of both the perpetrator and victim
-        emit("cash_update", targetDBObj.userCash, room=targetDBObj.socketioSID)
-        emit("cash_update", perpetrator.userCash, room=perpetrator.socketioSID)
         gameDB.session.commit()
 
         #Updates the log
         emit('log_update', logEntry, room=gameIDString)
 
-    emit('action_declare', {"target" : target, "action": action, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Send event to enforce popup
+    emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Send event to enforce popup
+
+#---------------#
+#Handles commit event
+@socketio.on("cash_commit")
+def cash_commit():
+    requestSID = request.sid
+    gameID = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first().userGameID #Find game ID by querying based on sid
+
+    allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID, activeUsers.userCashPending != -1).all()
+    for user in allUsers:
+        user.userCash = user.userCashPending
+        user.userBank = user.userBankPending
+        user.userCashPending = -1
+        user.userBankPending = -1
+        #Updates the cash boxes of both the perpetrator and victim
+        emit("cash_update", user.userCash, room=user.socketioSID)
+        emit("bank_update", user.userBank, room=user.socketioSID)
+
+    gameDB.session.commit()
+
+#---------------#
+@socketio.on("use_mirror")
+def use_mirror():
+    requestSID = request.sid
+    victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the victim's information
+    if victim.hasMirror:
+        pass
 
 #=========================================================#
 #^ Main app execution ^#
