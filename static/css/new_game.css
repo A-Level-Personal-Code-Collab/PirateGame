@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Sep 13 2021
+ * Last Modified: Wed Sep 15 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -47,6 +47,10 @@ img {
 .info_circle {
   font-weight: bold;
   cursor: pointer;
+}
+
+#item_sliders {
+  left: 25%; /* % is used because it is in a contence */
 }
 
 

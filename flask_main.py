@@ -467,6 +467,8 @@ def new_game():
         print(sliderData)
         itemData = gameData[1]
         print(itemData)
+        nickname = request.form.get("nickname")
+        print(nickname)
         #Generate random ID
         gameID = ""
         for x in range(8):
@@ -482,7 +484,7 @@ def new_game():
             userSID = random.randint(0,999999)
 
         newGame = activeGame(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
-        newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname="UNSET",isHost=True)
+        newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname=nickname,isHost=True)
 
         gameDB.session.add(newGame)
         gameDB.session.add(newUser)
