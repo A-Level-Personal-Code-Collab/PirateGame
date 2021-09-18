@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Fri Sep 17 2021
+ * Last Modified: Sat Sep 18 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -175,9 +175,13 @@
          var targetText = document.getElementById("h3_target_text");
          if (target != "") //If target has been decided
          {
-             targetText.innerHTML = target; //Show who the target is
+             if (target.toLowerCase() == MY_NICKNAME.toLowerCase()){
+                 targetText.innerHTML = "YOU"
+                 socket.emit("retaliation_declare", {type: "none"})
+             }else {targetText.innerHTML = target;} //Show who the target is
+             
              loadingDots.style.display = "none"; //Hide loading dots
-             update_money(); //Update all user's cash box in case they are the target
+             setTimeout(function () {update_money();},100); //Update all user's cash box in case they are the target
              setTimeout(function () {waitingForActionPopup.style.display="none"}, 3000) //Close the popup after 3s
          } else //Show loading circles
          {

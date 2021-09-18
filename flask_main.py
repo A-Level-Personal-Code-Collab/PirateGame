@@ -6,13 +6,15 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Sep 17 2021
+# Last Modified: Sat Sep 18 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
-# 2021-09-17	WH	tandardised refrence to item names so, for example, kill is refrenced as itmKill everywhere
+# 2021-09-18	WH	Added equation parser script
+# 2021-09-18	WH	Dataclasses now contain an expression that is parsed to calculale how each action effects all the cash containers
+# 2021-09-17	WH	standardised refrence to item names so, for example, kill is refrenced as itmKill everywhere
 # 2021-09-17	WH	Changed perpetrate_<action> events to notify events as this makes more sense
 # 2021-09-17	WH	Major overhaul of action definitions as they are now in data classes 
 # 2021-09-02	WH	Now handles Kill, Gift, Swap and Steal
@@ -35,6 +37,7 @@
 #---------------------------------------------------------------------#
 from re import sub
 import re
+from weakref import ProxyTypes
 from flask import Flask, render_template, Markup, send_file, request
 from flask_socketio import SocketIO, join_room, rooms, send, emit
 from flask.helpers import url_for
@@ -56,7 +59,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 gameDB = SQLAlchemy(app)
 
 #=========================================================#
-#^ Database table models ^#in
+#^ Database table models ^#
 #(these are required by SQL alchemy to interact with database so the variable names and info must correspond with your database)
 #---------------#
 #The table that stores a log of all currently active games
@@ -80,9 +83,8 @@ class activeUsers(gameDB.Model):
     userGrid = gameDB.Column(gameDB.String(9999))
     isHost = gameDB.Column(gameDB.Boolean, default=False)
     userCash = gameDB.Column(gameDB.Integer, default=0)
-    userCashPending = gameDB.Column(gameDB.Integer, default=-1)
+    userPendingExpression = gameDB.Column(gameDB.String(200), default="")
     userBank = gameDB.Column(gameDB.Integer, default=0)
-    userBankPending = gameDB.Column(gameDB.Integer, default=-1)
     hasShield = gameDB.Column(gameDB.Boolean, default=False)
     hasMirror = gameDB.Column(gameDB.Boolean, default=False)
 
@@ -93,11 +95,12 @@ class actionItem():
     '''The base class for any action obejct that is created'''
     ACTION_EMOJI = "❔"
     ACTION_IDENTIFIER = "itmUNDEF"
+    MATHS_EXPRESSION= "vCash=vCash:vBank=vBank|pCash=pCash:pBank=pBank"
     LOG_MESSAGE = "{emoji} {perpetrator} did undefined action on {victim} {emoji}"
     CAN_MIRROR = True
     CAN_SHIELD = True
 
-    def get_log(self, perpetrator, victim):
+    def get_log(self, victim, perpetrator):
         return self.LOG_MESSAGE.format(emoji=self.ACTION_EMOJI,perpetrator=perpetrator,victim=victim)
 
     def identify(self,test):
@@ -109,20 +112,42 @@ class actionItem():
     def get_itemNotify(self):
         return "itm_available", {"type": self.ACTION_IDENTIFIER}
 
+    def get_expressions(self):
+        expression = self.MATHS_EXPRESSION.split("|")
+        if len(expression) == 1:
+            return expression[0], ""
+        else:
+            return expression[0], expression[1]
+
+class retaliatoryAction:
+    '''The base class for retaliatory actions like mirror'''
+    ACTION_EMOJI = "❔"
+    ACTION_IDENTIFIER = "itmUNDEF"
+    LOG_MESSAGE = "{emoji} {perpetrator} did undefined action on {victim} {emoji}"
+
+    def get_log(self, victim, perpetrator):
+        return self.LOG_MESSAGE.format(emoji=self.ACTION_EMOJI,perpetrator=perpetrator,victim=victim)
+
+    def identify(self,test):
+        if test == self.ACTION_IDENTIFIER:
+            return True
+        else:
+            return False
+
+
 #=========================================================#
 #^ Action Data classes ^#
+#Here describes what each action does and how it behaves
 class itmKill(actionItem):
     '''Class for kill item (victim's money is set to 0)'''
     IMAGE_LOCATION = "../static/img/kill.png"
     ACTION_EMOJI = "⚔"
     ACTION_IDENTIFIER = "itmKill"
+    MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} killed {victim} {emoji}"
     CAN_MIRROR = True
     CAN_SHIELD = True
     TARGETTED = True
-
-    def calculate_money(self, vCash, pCash, vBank, pBank):
-        return 0, pCash, vBank, pBank
 
 #---------------#
 class itmSteal(actionItem):
@@ -130,13 +155,11 @@ class itmSteal(actionItem):
     IMAGE_LOCATION = "../static/img/steal.png"
     ACTION_EMOJI = "💰"
     ACTION_IDENTIFIER = "itmSteal"
+    MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}+{vCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} has stolen from {victim} {emoji}"
     CAN_MIRROR = True
     CAN_SHIELD = True
     TARGETTED = True
-
-    def calculate_money(self, vCash, pCash, vBank, pBank):
-        return 0, pCash+vCash, vBank, pBank
 
 #---------------#
 class itmGift(actionItem):
@@ -144,13 +167,12 @@ class itmGift(actionItem):
     IMAGE_LOCATION = "../static/img/gift.png"
     ACTION_EMOJI = "🎁"
     ACTION_IDENTIFIER = "itmGift"
+    MATHS_EXPRESSION= "self.vCash={vCash}+1000:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} gifted {victim} {emoji}"
     CAN_MIRROR = True
     CAN_SHIELD = True
     TARGETTED = True
 
-    def calculate_money(self, vCash, pCash, vBank, pBank):
-        return vCash+1000, pCash, vBank, pBank
 
 #---------------#
 class itmSwap(actionItem):
@@ -158,13 +180,11 @@ class itmSwap(actionItem):
     IMAGE_LOCATION = "../static/img/swap.png"
     ACTION_EMOJI = "🤝"
     ACTION_IDENTIFIER = "itmSwap"
-    LOG_MESSAGE = "{emoji} {perpetrator} has swapped with {victim} {emoji}"
+    MATHS_EXPRESSION= "self.vCash={pCash}:self.vBank={vBank}|self.pCash={vCash}:self.pBank={pBank}"
+    LOG_MESSAGE = "{emoji} {perpetrator} swapped with {victim} {emoji}"
     CAN_MIRROR = False
     CAN_SHIELD = True
     TARGETTED = True
-
-    def calculate_money(self, vCash, pCash, vBank, pBank):
-        return pCash, vCash, vBank, pBank
 
 #---------------#
 class itmBomb(actionItem):
@@ -172,13 +192,11 @@ class itmBomb(actionItem):
     IMAGE_LOCATION = "../static/img/bomb.png"
     ACTION_EMOJI = "💣"
     ACTION_IDENTIFIER = "itmBomb"
+    MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}"
     LOG_MESSAGE = ""
     CAN_MIRROR = False
     CAN_SHIELD = False
     TARGETTED = False
-
-    def calculate_money(self, vCash, vBank):
-        return 0, vBank
 
 #---------------#
 class itmBank(actionItem):
@@ -186,24 +204,25 @@ class itmBank(actionItem):
     IMAGE_LOCATION = "../static/img/bank.png"
     ACTION_EMOJI = "🏦"
     ACTION_IDENTIFIER = "itmBank"
+    MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}+{vCash}"
     LOG_MESSAGE = ""
     CAN_MIRROR = False
     CAN_SHIELD = False
     TARGETTED = False
 
-    def calculate_money(self, vCash, vBank):
-        return 0, vBank+vCash
-
 #---------------#
-class itmMirror:
+class itmMirror(retaliatoryAction):
     '''Class for mirror modifier item'''
     IMAGE_LOCATION = "../static/img/mirror.png"
     ACTION_EMOJI = "🪞"
     ACTION_IDENTIFIER = "itmMirror"
     LOG_MESSAGE = "{emoji} {victim} mirrored that {emoji}"
 
+    def calculate_money(self, victim, perpetrator):
+        victim_new = {"cash": perpetrator["cashPending"]}
+
 #---------------#
-class itmShield:
+class itmShield(retaliatoryAction):
     '''Class for shield modifier item'''
     IMAGE_LOCATION = "../static/img/shield.png"
     ACTION_EMOJI = "🛡"
@@ -390,6 +409,21 @@ class gameplay:
         random.shuffle(self.playOrder)
         self.csvString = ",".join(self.playOrder)
         return self.csvString
+
+    #---------------#
+    def parse_expression(self,expression,victim,perpetrator=None):
+        self.vCash = victim.userCash
+        self.vBank = victim.userBank
+        self.pCash = perpetrator.userCash if perpetrator else 0
+        self.pBank = perpetrator.userBank if perpetrator else 0
+        expression = expression.format(vCash=self.vCash,vBank=self.vBank,pCash=self.pCash,pBank=self.pBank)
+        print(expression)
+        for e in expression.split(":"):
+            exec(e)
+            print(e)
+            print(self.vCash,self.vBank,self.pCash,self.pBank)
+        
+        return self.vCash, self.vBank, self.pCash, self.pBank
 
 #=========================================================#
 #URL routes
@@ -663,7 +697,8 @@ def next_round():
             if action().identify(item):
                 instance = action()
                 if not action.TARGETTED:
-                    player.userCash, player.userBank= instance.calculate_money(player.userCash, player.userBank)
+                    actionExpression, null = instance.get_expressions()
+                    player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player)
                     emit("cash_update", player.userCash, room=player.socketioSID)
                     emit("bank_update", player.userBank, room=player.socketioSID)
                 else:
@@ -691,7 +726,7 @@ def action_declared(data):
         for actionType in actionItem.__subclasses__():
             if actionType().identify(actionIdentifier):
                 instance = actionType()
-                target.userCashPending, perpetrator.userCashPending, target.userBankPending, perpetrator.userBankPending = instance.calculate_money(target.userCash, perpetrator.userCash, target.userBank, perpetrator.userBank)
+                target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions()
                 logEntry = instance.get_log(targetNickname,perpetrator.userNickname)
         
         gameDB.session.commit()
@@ -702,39 +737,41 @@ def action_declared(data):
     emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Send event to enforce popup
 
 #---------------#
-#Handles commit event
-@socketio.on("cash_commit")
-def cash_commit():
+#Handles the response to the target being selected
+@socketio.on("retaliation_declare")
+def retaliation_decl(data):
     requestSID = request.sid
-    gameID = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first().userGameID #Find game ID by querying based on sid
+    victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first()#Find game ID by querying based on sid
+    perpetrator = activeUsers.query.filter(activeUsers.userGameID==victim.userGameID, activeUsers.userPendingExpression != "").first() #Find perpetrator based on the fact that they too will have changes to their pending
+    moneyHandlingExpression= victim.userPendingExpression+":"+perpetrator.userPendingExpression
+    print(moneyHandlingExpression)
+    retal_type = data["type"]
+    gameHandler = gameplay()
 
-    allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID, activeUsers.userCashPending != -1).all()
-    for user in allUsers:
-        user.userCash = user.userCashPending
-        user.userBank = user.userBankPending
-        user.userCashPending = -1
-        user.userBankPending = -1
+    print(retal_type)
+    if retal_type == "none":
+        victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank = gameHandler.parse_expression(moneyHandlingExpression, victim, perpetrator)
+        print(victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank)
+
+    for user in [victim,perpetrator]:
+        user.userPendingExpression = ""
         #Updates the cash boxes of both the perpetrator and victim
+        print("Cash udate"+str(user.userCash))
         emit("cash_update", user.userCash, room=user.socketioSID)
         emit("bank_update", user.userBank, room=user.socketioSID)
 
     gameDB.session.commit()
 
-#---------------#
-@socketio.on("use_mirror")
-def use_mirror():
-    requestSID = request.sid
-    victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the victim's information
-    if victim.hasMirror:
-        pass
 
 #=========================================================#
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
     testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=0,userBank=0,hasMirror=False,hasShield=False)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=0,userBank=0,hasMirror=False,hasShield=False)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
+    gameDB.session.add(testUser2)
     gameDB.session.add(testGame)
     gameDB.session.commit()
     socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem')) #SocketIo required for two way communication
