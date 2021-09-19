@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Sep 13 2021
+# Last Modified: Sun Sep 19 2021
 # Modified By: Adam O'Neill
 # -----
 # HISTORY:
@@ -401,11 +401,14 @@ def about_page():
 #---------------#
 @app.route("/playing_online/lobby")
 def lobby():
+    gameID = request.args.get("gid")
+    hostSID = activeGame.query.get(gameID).hostSID
+    hostNick = activeUsers.query.get(hostSID).userNickname
     host_content = ""
     if isHost(request.cookies.get("SID"),request.args.get("gid")): #Renders host-only controls if the user is the host
         host_content = Markup(render_template("host_only_lobby.html"))
 
-    return render_template("lobby.html",host_only_content=host_content)
+    return render_template("lobby.html",host_only_content=host_content,gameID=gameID,hostNick=hostNick)
 
 #---------------#
 @app.route("/playing_online/game")

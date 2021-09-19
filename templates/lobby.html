@@ -6,7 +6,7 @@ Description: The HTML file for the waiting lobby
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Wed Sep 15 2021
+Last Modified: Sun Sep 19 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -19,15 +19,16 @@ Date      	By	Comments
 {% block title %} Online Lobby {% endblock %}
 {% block head %}
     <link rel="stylesheet" href="../static/css/lobby.css">
-    <link rel="stylesheet" href="../static/css/game_header.css">
+    <!--<link rel="stylesheet" href="../static/css/game_header.css"> -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
     <script src="../static/javascript/lobby.js" defer></script>
 {% endblock %}
 {% block body %}
     <div>
         <div id="div_lobbyHeader" class="gameSubheader">
-            Lobby Header Here
-            {{ host_only_content }}
+            <h1 id="hostNick">{{ hostNick }}'s Pirate Game</h1>
+            <h1 id="gameID">{{ gameID  }}</h1>
+            <div id="hostContent">{{ host_only_content }}</div>
         </div>
         <div id="div_listContainer">
         </div>
