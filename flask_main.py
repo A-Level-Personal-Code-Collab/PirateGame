@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-19	WH	Added comments and tidy code
 # 2021-09-19	WH	Added retaliation system for all other retaliation options
 # 2021-09-18	WH	Added equation parser script
 # 2021-09-18	WH	Dataclasses now contain an expression that is parsed to calculale how each action effects all the cash containers
@@ -120,6 +121,7 @@ class actionItem():
         else:
             return expression[0], expression[1]
 
+#---------------#
 class retaliatoryAction:
     '''The base class for retaliatory actions like mirror'''
     ACTION_EMOJI = "❔"
@@ -139,8 +141,7 @@ class retaliatoryAction:
         return "retal_available", {"type": self.ACTION_IDENTIFIER, "image": self.IMAGE_LOCATION}
 
 #=========================================================#
-#^ Action Data classes ^#
-#Here describes what each action does and how it behaves
+#^ Action Data classes  - describes what each action does and how it behaves ^#
 class itmKill(actionItem):
     '''Class for kill item (victim's money is set to 0)'''
     IMAGE_LOCATION = "../static/img/kill.png"
@@ -213,7 +214,8 @@ class itmBank(actionItem):
     CAN_SHIELD = False
     TARGETTED = False
 
-#---------------#
+#=========================================================#
+#^ Defines how retaliation actions behave ^#
 class itmMirror(retaliatoryAction):
     '''Class for mirror modifier item'''
     IMAGE_LOCATION = "../static/img/mirror.png"
@@ -422,22 +424,26 @@ class gameplay:
         return self.csvString
 
     #---------------#
+    #Takes the money expression and calculates actual values with it
     def parse_expression(self,expression,victim,perpetrator=None):
         self.vCash = victim.userCash
         self.vBank = victim.userBank
         self.pCash = perpetrator.userCash if perpetrator else 0
         self.pBank = perpetrator.userBank if perpetrator else 0
+
+        #Substitute numbers in to expression to replace variables in order to make latter raplcement easier (e.g. {vCash} to 0)
         expression = expression.format(vCash=self.vCash,vBank=self.vBank,pCash=self.pCash,pBank=self.pBank)
-        print(expression)
+
+        #Calculate each part of the formula individually (e.g. self.pCah=300+1000 is one)
         for e in expression.split(":"):
-            print(e)
-            exec(e)
-            print(self.vCash,self.vBank,self.pCash,self.pBank)
+            exec(e) #Executes the string expression
         
         return self.vCash, self.vBank, self.pCash, self.pBank
 
 #=========================================================#
 #URL routes
+#---------------#
+#The index page
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -652,7 +658,7 @@ def on_join(data):
     gameDB.session.commit()
 
 #---------------#
-#When the host opts to start the game
+#When the host opts to start the game (from lobby)
 @socketio.on("start")
 def start_game(data):
     gameID = data["gameID"]
@@ -696,91 +702,103 @@ def next_round():
         item = playerGrid[int(square)]
 
         #---------------#
-        #This is the location in which it is decided what happens with each type of file
-        if money(200).identify(item): #Handle money type items
-            denomination = item[1:]
-            note = money(int(denomination))
-            player.userCash = note.cash_update(player.userCash)
-            emit("cash_update", player.userCash, room=player.socketioSID)
+        #Handle money items
+        if money(200).identify(item): #Use the identify method from data class
+            denomination = item[1:] #Get the denomination value by removing the 'M' from the ID
+            note = money(int(denomination)) #Get instance of data class
+            player.userCash = note.cash_update(player.userCash) #Update player's cash value in database
+            emit("cash_update", player.userCash, room=player.socketioSID) #Send cash update event
 
+        #---------------#
         #Iterate through all action classes and process them
         for action in actionItem.__subclasses__():
-            if action().identify(item):
-                instance = action()
-                if not action.TARGETTED:
-                    actionExpression, null = instance.get_expressions()
-                    player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player)
-                    emit("cash_update", player.userCash, room=player.socketioSID)
+            instance = action()
+            if instance.identify(item): #Use the identify method to test if the action in question is the desired action
+                if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
+                    actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
+                    player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player) #Parse expression
+                    emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
                     emit("bank_update", player.userBank, room=player.socketioSID)
                 else:
-                    event, data = instance.get_itemNotify()
+                    event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
                     emit(event, data,room=player.socketioSID)
-                break
+                break #Break loop after detecting correct item to save resources
         
+        #---------------#
+        #Iterate through retaliation actions to identify if the user has one of those
         for action in retaliatoryAction.__subclasses__():
-            if action().identify(item):
-                instance = action()
-                event, data = instance.get_itemNotify()
+            instance = action()
+            if instance.identify(item):
+                event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
                 emit(event, data,room=player.socketioSID)
 
+    #---------------#
     #Update values in database to newest
     gameObject.currentRound = currentRound
     gameDB.session.commit()
 
 #---------------#
-#Handles when somone declares their item
+#Handles when somone declares their action item
 @socketio.on("action_declare")
 def action_declared(data):
     requestSID = request.sid
     targetNickname = data["target"]
-    actionIdentifier = data["action"]
+    actionIdentifier = data["action"] #The type of action we are dealing with
     perpetrator = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the perpetrator's information
     gameID = perpetrator.userGameID #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     
-    if targetNickname != "": #If the declaration includes the target
-        target = activeUsers.query.filter(activeUsers.userNickname==targetNickname).first() #Gets a table object of the target
+    #---------------#
+    #Handling for once a target has been selcted
+    if targetNickname != "": #If the declaration includes the target information
+        target = activeUsers.query.filter(activeUsers.userNickname==targetNickname).first() #Gets a database record object of the target
 
         for actionType in actionItem.__subclasses__():
-            if actionType().identify(actionIdentifier):
-                instance = actionType()
-                target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions()
-                logEntry = instance.get_log(targetNickname,perpetrator.userNickname)
-        
+            instance = actionType()
+            if instance.identify(actionIdentifier):
+                target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions() #Save the expression information to the database based on what event has taken place
+                logEntry = instance.get_log(targetNickname,perpetrator.userNickname) #Log the action to the logs
+                break # Break to save resources
+
         gameDB.session.commit()
 
         #Updates the log
         emit('log_update', logEntry, room=gameIDString)
 
-    emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Send event to enforce popup
+    emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Re-broadcast event to enforce popup
 
 #---------------#
-#Handles the response to the target being selected
+#Handles when a client declares their response to an action being done against them
 @socketio.on("retaliation_declare")
 def retaliation_decl(data):
     requestSID = request.sid
-    victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first()#Find game ID by querying based on sid
+    victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Load victim from database
     perpetrator = activeUsers.query.filter(activeUsers.userGameID==victim.userGameID, activeUsers.userPendingExpression != "").first() #Find perpetrator based on the fact that they too will have changes to their pending
-    moneyHandlingExpression= victim.userPendingExpression+":"+perpetrator.userPendingExpression
-    gameID = perpetrator.userGameID #Find game ID by querying based on sid
+
+    moneyHandlingExpression= victim.userPendingExpression+":"+perpetrator.userPendingExpression #Create combined expression for money that tells what happens to both parties
+    gameID = perpetrator.userGameID #Find game ID from perpetrator
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
-    print(moneyHandlingExpression)
-    retal_type = data["type"]
+    retal_type = data["type"] #Gets the string dictating the clients response
     gameHandler = gameplay()
 
+    #---------------#
+    #Loops through avilable retaliations to check if it matches any of those
     for action in retaliatoryAction.__subclasses__():
         instance = action()
         if instance.identify(retal_type):
-            moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression)
-            emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString)
-            print(moneyHandlingExpression)
-            break
+            moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dicted in the retaliation's data class
+            emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString) #Add retaliation log entry
+            break #Break to save resources
 
+    #---------------#
+    #Actually parse new (or un-updated) money expression to new cash values
     victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank = gameHandler.parse_expression(moneyHandlingExpression, victim, perpetrator)
-    print(victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank)
 
+    #---------------#
+    #Send cash updates and bank updates to users as well as resetting their pending expression
     for user in [victim,perpetrator]:
         user.userPendingExpression = ""
+
         #Updates the cash boxes of both the perpetrator and victim
         print("Cash udate"+str(user.userCash))
         emit("cash_update", user.userCash, room=user.socketioSID)

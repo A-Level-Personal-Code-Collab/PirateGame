@@ -45,8 +45,8 @@
  var recordedBank = 0; //Keeps track of the last value recorded on the page
  var declareAction = ""; //The name of the action that is going to be declared
  var targetSelector = false; //Tracks if the user is currently selecting a target
- var retaliations = []
- var retaliated = false
+ var retaliations = [] //A list of available retaliations
+ var retaliated = false //Has the user already retaliated to the incomming action
 
  //=========================================================//
  //^ OnLoad Function ^//
@@ -67,7 +67,7 @@
     socket.on('log_update', log_update)
 
     socket.on('itm_available', item_available);
-    socket.on('retal_available', (data) => {retaliations.push(data)})
+    socket.on('retal_available', (data) => {retaliations.push(data)}) //Add new retaliation to retaliations array
 
     socket.on('action_declare', action_popup);
 
@@ -121,7 +121,7 @@
  }
 
  /*---------------*/
- //Update declaration button
+ //Update declaration button (whethere it is greyed out or not)
  function update_declare(state)
  {
      declareButton.disabled = state; //Disables button
@@ -131,13 +131,16 @@
  }
 
  /*---------------*/
+ //Update the box that displays available reactions
  function update_retaliations()
  {
+     //Creates html images on page to show what actions the user has available
      var imageList = ""
      retaliations.forEach((a) => {
          imageList = imageList + `<img src="${a['image']}" class="retaliationItems" alt="${a["type"]}" id="${a["type"]}">`
      })
-     retaliationsStorage.innerHTML = imageList;
+
+     retaliationsStorage.innerHTML = imageList; //Display images on page
  }
 
  /*---------------*/
@@ -163,12 +166,13 @@
  }
 
  /*---------------*/
+ //Declare the user's choice of retaliation to the server
  function retaliation_declare(type)
  {
-     if (!retaliated) {
-        socket.emit("retaliation_declare", {type: type});
-        retaliations.splice(retaliations.indexOf(type),1);
-        update_retaliations();
+     if (!retaliated) { //Check a retaliation hasn't already been sent
+        socket.emit("retaliation_declare", {type: type}); //Send back to server
+        retaliations.splice(retaliations.indexOf(type),1); //Remove retaliation from available retaliations events
+        update_retaliations(); //Update the retaliations box on the page
         retaliated = true;
      }
  }
@@ -217,8 +221,9 @@
              }else {targetText.innerHTML = target;} //Show who the target is
              
              loadingDots.style.display = "none"; //Hide loading dots
-             setTimeout(function () {update_money();},100); //Update all user's cash box in case they are the target
+             setTimeout(function () {update_money();},100); //Update all user's cash box in case they are the target (delay allows server time to process)
              setTimeout(function () {waitingForActionPopup.style.display="none";}, 3000) //Close the popup after 3s
+
          } else //Show loading circles
          {
             targetText.innerHTML = ""
@@ -243,8 +248,8 @@
  }
 
  //=========================================================//
- //^ Defines what happens for different actions when you are the perpetrator ^//
- //Determines what happens on kill
+ //^ Defines what happens when events come in from the socket^//
+ //Determines what happens when a new item is available (runs as soon as event comes in)
  function item_available(data)
  {
      declareAction = data["type"];

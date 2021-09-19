@@ -87,11 +87,14 @@
      position: relative;
  }
 
+ /*---------------*/
+ /*The realiation bank on page item styling*/
  .retaliationItems
  {
      width: 10vh;
-     height: 10;
+     height: 10vh;
  }
+ 
  /*//=========================================================//*/
  /*^ Game action buttons ^*/
  .actionButton 
