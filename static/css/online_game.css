@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Thu Sep 02 2021
+ * Last Modified: Sun Sep 19 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-19	WH	Added styling for some retaliation scenarios
  * 2021-09-02	WH	Added animation for some loading dots
  * 2021-09-02	WH	Added code for page-specifc popup settings
  * 2021-08-28	WH	Added .completed class
@@ -86,6 +87,11 @@
      position: relative;
  }
 
+ .retaliationItems
+ {
+     width: 10vh;
+     height: 10;
+ }
  /*//=========================================================//*/
  /*^ Game action buttons ^*/
  .actionButton 
@@ -156,6 +162,17 @@
      font-family: "Frijole", Arial;
  }
 
+ .realiationOption
+ {
+     height: 8vh;
+     width: 8vh;
+     border: black solid 3px;
+ }
+
+ .realiationOption:hover
+ {
+     background-color: rgba(168, 166, 21, 0.541);
+ }
  /*//=========================================================//*/
  /*^ Loading dots animation ^*/
  #div_loadingdots

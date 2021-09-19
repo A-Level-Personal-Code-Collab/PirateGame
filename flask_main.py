@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Sep 18 2021
+# Last Modified: Sun Sep 19 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-19	WH	Added retaliation system for all other retaliation options
 # 2021-09-18	WH	Added equation parser script
 # 2021-09-18	WH	Dataclasses now contain an expression that is parsed to calculale how each action effects all the cash containers
 # 2021-09-17	WH	standardised refrence to item names so, for example, kill is refrenced as itmKill everywhere
@@ -134,6 +135,8 @@ class retaliatoryAction:
         else:
             return False
 
+    def get_itemNotify(self):
+        return "retal_available", {"type": self.ACTION_IDENTIFIER, "image": self.IMAGE_LOCATION}
 
 #=========================================================#
 #^ Action Data classes ^#
@@ -218,8 +221,13 @@ class itmMirror(retaliatoryAction):
     ACTION_IDENTIFIER = "itmMirror"
     LOG_MESSAGE = "{emoji} {victim} mirrored that {emoji}"
 
-    def calculate_money(self, victim, perpetrator):
-        victim_new = {"cash": perpetrator["cashPending"]}
+    def expression_manipulate(self, expression):
+        self.new_expression = expression.replace("self.vCash","___V.CASH___")
+        self.new_expression = self.new_expression.replace("self.pCash","___P.CASH___")
+        self.new_expression = self.new_expression.replace("___P.CASH___","self.vCash")
+        self.new_expression = self.new_expression.replace("___V.CASH___","self.pCash")
+
+        return self.new_expression
 
 #---------------#
 class itmShield(retaliatoryAction):
@@ -228,6 +236,9 @@ class itmShield(retaliatoryAction):
     ACTION_EMOJI = "🛡"
     ACTION_IDENTIFIER = "itmShield"
     LOG_MESSAGE = "{emoji} {victim} blocked that {emoji}"
+
+    def expression_manipulate(self, expression):
+        return "self.vCash={vCash}:self.vBank={vBank}:self.pCash={pCash}:self.pBank={pBank}"
 
 #=========================================================#
 #^ Money Data Class ^#
@@ -419,8 +430,8 @@ class gameplay:
         expression = expression.format(vCash=self.vCash,vBank=self.vBank,pCash=self.pCash,pBank=self.pBank)
         print(expression)
         for e in expression.split(":"):
-            exec(e)
             print(e)
+            exec(e)
             print(self.vCash,self.vBank,self.pCash,self.pBank)
         
         return self.vCash, self.vBank, self.pCash, self.pBank
@@ -704,6 +715,13 @@ def next_round():
                 else:
                     event, data = instance.get_itemNotify()
                     emit(event, data,room=player.socketioSID)
+                break
+        
+        for action in retaliatoryAction.__subclasses__():
+            if action().identify(item):
+                instance = action()
+                event, data = instance.get_itemNotify()
+                emit(event, data,room=player.socketioSID)
 
     #Update values in database to newest
     gameObject.currentRound = currentRound
@@ -744,14 +762,22 @@ def retaliation_decl(data):
     victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first()#Find game ID by querying based on sid
     perpetrator = activeUsers.query.filter(activeUsers.userGameID==victim.userGameID, activeUsers.userPendingExpression != "").first() #Find perpetrator based on the fact that they too will have changes to their pending
     moneyHandlingExpression= victim.userPendingExpression+":"+perpetrator.userPendingExpression
+    gameID = perpetrator.userGameID #Find game ID by querying based on sid
+    gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     print(moneyHandlingExpression)
     retal_type = data["type"]
     gameHandler = gameplay()
 
-    print(retal_type)
-    if retal_type == "none":
-        victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank = gameHandler.parse_expression(moneyHandlingExpression, victim, perpetrator)
-        print(victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank)
+    for action in retaliatoryAction.__subclasses__():
+        instance = action()
+        if instance.identify(retal_type):
+            moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression)
+            emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString)
+            print(moneyHandlingExpression)
+            break
+
+    victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank = gameHandler.parse_expression(moneyHandlingExpression, victim, perpetrator)
+    print(victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank)
 
     for user in [victim,perpetrator]:
         user.userPendingExpression = ""
@@ -768,7 +794,7 @@ def retaliation_decl(data):
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
     testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=0,userBank=0,hasMirror=False,hasShield=False)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=0,userBank=0,hasMirror=False,hasShield=False)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=0,userBank=0,hasMirror=False,hasShield=False)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)

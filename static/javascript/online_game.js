@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sat Sep 18 2021
+ * Last Modified: Sun Sep 19 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-19	WH	Added tracking for available retaliations
+ * 2021-09-19	WH	Added system to display available retaliation options
  * 2021-09-17	WH	item_available event replaces perpetrate_kill and perpetrate_steel etc. events
  * 2021-09-17	WH	Changed item names to match the python naming and their names in the dtabase (E.g) kill is now itmKill
  * 2021-09-02	WH	Added handling for log updates
@@ -31,6 +33,7 @@
  const chooseButton = document.getElementById("ipt_chooseTarget")
  const waitingForActionPopup =  document.getElementById("div_waitingPopup")
  const targetPickerPopup = document.getElementById("div_targetPickerPopup")
+ const retaliationsStorage = document.getElementById("retaliation_table")
 
  //=========================================================//
  //^ Variables ^//
@@ -42,6 +45,8 @@
  var recordedBank = 0; //Keeps track of the last value recorded on the page
  var declareAction = ""; //The name of the action that is going to be declared
  var targetSelector = false; //Tracks if the user is currently selecting a target
+ var retaliations = []
+ var retaliated = false
 
  //=========================================================//
  //^ OnLoad Function ^//
@@ -62,6 +67,7 @@
     socket.on('log_update', log_update)
 
     socket.on('itm_available', item_available);
+    socket.on('retal_available', (data) => {retaliations.push(data)})
 
     socket.on('action_declare', action_popup);
 
@@ -92,6 +98,7 @@
 
     previousSquare = square;
     setTimeout(update_money, 2000) //Delay here immitates the time that animation would be taking
+    setTimeout(update_retaliations, 2000) //Delay here immitates the time that animation would be taking
     setTimeout(function () {if (declareAction != "") {update_declare(false);}}, 2000)
  }
 
@@ -124,6 +131,16 @@
  }
 
  /*---------------*/
+ function update_retaliations()
+ {
+     var imageList = ""
+     retaliations.forEach((a) => {
+         imageList = imageList + `<img src="${a['image']}" class="retaliationItems" alt="${a["type"]}" id="${a["type"]}">`
+     })
+     retaliationsStorage.innerHTML = imageList;
+ }
+
+ /*---------------*/
  //Sends a declaration to server that an event has been declared (called when declare button pressed)
  function declare_action()
  {
@@ -141,8 +158,19 @@
      targetPickerPopup.style.display="none"; //Hide target picker popup again
      targetSelector = false; //Disable other popup inhibiting
      update_declare(true) //Update the declare button back to disabled state
-     declare_action = "";
+     declareAction = "";
 
+ }
+
+ /*---------------*/
+ function retaliation_declare(type)
+ {
+     if (!retaliated) {
+        socket.emit("retaliation_declare", {type: type});
+        retaliations.splice(retaliations.indexOf(type),1);
+        update_retaliations();
+        retaliated = true;
+     }
  }
 
  //=========================================================//
@@ -173,16 +201,24 @@
          //Loading dots or target shown
          var loadingDots = document.getElementById("div_loadingdots");
          var targetText = document.getElementById("h3_target_text");
+         var realiations_area = document.getElementById("div_retaliation_controls");
+         realiations_area.innerHTML = "";
          if (target != "") //If target has been decided
          {
              if (target.toLowerCase() == MY_NICKNAME.toLowerCase()){
-                 targetText.innerHTML = "YOU"
-                 socket.emit("retaliation_declare", {type: "none"})
+                 targetText.innerHTML = "YOU";
+
+                 retaliated = false;
+                 retaliations.forEach((a) => {
+                    realiations_area.innerHTML += `<img src="${a["image"]}" onClick="retaliation_declare('${a["type"]}')" class="realiationOption" alt="${a["type"]}">`
+                 })
+                 setTimeout(() => {retaliation_declare("none")}, 3000);
+                 
              }else {targetText.innerHTML = target;} //Show who the target is
              
              loadingDots.style.display = "none"; //Hide loading dots
              setTimeout(function () {update_money();},100); //Update all user's cash box in case they are the target
-             setTimeout(function () {waitingForActionPopup.style.display="none"}, 3000) //Close the popup after 3s
+             setTimeout(function () {waitingForActionPopup.style.display="none";}, 3000) //Close the popup after 3s
          } else //Show loading circles
          {
             targetText.innerHTML = ""
@@ -211,7 +247,6 @@
  //Determines what happens on kill
  function item_available(data)
  {
-
      declareAction = data["type"];
  }
 
