@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Sun Sep 19 2021
-# Modified By: Will Hall
+# Modified By: Ollie Burroughs
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -641,6 +641,25 @@ def game():
         return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick, target_dropdown=dropdown, myNick=myNick)
     else:
         return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, target_dropdown=dropdown, myNick=myNick)
+
+@app.route("/playing_online/results")
+def results():
+    #fetches user data
+    gameID = request.args.get("gid")
+    userID = request.cookies.get("SID")
+    allUsers = activeUsers.query.filter(activeUsers.userGameID==int(gameID)).all()
+    print(allUsers)
+    #collects users final cash amounts and sorts them in a dictionary
+    userscore = {}
+    for User in allUsers:
+        userscore[User.userNickname] = User.userCash + User.userBank
+    sorted_scores = dict(sorted(userscore.items(),key = lambda x:x[1] ))
+    print(sorted_scores)
+    final_scores_table = "<table> <tr> <td> Username </td> <td> money </td> </tr> "
+    for name,score in sorted_scores.items():
+        final_scores_table += f"<tr> <td> {name} </td> <td> {score} </td> </tr>" 
+    final_scores_table += "</table>"
+    return render_template ("results.html",results_table = Markup (final_scores_table))
 
 #=========================================================#
 #^ Socketio Functions ^#
