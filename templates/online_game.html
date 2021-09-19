@@ -6,12 +6,13 @@ Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Thu Sep 02 2021
+Last Modified: Sun Sep 19 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-09-19	WH	Added box for retaliatory implements
 2021-09-02	WH	Added target selector popup
 2021-09-02	WH	Added action waiting popup
 2021-09-02	WH	Added declare button to Header
@@ -72,6 +73,10 @@ Date      	By	Comments
                 <p id="p_logText"></p>
             </div>
         </div>
+        <div class="gameContainer">
+            <h5>Retaliation Implements</h5>
+            <div id="retaliation_table"></div>
+        </div>
     </div>
     <div style="display:none;" class="popupHousing" id="div_waitingPopup">
         <div class="popupbox actionPopUp">
@@ -80,6 +85,7 @@ Date      	By	Comments
             </div>
             <div class="popupBody">
                <h3 id="h3_perpetrator_text">__perpetrator__</h3> is attempting to <h3 id="h3_action_emphasis_text">💰 steal from 💰</h3><h3 id="h3_target_text"></h3><div id="div_loadingdots"><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div></div> 
+               <div id="div_retaliation_controls"></div>
             </div>
             <div class="popupFooter">
                 Wait for your crewmates to pick their target

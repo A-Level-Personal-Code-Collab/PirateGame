@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Tue Sep 07 2021
+ * Last Modified: Sun Sep 19 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,10 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-19	WH	Added tracking for available retaliations
+ * 2021-09-19	WH	Added system to display available retaliation options
+ * 2021-09-17	WH	item_available event replaces perpetrate_kill and perpetrate_steel etc. events
+ * 2021-09-17	WH	Changed item names to match the python naming and their names in the dtabase (E.g) kill is now itmKill
  * 2021-09-02	WH	Added handling for log updates
  * 2021-09-02	WH	Added target picker popup
  * 2021-09-02	WH	Added handling for waiting for decision popups
@@ -29,6 +33,7 @@
  const chooseButton = document.getElementById("ipt_chooseTarget")
  const waitingForActionPopup =  document.getElementById("div_waitingPopup")
  const targetPickerPopup = document.getElementById("div_targetPickerPopup")
+ const retaliationsStorage = document.getElementById("retaliation_table")
 
  //=========================================================//
  //^ Variables ^//
@@ -40,6 +45,8 @@
  var recordedBank = 0; //Keeps track of the last value recorded on the page
  var declareAction = ""; //The name of the action that is going to be declared
  var targetSelector = false; //Tracks if the user is currently selecting a target
+ var retaliations = [] //A list of available retaliations
+ var retaliated = false //Has the user already retaliated to the incomming action
 
  //=========================================================//
  //^ OnLoad Function ^//
@@ -59,10 +66,8 @@
     socket.on('bank_update', newsum => {bankTotal = newsum; recordedBank = 999}) //Change recorded bank variable to impossible value to force recording of bank value
     socket.on('log_update', log_update)
 
-    socket.on('perpetrate_kill', perpetrate_kill);
-    socket.on('perpetrate_steal', perpetrate_steal);
-    socket.on('perpetrate_swap', perpetrate_swap);
-    socket.on('perpetrate_gift', perpetrate_gift);
+    socket.on('itm_available', item_available);
+    socket.on('retal_available', (data) => {retaliations.push(data)}) //Add new retaliation to retaliations array
 
     socket.on('action_declare', action_popup);
 
@@ -79,7 +84,7 @@
  function select_sqaure(serialSquareNum)
  {
     var square = document.getElementById(`square${serialSquareNum}`);
-    var allSquares = document.querySelector("")
+    //var allSquares = document.querySelector("")
     
     square.classList.add("selected"); //Lights up currently selected square
 
@@ -93,6 +98,7 @@
 
     previousSquare = square;
     setTimeout(update_money, 2000) //Delay here immitates the time that animation would be taking
+    setTimeout(update_retaliations, 2000) //Delay here immitates the time that animation would be taking
     setTimeout(function () {if (declareAction != "") {update_declare(false);}}, 2000)
  }
 
@@ -115,13 +121,26 @@
  }
 
  /*---------------*/
- //Update declaration button
+ //Update declaration button (whethere it is greyed out or not)
  function update_declare(state)
  {
      declareButton.disabled = state; //Disables button
      //Add / Remove CSS class
      if (state) {declareButton.classList.add("disabled")}
      else {declareButton.classList.remove("disabled")}
+ }
+
+ /*---------------*/
+ //Update the box that displays available reactions
+ function update_retaliations()
+ {
+     //Creates html images on page to show what actions the user has available
+     var imageList = ""
+     retaliations.forEach((a) => {
+         imageList = imageList + `<img src="${a['image']}" class="retaliationItems" alt="${a["type"]}" id="${a["type"]}">`
+     })
+
+     retaliationsStorage.innerHTML = imageList; //Display images on page
  }
 
  /*---------------*/
@@ -142,8 +161,20 @@
      targetPickerPopup.style.display="none"; //Hide target picker popup again
      targetSelector = false; //Disable other popup inhibiting
      update_declare(true) //Update the declare button back to disabled state
-     declare_action = "";
+     declareAction = "";
 
+ }
+
+ /*---------------*/
+ //Declare the user's choice of retaliation to the server
+ function retaliation_declare(type)
+ {
+     if (!retaliated) { //Check a retaliation hasn't already been sent
+        socket.emit("retaliation_declare", {type: type}); //Send back to server
+        retaliations.splice(retaliations.indexOf(type),1); //Remove retaliation from available retaliations events
+        update_retaliations(); //Update the retaliations box on the page
+        retaliated = true;
+     }
  }
 
  //=========================================================//
@@ -166,20 +197,33 @@
          perpetratorText.innerHTML = perpetrator
 
          //Set the action that is shown
-         if (action == "kill") {actionText.innerHTML = "⚔ KILL ⚔"}
-         if (action == "steal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
-         if (action == "swap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
-         if (action == "gift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+         if (action == "itmKill") {actionText.innerHTML = "⚔ KILL ⚔"}
+         if (action == "itmSteal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
+         if (action == "itmSwap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
+         if (action == "itmGift") {actionText.innerHTML = "🎁 GIFT 🎁"}
 
          //Loading dots or target shown
          var loadingDots = document.getElementById("div_loadingdots");
          var targetText = document.getElementById("h3_target_text");
+         var realiations_area = document.getElementById("div_retaliation_controls");
+         realiations_area.innerHTML = "";
          if (target != "") //If target has been decided
          {
-             targetText.innerHTML = target; //Show who the target is
+             if (target.toLowerCase() == MY_NICKNAME.toLowerCase()){
+                 targetText.innerHTML = "YOU";
+
+                 retaliated = false;
+                 retaliations.forEach((a) => {
+                    realiations_area.innerHTML += `<img src="${a["image"]}" onClick="retaliation_declare('${a["type"]}')" class="realiationOption" alt="${a["type"]}">`
+                 })
+                 setTimeout(() => {retaliation_declare("none")}, 3000);
+                 
+             }else {targetText.innerHTML = target;} //Show who the target is
+             
              loadingDots.style.display = "none"; //Hide loading dots
-             update_money(); //Update all user's cash box in case they are the target
-             setTimeout(function () {waitingForActionPopup.style.display="none"}, 3000) //Close the popup after 3s
+             setTimeout(function () {update_money();},100); //Update all user's cash box in case they are the target (delay allows server time to process)
+             setTimeout(function () {waitingForActionPopup.style.display="none";}, 3000) //Close the popup after 3s
+
          } else //Show loading circles
          {
             targetText.innerHTML = ""
@@ -195,41 +239,20 @@
  function target_picker(action)
  {
      var actionText = document.getElementById("h3_targetPickerAction")
-     if (action == "kill") {actionText.innerHTML = "⚔ KILL ⚔"}
-     if (action == "steal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
-     if (action == "swap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
-     if (action == "gift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+     if (action == "itmKill") {actionText.innerHTML = "⚔ KILL ⚔"}
+     if (action == "itmSteal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
+     if (action == "itmSwap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
+     if (action == "itmGift") {actionText.innerHTML = "🎁 GIFT 🎁"}
 
      targetPickerPopup.style.display="block" //Show the popup
  }
 
  //=========================================================//
- //^ Defines what happens for different actions when you are the perpetrator ^//
- //Determines what happens on kill
- function perpetrate_kill()
+ //^ Defines what happens when events come in from the socket^//
+ //Determines what happens when a new item is available (runs as soon as event comes in)
+ function item_available(data)
  {
-     declareAction = "kill";
- }
-
- /*---------------*/
- //Detmines what happens when you get a steal
- function perpetrate_steal()
- {
-     declareAction = "steal";
- }
-
- /*---------------*/
- //Detrmines what happens when you get a swap
- function perpetrate_gift()
- {
-     declareAction = "gift";
- }
-
- /*---------------*/
- //Determines what happens when you get a swap
- function perpetrate_swap()
- {
-     declareAction = "swap";
+     declareAction = data["type"];
  }
 
  //=========================================================//
