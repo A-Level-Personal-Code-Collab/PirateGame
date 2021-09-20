@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Wed Sep 15 2021
+Last Modified: Mon Sep 20 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -24,12 +24,14 @@ Date      	By	Comments
     <script src="../static/javascript/verification_routines.js"></script> <!--Load nickname verification routine from file-->
 {% endblock %}
 
-{% block body %} 
+{% block body %}
+    <div class="header">
+        <h1>Create New Game</h1>
+        <p>Choose your settings for your pirate game...</p>
+        <p>{{ gameID }} <!--{{ hostNick }}--></p>
+    </div> 
     <div class="container">
-        <div class="header">
-            <h1>Create New Game</h1>
-            <p>Choose your settings for your pirate game...</p>
-        </div>
+        
         <div class="setting_body">
             <!-- Vanilla/ custom game slider -->
             <div class="row" id="div_switches">
