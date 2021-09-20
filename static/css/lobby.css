@@ -6,8 +6,8 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Aug 24 2021
- * Modified By: Will Hall
+ * Last Modified: Sun Sep 19 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -31,6 +31,62 @@
 0% { opacity: 0; transform: scale(0.5); }
 100% { opacity: 1; transform: scale(1); }
 }
+
+
+ /*//=========================================================//*/
+ /*^ Lobby header ^*/
+
+.gameSubheader
+{
+   background-color: #474e5d;
+   color: white;
+   height: 8vh;
+   min-height: max-content;
+   margin-bottom: 1vh;
+   position: relative;
+   text-align: center;
+   line-height: 8vh;
+   padding-left: 1vh;
+   padding-right: 1vh;
+}
+
+#hostNick {
+    float:left ;
+}
+
+#gameID {
+    position: absolute;
+    left: 45%;
+}
+
+#hostContent {
+    float: right;
+}
+
+ /*//=========================================================//*/
+ /*^ Begin Game Button ^*/
+
+ #start_button{
+    border: none;
+    cursor: pointer;
+    background-color: #ffd900;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.535);
+    font-size: 2vh;
+    padding: 1.5vh;
+    color: rgb(145, 145, 145);
+    border-radius: 8px;
+  }
+
+  #start_button:hover{
+    background-color: #fade3d;
+  }
+
+  #start_button:active{
+    background-color: #fade3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
+    transform: translateY(0.1vh);
+  }
+ 
 
  /*//=========================================================//*/
  /*^ Names list ^*/

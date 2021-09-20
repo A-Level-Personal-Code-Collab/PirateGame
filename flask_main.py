@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Sep 19 2021
+# Last Modified: Mon Sep 20 2021
 # Modified By: Ollie Burroughs
 # -----
 # HISTORY:
@@ -603,11 +603,14 @@ def about_page():
 #---------------#
 @app.route("/playing_online/lobby")
 def lobby():
+    gameID = request.args.get("gid")
+    hostSID = activeGame.query.get(gameID).hostSID
+    hostNick = activeUsers.query.get(hostSID).userNickname
     host_content = ""
     if isHost(request.cookies.get("SID"),request.args.get("gid")): #Renders host-only controls if the user is the host
         host_content = Markup(render_template("host_only_lobby.html"))
 
-    return render_template("lobby.html",host_only_content=host_content)
+    return render_template("lobby.html",host_only_content=host_content,gameID=gameID,hostNick=hostNick)
 
 #---------------#
 @app.route("/playing_online/game")
@@ -653,9 +656,9 @@ def results():
     userscore = {}
     for User in allUsers:
         userscore[User.userNickname] = User.userCash + User.userBank
-    sorted_scores = dict(sorted(userscore.items(),key = lambda x:x[1] ))
+    sorted_scores = dict(sorted(userscore.items(),key = lambda x:x[1],reverse=True ))
     print(sorted_scores)
-    final_scores_table = "<table> <tr> <td> Username </td> <td> money </td> </tr> "
+    final_scores_table = "<table class=\"podium\"> <tr> <td> Username </td> <td> money </td> </tr> "
     for name,score in sorted_scores.items():
         final_scores_table += f"<tr> <td> {name} </td> <td> {score} </td> </tr>" 
     final_scores_table += "</table>"
@@ -830,8 +833,8 @@ def retaliation_decl(data):
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=0,userBank=0,hasMirror=False,hasShield=False)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=0,userBank=0,hasMirror=False,hasShield=False)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=500,userBank=0,hasMirror=False,hasShield=False)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=1000,userBank=0,hasMirror=False,hasShield=False)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)
