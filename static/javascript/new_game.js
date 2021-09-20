@@ -4,7 +4,7 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Wed Sep 15 2021
+ * Last Modified: Mon Sep 20 2021
  * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Adam O'Neill
@@ -76,7 +76,6 @@ function disable() {
     else     {
         disablables.forEach(i => {i.classList.add("disablable"); i.disabled = true;})
         // Resets the switches to their defult positions
-        secretmode_tick.checked=false
         grid_slider.value = 6
         steal_slider.value = 1
         kill_slider.value = 1
