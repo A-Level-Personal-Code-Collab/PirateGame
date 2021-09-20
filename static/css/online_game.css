@@ -6,12 +6,14 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sun Sep 19 2021
+ * Last Modified: Mon Sep 20 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-20	WH	Created nice styling for retaliation options on pop-up
+ * 2021-09-20	WH	Created absolutely positioned Retaliations pop-out tab
  * 2021-09-19	WH	Added styling for some retaliation scenarios
  * 2021-09-02	WH	Added animation for some loading dots
  * 2021-09-02	WH	Added code for page-specifc popup settings
@@ -89,11 +91,53 @@
 
  /*---------------*/
  /*The realiation bank on page item styling*/
- .retaliationItems
+ .retaliationItems /* The image items in the item bank*/
  {
-     width: 10vh;
-     height: 10vh;
+     width: 7.5vh;
+     height: 7.5vh;
  }
+
+ div.retaliationSleeve /* The little pop-put tab that retaliation items go in*/
+ {
+     position: absolute;
+     height: 8vh;
+     width: fit-content;
+     min-width: 3vw;
+     max-width: 27vw;
+
+     background-color: #ffd900;
+     bottom: 15vh;
+     left:0;
+     border-top-right-radius: 2vh;
+     border-bottom-right-radius: 2vh;
+     transition: all 1s;
+     overflow: hidden;
+
+ }
+
+ div.retaliationSleeve:hover{
+     min-width: 27vw;
+ }
+
+ h5.retaliationSleeve { /* Text on the side of the pop-out tab*/
+     writing-mode: vertical-rl;
+     color: #474e5d;
+     margin: auto;
+     font-size: 1.1vh;
+     height: 100%;
+     margin-right: 0.5vw;
+     float: right;
+ }
+
+ #retaliation_box /* Interior div where js puts the image objects */
+ {
+     float: right;
+     height: 8vh;
+     margin-right: 1vw;
+     overflow: hidden;
+     max-width: 22.5vw;
+ }
+
  
  /*//=========================================================//*/
  /*^ Game action buttons ^*/
@@ -165,16 +209,28 @@
      font-family: "Frijole", Arial;
  }
 
+ #div_retaliation_controls
+ {
+     line-height: 5vh;
+     height: 7vh;
+     position: relative;
+ }
+
  .realiationOption
  {
-     height: 8vh;
-     width: 8vh;
-     border: black solid 3px;
+     position: relative;
+     height: 5vh;
+     width: 5vh;
+     border: #474e5d solid 2px;
+     border-radius: 2vh;
+     margin: 1vh;
+     transition: all 0.2s;
  }
 
  .realiationOption:hover
  {
-     background-color: rgba(168, 166, 21, 0.541);
+     background-color: #ffd900;
+     padding: 5px;
  }
  /*//=========================================================//*/
  /*^ Loading dots animation ^*/

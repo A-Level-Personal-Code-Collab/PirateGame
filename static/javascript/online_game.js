@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Sep 19 2021
+ * Last Modified: Mon Sep 20 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -33,7 +33,7 @@
  const chooseButton = document.getElementById("ipt_chooseTarget")
  const waitingForActionPopup =  document.getElementById("div_waitingPopup")
  const targetPickerPopup = document.getElementById("div_targetPickerPopup")
- const retaliationsStorage = document.getElementById("retaliation_table")
+ const retaliationsStorage = document.getElementById("retaliation_box")
 
  //=========================================================//
  //^ Variables ^//
