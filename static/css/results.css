@@ -6,10 +6,38 @@
  * Author: Ollie Burroughs
  * Copyright (c) 2021 SchmetCorp.
  * -----
- * Last Modified: Sun Sep 19 2021
+ * Last Modified: Sat Sep 25 2021
  * Modified By: Ollie Burroughs
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
+
+ .sidebarresults
+ {
+     border-top-left-radius: 2%;
+     border-bottom-left-radius:2%;
+     border-style: inset;
+     border-width: 15px;
+     border-color: #3b5ba1;
+     background-color: #474e5d;
+     width: 30%;
+     height: 100%;
+     position:absolute;
+     right: 0;
+ }
+.sidebarscores
+{
+    font-family: sans-serif;
+    font-weight: bolder;
+    text-align: center;
+    color: white;
+    width: 100%;
+    font-size: x-large;
+    border-spacing: 10px;
+}
+.ResultsTableHeader
+{
+    color:#6692f0;
+}
