@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sun Sep 19 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Sat Sep 25 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-25	WH	Added disabled style for start button
  * 2021-08-24	WH	Moved lobby header styling to game_header.css so the same styles can be applied in the game screen also
  * 2021-08-10	WH	Added list item formatiing and list animation
  */
@@ -81,10 +82,15 @@
     background-color: #fade3d;
   }
 
-  #start_button:active{
+  #start_button:active:not(:disabled){
     background-color: #fade3d;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
     transform: translateY(0.1vh);
+  }
+
+  #start_button:disabled{
+      background-color: darkgray;
+      cursor: not-allowed;
   }
  
 
