@@ -6,9 +6,9 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Aug 07 2021
- * Modified By: Adam O'Neill
- * -----
+ * Last Modified: Sat Sep 25 2021
+ * Modified By: Ollie Burroughs
+ * Details: added ease to header hover
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
@@ -44,6 +44,7 @@ a:link{
     border-radius: 4px;
     font-family: sans-serif; /* Works for the whole header */ 
     font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .Header a:hover{
