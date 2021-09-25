@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sat Aug 28 2021
+ * Last Modified: Sat Sep 25 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,10 +13,14 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-25	WH	Disables start button if number of users is too small
  * 2021-08-28	WH	Join event now sends userID to server also
  * 2021-08-09	WH	Added fetch function to pull data from the active users
  */
  const listDiv = document.getElementById("div_listContainer");
+ const btn_BeginGame = document.getElementById("start_button")
+
+ const MIN_USERS = 3;
 
  var socket = io.connect('https://localhost:5000'); //Connects to server's socket server
  
@@ -36,6 +40,17 @@
     
     socket.on('message', msg => { //Updates list to match incomming messahe
         listDiv.innerHTML = msg;
+
+        //Disabes start button if number of users is below the threshold
+        var numPeople = document.querySelector(".names_list").querySelectorAll("li").length;
+        if (numPeople < MIN_USERS){
+            btn_BeginGame.disabled=true;
+        }
+        else
+        {
+            btn_BeginGame.disabled=false;
+        }
+        
     })
 
     socket.on('start', function () {window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is recieved
