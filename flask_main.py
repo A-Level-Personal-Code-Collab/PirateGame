@@ -752,8 +752,8 @@ def next_round():
         for action in actionItem.__subclasses__():
             instance = action()
             if instance.identify(item): #Use the identify method to test if the action in question is the desired action
-                actionsRequired += 1
                 if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
+                    actionsRequired += 1
                     actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
                     player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player) #Parse expression
                     emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
@@ -869,8 +869,8 @@ def retaliation_decl(data):
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGames(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=500,userBank=200,hasMirror=False,hasShield=False)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=1000,userBank=300,hasMirror=False,hasShield=False)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=500,userBank=200)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=1000,userBank=300)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)
