@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Sep 20 2021
+ * Last Modified: Sat Sep 25 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,10 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-25	WH	Option to retaliate now disables unavaliable retaliation
+ * 2021-09-25	WH	Future tense message for popup now defined server side
+ * 2021-09-25	WH	Bank update behaves like cash and doesn't show unless there is any need
+ * 2021-09-25	WH	All animation delay now happens server side
  * 2021-09-19	WH	Added tracking for available retaliations
  * 2021-09-19	WH	Added system to display available retaliation options
  * 2021-09-17	WH	item_available event replaces perpetrate_kill and perpetrate_steel etc. events
@@ -26,8 +30,8 @@
  */
  //=========================================================//
  //^ Gets elements from page ^//
- const cashBox = document.getElementById("p_cashText")
- const bankBox = document.getElementById("p_bankText")
+ const cashBox = document.getElementById("list_cashText")
+ const bankBox = document.getElementById("list_bankText")
  const logBox = document.getElementById("p_logText")
  const declareButton = document.getElementById("ipt_declare")
  const chooseButton = document.getElementById("ipt_chooseTarget")
@@ -39,10 +43,8 @@
  //^ Variables ^//
  var socket = io.connect('https://localhost:5000');
  var previousSquare = null;
- var cashTotal = 0;
  var recordedCash = 0;
- var bankTotal = 0;
- var recordedBank = 0; //Keeps track of the last value recorded on the page
+ var recordedBank = 0;
  var declareAction = ""; //The name of the action that is going to be declared
  var targetSelector = false; //Tracks if the user is currently selecting a target
  var retaliations = [] //A list of available retaliations
@@ -62,12 +64,12 @@
     })
 
     socket.on('new_square', select_sqaure)
-    socket.on('cash_update', newsum => {cashTotal = newsum})
-    socket.on('bank_update', newsum => {bankTotal = newsum; recordedBank = 999}) //Change recorded bank variable to impossible value to force recording of bank value
+    socket.on('cash_update', update_cash)
+    socket.on('bank_update', update_bank)
     socket.on('log_update', log_update)
 
     socket.on('itm_available', item_available);
-    socket.on('retal_available', (data) => {retaliations.push(data)}) //Add new retaliation to retaliations array
+    socket.on('retal_available', update_retaliations) //Add new retaliation to retaliations array
 
     socket.on('action_declare', action_popup);
 
@@ -75,6 +77,10 @@
     //Adds event listeners for page events
     declareButton.addEventListener("click", declare_action);
     chooseButton.addEventListener("click", declare_target);
+
+    /*---------------*/
+    //Updates the page to its correct values
+
  }
 
  //=========================================================//
@@ -97,19 +103,22 @@
 
 
     previousSquare = square;
-    setTimeout(update_money, 2000) //Delay here immitates the time that animation would be taking
-    setTimeout(update_retaliations, 2000) //Delay here immitates the time that animation would be taking
-    setTimeout(function () {if (declareAction != "") {update_declare(false);}}, 2000)
  }
 
  /*---------------*/
- //Updates values in cash and bank boxes
- function update_money()
+ //Updates values in cash box
+ function update_cash(cashTotal)
  {
-     if (cashTotal != recordedCash) {if (cashBox.innerHTML == "") {cashBox.innerHTML = cashTotal} else {cashBox.innerHTML = cashBox.innerHTML + `, ${cashTotal}`}} //Adds commas only if box is not empty
-     if (bankTotal != recordedBank) {if (bankBox.innerHTML == "") {bankBox.innerHTML = bankTotal} else {bankBox.innerHTML = bankBox.innerHTML + `, ${bankTotal}`}}
-     recordedBank = bankTotal
+     if (cashTotal != recordedCash) {cashBox.innerHTML = cashBox.innerHTML + `<li class="moneyEntry">${cashTotal}</li>`}
      recordedCash = cashTotal
+ }
+
+ /*---------------*/
+ //Updates values in bank
+ function update_bank(bankTotal)
+ {
+    if (bankTotal != recordedBank) {cashBox.innerHTML = cashBox.innerHTML + `<li class="moneyEntry">${bankTotal}</li>`}
+     recordedBank = bankTotal
  }
 
  /*---------------*/
@@ -121,19 +130,10 @@
  }
 
  /*---------------*/
- //Update declaration button (whethere it is greyed out or not)
- function update_declare(state)
- {
-     declareButton.disabled = state; //Disables button
-     //Add / Remove CSS class
-     if (state) {declareButton.classList.add("disabled")}
-     else {declareButton.classList.remove("disabled")}
- }
-
- /*---------------*/
  //Update the box that displays available reactions
- function update_retaliations()
+ function update_retaliations(retal_new)
  {
+     if (retal_new != null) {retaliations.push(retal_new);}
      //Creates html images on page to show what actions the user has available
      var imageList = ""
      retaliations.forEach((a) => {
@@ -160,7 +160,7 @@
      socket.emit('action_declare', {target : target, action : declareAction}); //Send over another declaration event but including target
      targetPickerPopup.style.display="none"; //Hide target picker popup again
      targetSelector = false; //Disable other popup inhibiting
-     update_declare(true) //Update the declare button back to disabled state
+     declareButton.disabled = true; //Update the declare button back to disabled state
      declareAction = "";
 
  }
@@ -187,6 +187,9 @@
          var target = data["target"];
          var perpetrator = data["perpetrator"];
          var action = data["action"];
+         var ftVerbMessage = data["ftVerb"]
+         var invalidRetals = data["invalidRetals"].split(",")
+         console.log(invalidRetals)
 
          //Get HTML elements from page
          var actionText = document.getElementById("h3_action_emphasis_text");
@@ -196,11 +199,8 @@
         //Update the perpatrator text
          perpetratorText.innerHTML = perpetrator
 
-         //Set the action that is shown
-         if (action == "itmKill") {actionText.innerHTML = "⚔ KILL ⚔"}
-         if (action == "itmSteal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
-         if (action == "itmSwap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
-         if (action == "itmGift") {actionText.innerHTML = "🎁 GIFT 🎁"}
+         //Set the action text message that is shown e.g. Will Kill ...
+         actionText.innerHTML = ftVerbMessage
 
          //Loading dots or target shown
          var loadingDots = document.getElementById("div_loadingdots");
@@ -214,14 +214,20 @@
 
                  retaliated = false;
                  retaliations.forEach((a) => {
-                    realiations_area.innerHTML += `<img src="${a["image"]}" onClick="retaliation_declare('${a["type"]}')" class="realiationOption" alt="${a["type"]}">`
+                    if (invalidRetals.includes(a["type"])) //Checks if a given retaliation is disallowed by the event in question
+                    {
+                        realiations_area.innerHTML += `<img src="${a["image"]}" onClick="retaliation_declare('${a["type"]}')" class="realiationOption disabled" alt="${a["type"]}">`
+                    } else
+                    {
+                        realiations_area.innerHTML += `<img src="${a["image"]}" onClick="retaliation_declare('${a["type"]}')" class="realiationOption" alt="${a["type"]}">`
+                    }
                  })
+
                  setTimeout(() => {retaliation_declare("none")}, 3000);
                  
              }else {targetText.innerHTML = target;} //Show who the target is
              
              loadingDots.style.display = "none"; //Hide loading dots
-             setTimeout(function () {update_money();},100); //Update all user's cash box in case they are the target (delay allows server time to process)
              setTimeout(function () {waitingForActionPopup.style.display="none";}, 3000) //Close the popup after 3s
 
          } else //Show loading circles
@@ -238,12 +244,6 @@
  //The popup for the perpetrator to select a target
  function target_picker(action)
  {
-     var actionText = document.getElementById("h3_targetPickerAction")
-     if (action == "itmKill") {actionText.innerHTML = "⚔ KILL ⚔"}
-     if (action == "itmSteal") {actionText.innerHTML = "💰 STEAL FROM 💰"}
-     if (action == "itmSwap") {actionText.innerHTML = "🤝 SWAP WITH 🤝"}
-     if (action == "itmGift") {actionText.innerHTML = "🎁 GIFT 🎁"}
-
      targetPickerPopup.style.display="block" //Show the popup
  }
 
@@ -253,6 +253,9 @@
  function item_available(data)
  {
      declareAction = data["type"];
+     var popupMessage = data["ftVerb"]
+     document.getElementById("h3_targetPickerAction").innerHTML = popupMessage
+     declareButton.disabled = false;
  }
 
  //=========================================================//

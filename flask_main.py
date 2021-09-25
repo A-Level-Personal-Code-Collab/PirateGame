@@ -6,12 +6,14 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Sep 20 2021
-# Modified By: Ollie Burroughs
+# Last Modified: Sat Sep 25 2021
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-25	WH	Now sends list of invalied retaliations with action declare
+# 2021-09-25	WH	Data classes now also define the future tense version of the event name for the popup
 # 2021-09-19	WH	Added comments and tidy code
 # 2021-09-19	WH	Added retaliation system for all other retaliation options
 # 2021-09-18	WH	Added equation parser script
@@ -48,6 +50,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 import random
 from string import Template
+from time import sleep
 
 from werkzeug.wrappers import response
 
@@ -65,14 +68,15 @@ gameDB = SQLAlchemy(app)
 #(these are required by SQL alchemy to interact with database so the variable names and info must correspond with your database)
 #---------------#
 #The table that stores a log of all currently active games
-class activeGame(gameDB.Model):
-    __tablename__ = 'activeGames'
+class activeGames(gameDB.Model):
+    __tablename__ = 'activeGamess'
     gameID = gameDB.Column(gameDB.Integer, primary_key=True)
     hostSID = gameDB.Column(gameDB.Integer)
     gridSettings = gameDB.Column(gameDB.String(100))
     itemSettings = gameDB.Column(gameDB.String(100))
     currentRound = gameDB.Column(gameDB.Integer)
     squareOrder = gameDB.Column(gameDB.String(300))
+    remainingActions = gameDB.Column(gameDB.Integer, default=0)
 
 #---------------#
 #The table that stores a log of all active users and their grids
@@ -87,8 +91,7 @@ class activeUsers(gameDB.Model):
     userCash = gameDB.Column(gameDB.Integer, default=0)
     userPendingExpression = gameDB.Column(gameDB.String(200), default="")
     userBank = gameDB.Column(gameDB.Integer, default=0)
-    hasShield = gameDB.Column(gameDB.Boolean, default=False)
-    hasMirror = gameDB.Column(gameDB.Boolean, default=False)
+    availableRetaliatios = gameDB.Column(gameDB.String(255))
 
 
 #=========================================================#
@@ -99,11 +102,14 @@ class actionItem():
     ACTION_IDENTIFIER = "itmUNDEF"
     MATHS_EXPRESSION= "vCash=vCash:vBank=vBank|pCash=pCash:pBank=pBank"
     LOG_MESSAGE = "{emoji} {perpetrator} did undefined action on {victim} {emoji}"
-    CAN_MIRROR = True
-    CAN_SHIELD = True
+    FUTURE_TENSE_VERB_MSG = "{emoji} UNDEF {emoji}"
+    INVALIED_RETALIATIONS = []
 
     def get_log(self, victim, perpetrator):
         return self.LOG_MESSAGE.format(emoji=self.ACTION_EMOJI,perpetrator=perpetrator,victim=victim)
+
+    def get_popupVerb(self):
+        return self.FUTURE_TENSE_VERB_MSG.format(emoji=self.ACTION_EMOJI)
 
     def identify(self,test):
         if test == self.ACTION_IDENTIFIER:
@@ -112,7 +118,8 @@ class actionItem():
             return False
 
     def get_itemNotify(self):
-        return "itm_available", {"type": self.ACTION_IDENTIFIER}
+        popupMessage = self.get_popupVerb()
+        return "itm_available", {"type": self.ACTION_IDENTIFIER, "ftVerb": popupMessage}
 
     def get_expressions(self):
         expression = self.MATHS_EXPRESSION.split("|")
@@ -120,6 +127,12 @@ class actionItem():
             return expression[0], ""
         else:
             return expression[0], expression[1]
+
+    def isRetalValid(self,retalType):
+        if retalType in self.INVALIED_RETALIATIONS:
+            return False
+        else: 
+            return True
 
 #---------------#
 class retaliatoryAction:
@@ -149,8 +162,8 @@ class itmKill(actionItem):
     ACTION_IDENTIFIER = "itmKill"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} killed {victim} {emoji}"
-    CAN_MIRROR = True
-    CAN_SHIELD = True
+    FUTURE_TENSE_VERB_MSG = "{emoji} KILL {emoji}"
+    INVALIED_RETALIATIONS = []
     TARGETTED = True
 
 #---------------#
@@ -161,8 +174,8 @@ class itmSteal(actionItem):
     ACTION_IDENTIFIER = "itmSteal"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}+{vCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} has stolen from {victim} {emoji}"
-    CAN_MIRROR = True
-    CAN_SHIELD = True
+    FUTURE_TENSE_VERB_MSG = "{emoji} STEAL FROM {emoji}"
+    INVALIED_RETALIATIONS = []
     TARGETTED = True
 
 #---------------#
@@ -173,8 +186,8 @@ class itmGift(actionItem):
     ACTION_IDENTIFIER = "itmGift"
     MATHS_EXPRESSION= "self.vCash={vCash}+1000:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} gifted {victim} {emoji}"
-    CAN_MIRROR = True
-    CAN_SHIELD = True
+    FUTURE_TENSE_VERB_MSG = "{emoji} GIFT {emoji}"
+    INVALIED_RETALIATIONS = []
     TARGETTED = True
 
 
@@ -186,8 +199,8 @@ class itmSwap(actionItem):
     ACTION_IDENTIFIER = "itmSwap"
     MATHS_EXPRESSION= "self.vCash={pCash}:self.vBank={vBank}|self.pCash={vCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} {perpetrator} swapped with {victim} {emoji}"
-    CAN_MIRROR = False
-    CAN_SHIELD = True
+    FUTURE_TENSE_VERB_MSG = "{emoji} SWAP WITH {emoji}"
+    INVALIED_RETALIATIONS = ["itmMirror"]
     TARGETTED = True
 
 #---------------#
@@ -198,8 +211,7 @@ class itmBomb(actionItem):
     ACTION_IDENTIFIER = "itmBomb"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}"
     LOG_MESSAGE = ""
-    CAN_MIRROR = False
-    CAN_SHIELD = False
+    INVALIED_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 
 #---------------#
@@ -210,8 +222,7 @@ class itmBank(actionItem):
     ACTION_IDENTIFIER = "itmBank"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}+{vCash}"
     LOG_MESSAGE = ""
-    CAN_MIRROR = False
-    CAN_SHIELD = False
+    INVALIED_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 
 #=========================================================#
@@ -339,7 +350,7 @@ def nicknameValidate(nickname):
 #---------------#
 #Checks that the provided game ID exists
 def gameIDValidate(gameID):
-    if activeGame.query.get(int(gameID)):
+    if activeGames.query.get(int(gameID)):
         return True
     else:
         return False
@@ -357,7 +368,7 @@ def getActiveUsersList(gameID):
 #---------------#
 #Checks if a given user SID is the host of a game
 def isHost(SID,gameID):
-    qurRes = activeGame.query.filter(activeGame.hostSID==SID,activeGame.gameID==gameID).all()
+    qurRes = activeGames.query.filter(activeGames.hostSID==SID,activeGames.gameID==gameID).all()
     print(qurRes)
     if qurRes:
         return True
@@ -467,7 +478,7 @@ def play_game():
         if submitButton == "Playing here instead": #Check if the user has answered that they wish to use a new SID (in which case delete all reference to old SID)
             queryData = activeUsers.query.filter(activeUsers.userSID==userSID).first()
             if queryData.isHost == True:
-                activeGame.query.filter(activeGame.gameID==queryData.userGameID).delete()
+                activeGames.query.filter(activeGames.gameID==queryData.userGameID).delete()
             activeUsers.query.filter(activeUsers.userSID==userSID).delete()
 
         #Check if the SID stored in the user's cookies is still present in the active database
@@ -481,7 +492,7 @@ def play_game():
             if nicknameValidate(nickname):
                 #Saves user details to database
                 userSID = random.randint(0,999999)
-                while activeGame.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+                while activeGames.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
                     userSID = random.randint(0,999999)
 
                 newUserActivate = activeUsers(userSID=userSID,userNickname=nickname,userGameID=gameID,isHost=False); #Build new database entry using base class
@@ -524,17 +535,16 @@ def new_game():
         gameID = ""
         for x in range(8):
             gameID = gameID + str(random.randint(0,9))
-        while activeGame.query.get(int(gameID)) != None: #Check if chosen gameID already exists and keep regerating until it doesn't
+        while activeGames.query.get(int(gameID)) != None: #Check if chosen gameID already exists and keep regerating until it doesn't
                     gameID = ""
                     for x in range(8):
                         gameID = gameID + str(random.randint(0,9))
         gameID = int(gameID)
-        print(gameID)
         userSID = random.randint(0,999999)
-        while activeGame.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+        while activeGames.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
             userSID = random.randint(0,999999)
 
-        newGame = activeGame(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
+        newGame = activeGames(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
         newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname=nickname,isHost=True)
 
         gameDB.session.add(newGame)
@@ -564,7 +574,7 @@ def game_sheet():
 
     #-#
     #Queries and retries required data from database
-    gameData = activeGame.query.get(int(gameID))
+    gameData = activeGames.query.get(int(gameID))
 
     if gameData == None: #If an attempt is made to access page without correct ID
         return "FATAL ERROR!"
@@ -604,7 +614,7 @@ def about_page():
 @app.route("/playing_online/lobby")
 def lobby():
     gameID = request.args.get("gid")
-    hostSID = activeGame.query.get(gameID).hostSID
+    hostSID = activeGames.query.get(gameID).hostSID
     hostNick = activeUsers.query.get(hostSID).userNickname
     host_content = ""
     if isHost(request.cookies.get("SID"),request.args.get("gid")): #Renders host-only controls if the user is the host
@@ -617,13 +627,13 @@ def lobby():
 def game():
     gameID = request.args.get("gid")
     userID = request.cookies.get("SID")
-    hostSID = activeGame.query.get(gameID).hostSID
+    hostSID = activeGames.query.get(gameID).hostSID
     hostNick = activeUsers.query.get(hostSID).userNickname
     myNick = activeUsers.query.get(userID).userNickname #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
 
     #Gets grid information from relevant database
     gridSerial = activeUsers.query.get(userID).userGrid
-    gridSettingsJSON = json.loads(activeGame.query.get(gameID).gridSettings)
+    gridSettingsJSON = json.loads(activeGames.query.get(gameID).gridSettings)
     gridX = int(gridSettingsJSON["GRID_X"])
     
     usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
@@ -690,7 +700,7 @@ def start_game(data):
         emit("start",room=gameID)
 
         #Load grid data from database
-        gameData = activeGame.query.get(int(gameID))
+        gameData = activeGames.query.get(int(gameID))
         gridJSON = json.loads(gameData.gridSettings)
         gridSize = int(gridJSON["GRID_X"])*int(gridJSON["GRID_Y"])
 
@@ -712,13 +722,16 @@ def next_round():
     requestSID = request.sid
     gameID = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first().userGameID #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
-    gameObject = activeGame.query.get(gameID) #Load game information from database
+    gameObject = activeGames.query.get(gameID) #Load game information from database
     currentRound = gameObject.currentRound +1
     square = gameObject.squareOrder.split(",")[currentRound-1]
 
     emit("new_square", square, room=gameIDString) #Send selected square to clients
 
+    sleep(3) #Time for animation to occur on client
+
     all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString).all()
+    actionsRequired = 0 #Used to track whether the next round can begin imediately
     for player in all_players:
         playerGrid = player.userGrid.split(",")
         item = playerGrid[int(square)]
@@ -736,6 +749,7 @@ def next_round():
         for action in actionItem.__subclasses__():
             instance = action()
             if instance.identify(item): #Use the identify method to test if the action in question is the desired action
+                actionsRequired += 1
                 if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
                     actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
                     player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player) #Parse expression
@@ -751,8 +765,15 @@ def next_round():
         for action in retaliatoryAction.__subclasses__():
             instance = action()
             if instance.identify(item):
+                player.availableRetaliatios = f"{player.availableRetaliatios},{item}"
                 event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
                 emit(event, data,room=player.socketioSID)
+
+    #---------------#
+    if actionsRequired == 0:
+        emit("round_complete",room=gameIDString)
+    else:
+        gameObject.remainingActions = actionsRequired
 
     #---------------#
     #Update values in database to newest
@@ -769,6 +790,7 @@ def action_declared(data):
     perpetrator = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the perpetrator's information
     gameID = perpetrator.userGameID #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
+    invalidRetals = ""
     
     #---------------#
     #Handling for once a target has been selcted
@@ -779,6 +801,7 @@ def action_declared(data):
             instance = actionType()
             if instance.identify(actionIdentifier):
                 target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions() #Save the expression information to the database based on what event has taken place
+                invalidRetals = ",".join(instance.INVALIED_RETALIATIONS)
                 logEntry = instance.get_log(targetNickname,perpetrator.userNickname) #Log the action to the logs
                 break # Break to save resources
 
@@ -786,8 +809,9 @@ def action_declared(data):
 
         #Updates the log
         emit('log_update', logEntry, room=gameIDString)
-
-    emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname}, room=gameIDString) #Re-broadcast event to enforce popup
+    
+    fTenseMessage = eval(f"{actionIdentifier}().get_popupVerb()") #Uses the dataclass system to get the propper grammer for the popup messgae
+    emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname, "ftVerb": fTenseMessage, "invalidRetals": invalidRetals}, room=gameIDString) #Re-broadcast event to enforce popup
 
 #---------------#
 #Handles when a client declares their response to an action being done against them
@@ -795,22 +819,28 @@ def action_declared(data):
 def retaliation_decl(data):
     requestSID = request.sid
     victim = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Load victim from database
-    perpetrator = activeUsers.query.filter(activeUsers.userGameID==victim.userGameID, activeUsers.userPendingExpression != "").first() #Find perpetrator based on the fact that they too will have changes to their pending
+    perpetrator = activeUsers.query.filter(activeUsers.userGameID==victim.userGameID, activeUsers.userPendingExpression != "", activeUsers.userSID != victim.userSID).first() #Find perpetrator based on the fact that they too will have changes to their pending
 
     moneyHandlingExpression= victim.userPendingExpression+":"+perpetrator.userPendingExpression #Create combined expression for money that tells what happens to both parties
     gameID = perpetrator.userGameID #Find game ID from perpetrator
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     retal_type = data["type"] #Gets the string dictating the clients response
     gameHandler = gameplay()
+    aktvGame = activeGames.query.get(gameID)
 
     #---------------#
     #Loops through avilable retaliations to check if it matches any of those
-    for action in retaliatoryAction.__subclasses__():
-        instance = action()
-        if instance.identify(retal_type):
-            moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dicted in the retaliation's data class
-            emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString) #Add retaliation log entry
-            break #Break to save resources
+    if retal_type != "none":
+        for action in retaliatoryAction.__subclasses__():
+            instance = action()
+            if instance.identify(retal_type):
+                availableRetals = victim.availableRetaliatios.split(",")
+                if retal_type in availableRetals:
+                    availableRetals.remove(retal_type)
+                    victim.availableRetaliatios = ",".join(availableRetals)
+                    moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dicted in the retaliation's data class
+                    emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString) #Add retaliation log entry
+                    break #Break to save resources
 
     #---------------#
     #Actually parse new (or un-updated) money expression to new cash values
@@ -822,9 +852,12 @@ def retaliation_decl(data):
         user.userPendingExpression = ""
 
         #Updates the cash boxes of both the perpetrator and victim
-        print("Cash udate"+str(user.userCash))
         emit("cash_update", user.userCash, room=user.socketioSID)
         emit("bank_update", user.userBank, room=user.socketioSID)
+
+    aktvGame.remainingActions -= 1
+    if aktvGame.remainingActions == 0:
+        emit("round_complete",room=gameIDString)
 
     gameDB.session.commit()
 
@@ -832,12 +865,12 @@ def retaliation_decl(data):
 #=========================================================#
 #^ Main app execution ^#
 if __name__ == "__main__":
-    testGame = activeGame(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="itmSwap,itmSwap,itmSwap,itmKill,M5000,itmKill,itmKill,itmShield,itmGift,itmGift,itmGift,itmGift,itmMirror,itmBomb,itmBomb,itmSteal,itmSteal,itmSteal,itmBank,itmSteal,itmSteal,itmSwap,itmSteal,itmSteal,itmSteal",isHost=True,userCash=500,userBank=0,hasMirror=False,hasShield=False)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=1000,userBank=0,hasMirror=False,hasShield=False)
+    testGame = activeGames(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY_USER",userGrid="itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,itmSwap,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=True,userCash=500,userBank=0)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSwap,itmKill,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=1000,userBank=0)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)
     gameDB.session.add(testGame)
     gameDB.session.commit()
-    socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem')) #SocketIo required for two way communication
+    socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem'), host="0.0.0.0") #SocketIo required for two way communication

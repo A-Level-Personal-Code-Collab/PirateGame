@@ -6,12 +6,14 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Mon Sep 20 2021
+ * Last Modified: Sat Sep 25 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-25	WH	Added styling for new cash list item
+ * 2021-09-25	WH	Added retaliation disabled style
  * 2021-09-20	WH	Created nice styling for retaliation options on pop-up
  * 2021-09-20	WH	Created absolutely positioned Retaliations pop-out tab
  * 2021-09-19	WH	Added styling for some retaliation scenarios
@@ -76,6 +78,30 @@
      margin-right: 2%;
      display: inline-flex;
      width: 96%;
+ }
+
+ .moneyList
+ {
+     list-style: none;
+ }
+
+ li.moneyEntry
+ {
+     display: inline-flex;
+     padding: 2px 5px;
+     margin: 5px;
+     background-color: rgba(196, 196, 196, 0.637);
+     font-size: 16px;
+     font-weight: bold;
+     width: fit-content;
+     border-radius: 3px;
+ }
+
+ .moneyEntry::before
+ {
+     padding-left: 5px;
+     padding-right: 3px;
+    content: "\1F4B7";
  }
 
  /*---------------*/
@@ -156,10 +182,11 @@
     border-radius: 3px;
  }
 
- .actionButton.disabled
+ .actionButton:disabled
  {
      filter: blur(1px) grayscale(100%);
      pointer-events: none;
+     cursor: not-allowed;
      opacity: (0.6);
  }
 
@@ -232,6 +259,14 @@
      background-color: #ffd900;
      padding: 5px;
  }
+
+ .realiationOption.disabled
+ {
+     pointer-events: none;
+     filter: blur(1px) grayscale(100%);
+
+ }
+
  /*//=========================================================//*/
  /*^ Loading dots animation ^*/
  #div_loadingdots

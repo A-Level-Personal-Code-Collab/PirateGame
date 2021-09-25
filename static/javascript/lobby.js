@@ -43,12 +43,15 @@
 
         //Disabes start button if number of users is below the threshold
         var numPeople = document.querySelector(".names_list").querySelectorAll("li").length;
-        if (numPeople < MIN_USERS){
-            btn_BeginGame.disabled=true;
-        }
-        else
+        if (!!btn_BeginGame) //Check button is not null
         {
-            btn_BeginGame.disabled=false;
+            if (numPeople < MIN_USERS){
+                btn_BeginGame.disabled=true;
+            }
+            else
+            {
+                btn_BeginGame.disabled=false;
+            }
         }
         
     })

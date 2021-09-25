@@ -5,7 +5,7 @@
  * Decription: Gameplay CSS for the host's controls
  * Author: Will Hall
  * -----
- * Last Modified: Sat Aug 28 2021
+ * Last Modified: Sat Sep 25 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -14,6 +14,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-25	WH	Added next round disabling system
  * 2021-08-28	WH	Added event listener to Next-Round button in order to move to next round
  */
  //=========================================================//
@@ -29,6 +30,8 @@
      nextRound_btn.addEventListener("click", next_round);
 
      /*---------------*/
+     // SocketIO Listeners
+     socket.on("round_complete", round_complete)
 
  }
 
@@ -37,6 +40,12 @@
  function next_round()
  {
     socket.emit("next_round");
+    nextRound_btn.disabled = true;
+ }
+
+ function round_complete()
+ {
+     nextRound_btn.disabled = false;
  }
 
  //=========================================================//
