@@ -661,7 +661,7 @@ def results():
         userscore[User.userNickname] = User.userCash + User.userBank
     sorted_scores = dict(sorted(userscore.items(),key = lambda x:x[1],reverse=True ))
     print(sorted_scores)
-    final_scores_table = "<table class=\"podium\"> <tr class=\"ResultsTableHeader\"> <td> Player </td> <td> Final Cash </td> </tr> "
+    final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td> Player </td> <td> Final Cash </td> </tr> "
     for name,score in sorted_scores.items():
         final_scores_table += f"<tr> <td> {name} </td> <td> {score} </td> </tr>" 
     final_scores_table += "</table>"
