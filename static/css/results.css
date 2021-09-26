@@ -6,7 +6,7 @@
  * Author: Ollie Burroughs
  * Copyright (c) 2021 SchmetCorp.
  * -----
- * Last Modified: Sat Sep 25 2021
+ * Last Modified: Sun Sep 26 2021
  * Modified By: Ollie Burroughs
  * -----
  * HISTORY:
@@ -23,9 +23,11 @@
      border-color: #3b5ba1;
      background-color: #474e5d;
      width: 30%;
-     height: 100%;
-     position:absolute;
+     bottom:0px;
+     top:84px;
+     position:fixed;
      right: 0;
+     overflow-y:scroll;
  }
 .sidebarscores
 {

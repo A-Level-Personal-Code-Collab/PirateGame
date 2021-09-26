@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Sun Sep 26 2021
-# Modified By: Will Hall
+# Modified By: Ollie Burroughs
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -681,9 +681,11 @@ def results():
     userscores = json.loads(activeGames.query.get(gameID).resultsScores)
 
     sorted_scores = dict(sorted(userscores.items(),key = lambda x:x[1],reverse=True ))
-    final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td> Player </td> <td> Final Cash </td> </tr> "
+    final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td></td><td> Player </td> <td> Final Cash </td> </tr> "
+    placing = 1
     for name,score in sorted_scores.items():
-        final_scores_table += f"<tr> <td> {name} </td> <td> {score} </td> </tr>" 
+        final_scores_table += f"<tr> <td>{placing}</td> <td> {name} </td> <td> {score} </td> </tr>"
+        placing += 1 
     final_scores_table += "</table>"
     return render_template ("results.html",results_table = Markup (final_scores_table))
 
@@ -884,7 +886,7 @@ def retaliation_decl(data):
 #=========================================================#
 #^ Main app execution ^#
 if __name__ == "__main__":
-    testGame = activeGames(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
+    testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "test2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "test7": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1900, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
     testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=500,userBank=200)
     testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=1000,userBank=300)
     gameDB.create_all() #Creates all defined tables in in-memory database
