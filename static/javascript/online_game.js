@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-26	WH	Uses dynamic socketio address now
  * 2021-09-26	WH	Added handling for game finnished event to forward users to results page (Issue#104)
  * 2021-09-26	WH	Fixed retaliation removal problem (Issue#)
  * 2021-09-26	WH	Implemented square picker animation
@@ -44,7 +45,7 @@
 
  //=========================================================//
  //^ Variables ^//
- var socket = io.connect('https://localhost:5000');
+ var socket = io.connect(window.location.origin);
  var previousSquare = null;
  var recordedCash = 0;
  var recordedBank = 0;

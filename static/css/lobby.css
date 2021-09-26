@@ -64,10 +64,16 @@
     float: right;
 }
 
+#controlContent
+{
+    float: right;
+}
+
+
  /*//=========================================================//*/
  /*^ Begin Game Button ^*/
 
- #start_button{
+ .actionButton{
     border: none;
     cursor: pointer;
     background-color: #ffd900;
@@ -76,23 +82,24 @@
     padding: 1.5vh;
     color: rgb(145, 145, 145);
     border-radius: 8px;
+    margin-right: 0.5vw;
   }
 
-  #start_button:hover{
+  .actionButton:hover{
     background-color: #fade3d;
   }
 
-  #start_button:active:not(:disabled){
+  .actionButton:active:not(:disabled){
     background-color: #fade3d;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
     transform: translateY(0.1vh);
   }
 
-  #start_button:disabled{
+  .actionButton:disabled{
       background-color: darkgray;
       cursor: not-allowed;
   }
- 
+
 
  /*//=========================================================//*/
  /*^ Names list ^*/

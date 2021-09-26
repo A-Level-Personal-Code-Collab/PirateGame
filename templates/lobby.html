@@ -6,12 +6,13 @@ Description: The HTML file for the waiting lobby
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sun Sep 19 2021
-Modified By: Adam O'Neill
+Last Modified: Sun Sep 26 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-09-26	WH	Added music control button
 2021-08-09	WH	Added file an basic structure with no header or styling
 -->
 {% extends 'base.html' %}
@@ -29,6 +30,7 @@ Date      	By	Comments
             <h1 id="hostNick">{{ hostNick }}'s Pirate Game</h1>
             <h1 id="gameID">{{ gameID  }}</h1>
             <div id="hostContent">{{ host_only_content }}</div>
+            <div id="controlContent"><input type="button" value="🎵" class="actionButton" id="ipt_musicControl"></div>
         </div>
         <div id="div_listContainer">
         </div>

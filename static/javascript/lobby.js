@@ -13,16 +13,20 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-26	WH	Added dynamic socketio address
+ * 2021-09-26	WH	Added music plaback control
  * 2021-09-25	WH	Disables start button if number of users is too small
  * 2021-08-28	WH	Join event now sends userID to server also
  * 2021-08-09	WH	Added fetch function to pull data from the active users
  */
  const listDiv = document.getElementById("div_listContainer");
- const btn_BeginGame = document.getElementById("start_button")
-
+ const btn_BeginGame = document.getElementById("start_button");
+ const mcontrol_btn = document.getElementById("ipt_musicControl")
+ const musicPlayer = new Audio(`${window.location.origin}/static/audio/lobby_backing.ogg`)
  const MIN_USERS = 3;
 
- var socket = io.connect('https://localhost:5000'); //Connects to server's socket server
+ var socket = io.connect(window.location.origin); //Connects to server's socket server
+ var musicState = true;
  
  //=========================================================//
  //^ Performs user functions ^//
@@ -57,6 +61,12 @@
     })
 
     socket.on('start', function () {window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is recieved
+
+    /*---------------*/
+    //Handles background music playback
+    mcontrol_btn.addEventListener("click", musicToggle)
+    musicPlayer.loop = true
+    musicPlayer.play()
  }
 
  /*---------------*/
@@ -64,6 +74,14 @@
  function start_game()
  {
      socket.emit("start",{userSID: getCookie("SID"), gameID: getUrlVar("gid")})
+ }
+
+ /*---------------*/
+ //Toggles background music on click of button
+ function musicToggle()
+ {
+     musicState = !musicState
+     if (musicState) {(musicPlayer.play())} else {musicPlayer.pause()}
  }
 
  //=========================================================//
