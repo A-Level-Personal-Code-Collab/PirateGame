@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sat Sep 25 2021
+ * Last Modified: Sun Sep 26 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-26	WH	Fixed retaliation removal problem (Issue#)
+ * 2021-09-26	WH	Implemented square picker animation
  * 2021-09-25	WH	Option to retaliate now disables unavaliable retaliation
  * 2021-09-25	WH	Future tense message for popup now defined server side
  * 2021-09-25	WH	Bank update behaves like cash and doesn't show unless there is any need
@@ -89,20 +91,40 @@
  //Lights up a selected square and greys-out the old one
  function select_sqaure(serialSquareNum)
  {
-    var square = document.getElementById(`square${serialSquareNum}`);
-    //var allSquares = document.querySelector("")
+     const RUN_TIMES = 30;
+     const INTERVAL = 100;
+
+    var intervalFunc = setInterval(() => {
+        if (previousSquare) {previousSquare.classList.remove("selected"); previousSquare.classList.add("completed");}
+        var randomTag = pickRandomSquare();
+        console.log(randomTag)
+        randomTag.classList.add("selected");
+
+        setTimeout(() => {
+            randomTag.classList.remove("selected");
+        }, INTERVAL);
+    }, INTERVAL);
+
+    //Ends interval loop after set time then adds the final square
+    setTimeout(() => {
+        clearInterval(intervalFunc)
+
+        setTimeout(() =>{
+            var square = document.getElementById(`square${serialSquareNum}`);
+            square.classList.add("selected"); //Lights up winning square
+
+            previousSquare = square;
+        })
+    },RUN_TIMES*INTERVAL)    
+
     
-    square.classList.add("selected"); //Lights up currently selected square
-
-    //Greys-out passed squares
-    if (previousSquare)
-    {
-        previousSquare.classList.remove("selected");
-        previousSquare.classList.add("completed");
-    }
-
-
-    previousSquare = square;
+ }
+ /*---------------*/
+ //Choses a random sqaure for the animation
+ function pickRandomSquare() {
+    var allRemainingSquares = document.querySelectorAll(".gridSquare:not(.completed):not(#None)")
+    console.log(allRemainingSquares);
+    return allRemainingSquares[Math.floor(Math.random()*allRemainingSquares.length)]
  }
 
  /*---------------*/
@@ -117,7 +139,7 @@
  //Updates values in bank
  function update_bank(bankTotal)
  {
-    if (bankTotal != recordedBank) {cashBox.innerHTML = cashBox.innerHTML + `<li class="moneyEntry">${bankTotal}</li>`}
+    if (bankTotal != recordedBank) {bankBox.innerHTML = bankBox.innerHTML + `<li class="moneyEntry">${bankTotal}</li>`}
      recordedBank = bankTotal
  }
 
@@ -171,8 +193,10 @@
  {
      if (!retaliated) { //Check a retaliation hasn't already been sent
         socket.emit("retaliation_declare", {type: type}); //Send back to server
-        retaliations.splice(retaliations.indexOf(type),1); //Remove retaliation from available retaliations events
-        update_retaliations(); //Update the retaliations box on the page
+        if (type != "none") {
+            retaliations.splice(retaliations.indexOf(type),1); //Remove retaliation from available retaliations events
+            update_retaliations(); //Update the retaliations box on the page
+        }
         retaliated = true;
      }
  }

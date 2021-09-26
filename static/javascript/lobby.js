@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sat Sep 25 2021
+ * Last Modified: Sun Sep 26 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -20,7 +20,7 @@
  const listDiv = document.getElementById("div_listContainer");
  const btn_BeginGame = document.getElementById("start_button")
 
- const MIN_USERS = 3;
+ const MIN_USERS = 2;
 
  var socket = io.connect('https://localhost:5000'); //Connects to server's socket server
  

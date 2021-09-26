@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Sep 25 2021
+ * Last Modified: Sun Sep 26 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-26	WH	Added square picker animation for the selection routine
  * 2021-09-25	WH	Added styling for new cash list item
  * 2021-09-25	WH	Added retaliation disabled style
  * 2021-09-20	WH	Created nice styling for retaliation options on pop-up
@@ -25,6 +26,22 @@
  * 2021-08-24	WH	Added CSS for cash, bank and log boxes (outer container)
  * 2021-08-23	WH	Created file
  */
+  /*//=========================================================//*/
+ /*^ Css animation ^*/
+ /*Pop in animation from the internet*/
+ @-webkit-keyframes square-picker {
+    0% { opacity: 0.7; -webkit-transform: scale(1); }
+    100% { opacity: 0.7; -webkit-transform: scale(1.1); }
+}
+@-moz-keyframes square-picker {
+    0% { opacity: 0.7; -moz-transform: scale(1); }
+    100% { opacity: 0.7; -moz-transform: scale(1.1); }
+}
+@keyframes square-picker {
+    0% { opacity: 0.7; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.1); }
+}
+
  /*//=========================================================//*/
  /*^ Grid Settings ^*/
  .gridSquare
@@ -51,15 +68,22 @@
      
  }
 
- .selected
- {
-     background-color: rgb(228, 135, 135);
- }
-
  .completed
  {
-     background-color: rgb(135, 135, 135);
+     background-color: rgba(172, 172, 172, 0.705);
+     filter: blur(0.5px) grayscale(100%);
  }
+
+ .selected
+ {
+     filter: none;
+     background-color: rgb(228, 135, 135);
+     -webkit-animation:square-picker 0.2s;
+     -moz-animation:square-picker 0.2s;
+     -ms-animation:square-picker 0.2s;
+     animation: square-picker 0.2s;
+ }
+
 
  /*//=========================================================//*/
  /*^Game info boxes^*/
