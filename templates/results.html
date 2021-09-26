@@ -20,8 +20,33 @@
  {% block title %} Results {% endblock %}
  {% block head %}
      <link rel="stylesheet" href="../static/css/results.css">
+     <script> var top3str = '{{podiumscores | tojson | safe}}' </script>
+     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js" defer></script>
      <script src="../static/javascript/results.js" defer></script>
  {% endblock %}
  {% block body %}
+<div id = "podiumcontainer">
+    <div id = "secondcontainer" class = "columncontainer">
+        <div id = "secondcol" class = "podcol">
+            <h3 id = "secondtxt" class = "podtext">
+            SECOND
+            </h3>
+        </div>
+    </div>
+    <div id = "firstcontainer" class = "columncontainer">
+        <div id = "firstcol" class = "podcol">
+            <h3 id = "firsttxt" class = "podtext">
+            FIRST
+            </h3>
+        </div>
+    </div>
+    <div id = "thirdcontainer" class = "columncontainer">
+           <h3 id = "thirdtxt" class = "podtext">
+            THIRD
+            </h3>
+        <div id = "thirdcol" class = "podcol">
+        </div>
+    </div>
+</div>
  <div class = "sidebarresults">{{results_table}}</div>
  {% endblock %}

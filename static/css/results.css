@@ -14,21 +14,93 @@
  * ----------	---	---------------------------------------------------------
  */
 
- .sidebarresults
- {
-     border-top-left-radius: 2%;
-     border-bottom-left-radius:2%;
-     border-style: inset;
-     border-width: 15px;
-     border-color: #3b5ba1;
-     background-color: #474e5d;
-     width: 30%;
-     bottom:0px;
-     top:84px;
-     position:fixed;
-     right: 0;
-     overflow-y:scroll;
- }
+#podiumcontainer
+{
+    position: fixed;
+    left:5%;
+    bottom:0;
+    height:65%;
+    width:60%;
+}
+
+.columncontainer
+{
+    width: 33.333333%;
+    float: left;
+    height: 100%;
+    position: relative;
+}
+
+#thirdcontainer
+{
+    height:40%;
+}
+
+.podcol
+{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+#thirdcol
+{
+    background-color:chocolate;
+    height:65%;
+}
+
+#secondcol
+{
+    background-color:darkgrey;
+    height:66.666666666%;
+}
+
+#firstcol
+{
+    background-color: goldenrod;
+    height:100%;
+}
+
+.podtext
+{
+    font-family: sans-serif;
+    font-weight: bolder;
+    text-align: center;
+    color: blue;
+    overflow-wrap: break-word;
+    display: inline-block;
+}
+
+#firsttxt
+{
+    color:goldenrod;
+}
+
+#secondtxt
+{
+    color:darkgrey;
+}
+
+#thirdtxt
+{
+    color:chocolate;
+}
+
+.sidebarresults
+{
+    border-top-left-radius: 2%;
+    border-bottom-left-radius:2%;
+    border-style: inset;
+    border-width: 15px;
+    border-color: #3b5ba1;
+    background-color: #474e5d;
+    width: 30%;
+    bottom:0px;
+    top:84px;
+    position:fixed;
+    right: 0;
+    overflow-y:scroll;
+}
 .sidebarscores
 {
     font-family: sans-serif;
