@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-26	WH	Added game finnished event to forward to results page
 # 2021-09-25	WH	Now sends list of invalied retaliations with action declare
 # 2021-09-25	WH	Data classes now also define the future tense version of the event name for the popup
 # 2021-09-19	WH	Added comments and tidy code
@@ -41,6 +42,7 @@
 #---------------------------------------------------------------------#
 from re import sub
 import re
+from typing import final
 from weakref import ProxyTypes
 from flask import Flask, render_template, Markup, send_file, request
 from flask_socketio import SocketIO, join_room, rooms, send, emit
@@ -77,6 +79,7 @@ class activeGames(gameDB.Model):
     currentRound = gameDB.Column(gameDB.Integer)
     squareOrder = gameDB.Column(gameDB.String(300))
     remainingActions = gameDB.Column(gameDB.Integer, default=0)
+    resultsScores = gameDB.Column(gameDB.String(1000))
 
 #---------------#
 #The table that stores a log of all active users and their grids
@@ -451,8 +454,19 @@ class gameplay:
         
         return self.vCash, self.vBank, self.pCash, self.pBank
 
-def gameEnd(gameID):
-    pass
+    def gameEnd(self, gameID):
+        allUsers = activeUsers.query.filter(activeUsers.userGameID==int(gameID)).all()
+        gameOBJ = activeGames.query.get(int(gameID))
+
+        #collects users final cash amounts and sorts them in a dictionary
+        userscore = {}
+        for User in allUsers:
+            userscore[User.userNickname] = User.userCash + User.userBank
+
+        gameOBJ.resultsScores = json.dumps(userscore)
+        activeUsers.query.filter(activeUsers.userGameID==int(gameID)).delete()
+
+        gameDB.session.commit()       
 
 #=========================================================#
 #URL routes
@@ -663,14 +677,10 @@ def results():
     #fetches user data
     gameID = request.args.get("gid")
     userID = request.cookies.get("SID")
-    allUsers = activeUsers.query.filter(activeUsers.userGameID==int(gameID)).all()
-    print(allUsers)
-    #collects users final cash amounts and sorts them in a dictionary
-    userscore = {}
-    for User in allUsers:
-        userscore[User.userNickname] = User.userCash + User.userBank
-    sorted_scores = dict(sorted(userscore.items(),key = lambda x:x[1],reverse=True ))
-    print(sorted_scores)
+
+    userscores = json.loads(activeGames.query.get(gameID).resultsScores)
+
+    sorted_scores = dict(sorted(userscores.items(),key = lambda x:x[1],reverse=True ))
     final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td> Player </td> <td> Final Cash </td> </tr> "
     for name,score in sorted_scores.items():
         final_scores_table += f"<tr> <td> {name} </td> <td> {score} </td> </tr>" 
@@ -727,50 +737,56 @@ def next_round():
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     gameObject = activeGames.query.get(gameID) #Load game information from database
     currentRound = gameObject.currentRound +1
-    square = gameObject.squareOrder.split(",")[currentRound-1]
+    allSquares = gameObject.squareOrder.split(",")
 
-    emit("new_square", square, room=gameIDString) #Send selected square to clients
+    if currentRound > len(allSquares):
+        gameplay().gameEnd(gameID)
+        emit("game_complete", room=gameIDString)
 
-    sleep(3) #Time for animation to occur on client
+    else:
+        square = allSquares[currentRound-1]
+        emit("new_square", square, room=gameIDString) #Send selected square to clients
 
-    all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString).all()
-    actionsRequired = 0 #Used to track whether the next round can begin imediately
-    for player in all_players:
-        playerGrid = player.userGrid.split(",")
-        item = playerGrid[int(square)]
+        sleep(3) #Time for animation to occur on client
 
-        #---------------#
-        #Handle money items
-        if money(200).identify(item): #Use the identify method from data class
-            denomination = item[1:] #Get the denomination value by removing the 'M' from the ID
-            note = money(int(denomination)) #Get instance of data class
-            player.userCash = note.cash_update(player.userCash) #Update player's cash value in database
-            emit("cash_update", player.userCash, room=player.socketioSID) #Send cash update event
+        all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString).all()
+        actionsRequired = 0 #Used to track whether the next round can begin imediately
+        for player in all_players:
+            playerGrid = player.userGrid.split(",")
+            item = playerGrid[int(square)]
 
-        #---------------#
-        #Iterate through all action classes and process them
-        for action in actionItem.__subclasses__():
-            instance = action()
-            if instance.identify(item): #Use the identify method to test if the action in question is the desired action
-                if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
-                    actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
-                    player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player) #Parse expression
-                    emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
-                    emit("bank_update", player.userBank, room=player.socketioSID)
-                else:
-                    actionsRequired += 1
-                    event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
+            #---------------#
+            #Handle money items
+            if money(200).identify(item): #Use the identify method from data class
+                denomination = item[1:] #Get the denomination value by removing the 'M' from the ID
+                note = money(int(denomination)) #Get instance of data class
+                player.userCash = note.cash_update(player.userCash) #Update player's cash value in database
+                emit("cash_update", player.userCash, room=player.socketioSID) #Send cash update event
+
+            #---------------#
+            #Iterate through all action classes and process them
+            for action in actionItem.__subclasses__():
+                instance = action()
+                if instance.identify(item): #Use the identify method to test if the action in question is the desired action
+                    if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
+                        actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
+                        player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player) #Parse expression
+                        emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
+                        emit("bank_update", player.userBank, room=player.socketioSID)
+                    else:
+                        actionsRequired += 1
+                        event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
+                        emit(event, data,room=player.socketioSID)
+                    break #Break loop after detecting correct item to save resources
+            
+            #---------------#
+            #Iterate through retaliation actions to identify if the user has one of those
+            for action in retaliatoryAction.__subclasses__():
+                instance = action()
+                if instance.identify(item):
+                    player.availableRetaliatios = f"{player.availableRetaliatios},{item}"
+                    event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
                     emit(event, data,room=player.socketioSID)
-                break #Break loop after detecting correct item to save resources
-        
-        #---------------#
-        #Iterate through retaliation actions to identify if the user has one of those
-        for action in retaliatoryAction.__subclasses__():
-            instance = action()
-            if instance.identify(item):
-                player.availableRetaliatios = f"{player.availableRetaliatios},{item}"
-                event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
-                emit(event, data,room=player.socketioSID)
 
     #---------------#
     if actionsRequired == 0:
@@ -870,7 +886,7 @@ def retaliation_decl(data):
 if __name__ == "__main__":
     testGame = activeGames(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
     testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=500,userBank=200)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,M5000,M5000,M5000,M5000,M5000,M5000,M5000",isHost=False,userCash=1000,userBank=300)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=1000,userBank=300)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)

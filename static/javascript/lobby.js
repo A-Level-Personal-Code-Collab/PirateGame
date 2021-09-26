@@ -20,7 +20,7 @@
  const listDiv = document.getElementById("div_listContainer");
  const btn_BeginGame = document.getElementById("start_button")
 
- const MIN_USERS = 2;
+ const MIN_USERS = 3;
 
  var socket = io.connect('https://localhost:5000'); //Connects to server's socket server
  

@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-26	WH	Added handling for game finnished event to forward users to results page (Issue#104)
  * 2021-09-26	WH	Fixed retaliation removal problem (Issue#)
  * 2021-09-26	WH	Implemented square picker animation
  * 2021-09-25	WH	Option to retaliate now disables unavaliable retaliation
@@ -75,6 +76,8 @@
 
     socket.on('action_declare', action_popup);
 
+    socket.on('game_complete', function () {window.location.href = `/playing_online/results?gid=${gameID}`}) //Starts game if game event is recieved
+
     /*---------------*/
     //Adds event listeners for page events
     declareButton.addEventListener("click", declare_action);
@@ -97,7 +100,6 @@
     var intervalFunc = setInterval(() => {
         if (previousSquare) {previousSquare.classList.remove("selected"); previousSquare.classList.add("completed");}
         var randomTag = pickRandomSquare();
-        console.log(randomTag)
         randomTag.classList.add("selected");
 
         setTimeout(() => {
@@ -114,7 +116,7 @@
             square.classList.add("selected"); //Lights up winning square
 
             previousSquare = square;
-        })
+        }, INTERVAL)
     },RUN_TIMES*INTERVAL)    
 
     
@@ -123,7 +125,6 @@
  //Choses a random sqaure for the animation
  function pickRandomSquare() {
     var allRemainingSquares = document.querySelectorAll(".gridSquare:not(.completed):not(#None)")
-    console.log(allRemainingSquares);
     return allRemainingSquares[Math.floor(Math.random()*allRemainingSquares.length)]
  }
 
