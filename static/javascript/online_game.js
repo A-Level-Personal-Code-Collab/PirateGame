@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Sep 26 2021
+ * Last Modified: Mon Sep 27 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Uses dynamic socketio address now
  * 2021-09-26	WH	Added handling for game finnished event to forward users to results page (Issue#104)
  * 2021-09-26	WH	Fixed retaliation removal problem (Issue#)
@@ -53,11 +54,17 @@
  var targetSelector = false; //Tracks if the user is currently selecting a target
  var retaliations = [] //A list of available retaliations
  var retaliated = false //Has the user already retaliated to the incomming action
+ var intentionalForward = false; //Sets whether the forwarding is intended
 
  //=========================================================//
  //^ OnLoad Function ^//
  function on_load()
  {
+    //Adds leave page confirmation
+    window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you reall wish to leave this site?"; return "Do you reall wish to leave this site?";}});
+    
+    /*---------------*/
+    //Parse dictionary from python and sort the top 3 in array form
     var gameID = getUrlVar("gid")
     var userSID = getCookie("SID")
 
@@ -77,7 +84,7 @@
 
     socket.on('action_declare', action_popup);
 
-    socket.on('game_complete', function () {window.location.href = `/playing_online/results?gid=${gameID}`}) //Starts game if game event is recieved
+    socket.on('game_complete', function () {intentionalForward = true; window.location.href = `/playing_online/results?gid=${gameID}`}) //Starts game if game event is recieved
 
     /*---------------*/
     //Adds event listeners for page events

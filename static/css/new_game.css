@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Sep 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Mon Sep 27 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -143,17 +143,22 @@ img {
 
   /* ------------------- Input box css ------------------- */
 
+  .inputError
+  {
+      background-color: #C7536A;
+  }
+  
+  input[type=text]:not(.inputError)
+  {
+    background-color: #f1f0f0;
+  }
+  
   input[type=text] {
     border: 0.5px dotted black;
-    background-color: #f1f0f0;
     width: 5vh;
+    border-radius: 7px;
   }
 
-  .inputError
-{
-    background-color: #C7536A;
-    border-radius: 7px;
-}
 
 #start_game_button.disallowed
 {

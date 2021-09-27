@@ -4,8 +4,8 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Mon Sep 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Mon Sep 27 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-27	WH	Added code to alert users if their nickname is rejected
  * 2021-08-09	WH	Fixed problem where output boxes failed to update on custom-mode-disable (issue#33)
  * 2021-08-02	WH	Fixed disable item code and tidied File
  * 2021-08-02	AO	Added basic code aiming to disabale game customisation if master slider off
@@ -119,7 +120,8 @@ function postdata(game_data,nickname){
     xhr.open("POST",thisURL,true)
     xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) {
-            window.location.href = xhr.responseURL
+            if (xhr.responseURL == window.location.href) {nicknameinput.classList.add("inputError")} //If the same page gets served again the assume problem with nickname
+            else {window.location.href = xhr.responseURL}
         }
     }
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded")

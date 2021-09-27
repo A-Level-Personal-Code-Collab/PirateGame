@@ -4,7 +4,7 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Thu Aug 05 2021
+ * Last Modified: Mon Sep 27 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-27	WH	Added leave page confirmation
  * 2021-08-05	WH	Added stack counters to each item including their update routines
  * 2021-08-05	WH	Completely rewrote bank system grey-out items when a stack is exhaused
  * 2021-08-02	WH	Added function to show and hide the finnished pop-up based on whether the grid is full or not
@@ -79,6 +80,7 @@
 
  /*--*/
  var draggingCurrent = null; //Stores the items that is currently being moved around
+ var intentionalForward = false; //Sets whether the forwarding is intended
 
  //=========================================================//
  //====================== User subs ========================//
@@ -158,6 +160,10 @@
  //^ Perform all functions that should run when the space loads //
  function on_load() {
   /*--*/
+  //Adds leave page confirmation
+  window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you reall wish to leave this site?"; return "Do you reall wish to leave this site?";}});
+    
+  /*---------------*/
   /*Add event listeners*/
   /*Adds events to actual draggable items*/
   draggables.forEach(draggable => {
@@ -304,6 +310,7 @@
    xhr.open("POST",thisURL,true);
    xhr.onreadystatechange = function() {
     if (xhr.readyState == XMLHttpRequest.DONE) {
+      intentionalForward = true;
       window.location.href = xhr.responseURL;
     }
 }

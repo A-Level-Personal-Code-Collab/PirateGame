@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Sep 26 2021
+ * Last Modified: Mon Sep 27 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Added dynamic socketio address
  * 2021-09-26	WH	Added music plaback control
  * 2021-09-25	WH	Disables start button if number of users is too small
@@ -27,12 +28,17 @@
 
  var socket = io.connect(window.location.origin); //Connects to server's socket server
  var musicState = true;
+ var intentionalForward = false; //Sets whether the forwarding is intended
  
  //=========================================================//
  //^ Performs user functions ^//
  //Runs on-load
  function on_load()
  {
+    //Adds leave page confirmation
+    window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you reall wish to leave this site?"; return "Do you reall wish to leave this site?";}});
+    
+    /*---------------*/
     var gameID = getUrlVar("gid")
     var userSID = getCookie("SID")
 
@@ -60,7 +66,7 @@
         
     })
 
-    socket.on('start', function () {window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is recieved
+    socket.on('start', function () {intentionalForward = true; window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is recieved
 
     /*---------------*/
     //Handles background music playback
