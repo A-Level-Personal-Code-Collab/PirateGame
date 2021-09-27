@@ -4,8 +4,8 @@
  * Created Date: Wednesday, August 4th 2021, 10:32:28 am
  * Author: Will Hall
  * -----
- * Last Modified: Wed Aug 04 2021
- * Modified By: Will Hall
+ * Last Modified: Mon Sep 27 2021
+ * Modified By: Ollie Burroughs
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -32,7 +32,7 @@
      for (var l = 0; l < text.length; l++)
      {
          var charcode = text.toUpperCase().charCodeAt(l);
-         if (charcode > 90 || charcode < 65) {verificationValue--;} //Checks ASCII code falls into letter section
+         if ((charcode > 90 || charcode < 65) && (charcode != 32)) {verificationValue--;} //Checks ASCII code falls into letter section
      }
  
      if (verificationValue >= VERIFICATION_STAGES) {return true} else {return false}
