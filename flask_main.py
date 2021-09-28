@@ -7,11 +7,12 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Mon Sep 27 2021
-# Modified By: Ollie Burroughs
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-27	WH	Added nickname validation for new_game
 # 2021-09-26	WH	Added game finnished event to forward to results page
 # 2021-09-25	WH	Now sends list of invalied retaliations with action declare
 # 2021-09-25	WH	Data classes now also define the future tense version of the event name for the popup
@@ -529,6 +530,7 @@ def play_game():
         nickname = ""
         gameID = ""
 
+    print(nicknameError)
     return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
 
 #---------------#
@@ -544,35 +546,34 @@ def new_game():
         gameData = request.form.get("game_data")
         gameData = gameData.split("|")
         sliderData = gameData[0]
-        print(sliderData)
         itemData = gameData[1]
-        print(itemData)
         nickname = request.form.get("nickname")
-        print(nickname)
-        #Generate random ID
-        gameID = ""
-        for x in range(8):
-            gameID = gameID + str(random.randint(0,9))
-        while activeGames.query.get(int(gameID)) != None: #Check if chosen gameID already exists and keep regerating until it doesn't
-                    gameID = ""
-                    for x in range(8):
-                        gameID = gameID + str(random.randint(0,9))
-        gameID = int(gameID)
-        userSID = random.randint(0,999999)
-        while activeGames.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+
+        if nicknameValidate(nickname):
+            #Generate random ID
+            gameID = ""
+            for x in range(8):
+                gameID = gameID + str(random.randint(0,9))
+            while activeGames.query.get(int(gameID)) != None: #Check if chosen gameID already exists and keep regerating until it doesn't
+                        gameID = ""
+                        for x in range(8):
+                            gameID = gameID + str(random.randint(0,9))
+            gameID = int(gameID)
             userSID = random.randint(0,999999)
+            while activeGames.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+                userSID = random.randint(0,999999)
 
-        newGame = activeGames(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
-        newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname=nickname,isHost=True)
+            newGame = activeGames(gameID=gameID,hostSID=userSID,gridSettings=sliderData,itemSettings=itemData)
+            newUser = activeUsers(userSID=userSID,userGameID=gameID,userNickname=nickname,isHost=True)
 
-        gameDB.session.add(newGame)
-        gameDB.session.add(newUser)
-        gameDB.session.commit()
+            gameDB.session.add(newGame)
+            gameDB.session.add(newUser)
+            gameDB.session.commit()
 
-        response = redirect(f"/sheet_builder?gid={gameID}") # Redirects to sheet builder page
-        response.set_cookie("SID",str(userSID)) #Save SID for later use
+            response = redirect(f"/sheet_builder?gid={gameID}") # Redirects to sheet builder page
+            response.set_cookie("SID",str(userSID)) #Save SID for later use
 
-        return response
+            return response
 
     return render_template("new_game.html")
 
