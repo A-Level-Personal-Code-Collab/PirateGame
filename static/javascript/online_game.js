@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Sep 27 2021
+ * Last Modified: Wed Sep 29 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-29	WH	Handle retaliation display event to show the animation on retailiations
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Uses dynamic socketio address now
  * 2021-09-26	WH	Added handling for game finnished event to forward users to results page (Issue#104)
@@ -43,6 +44,7 @@
  const waitingForActionPopup =  document.getElementById("div_waitingPopup")
  const targetPickerPopup = document.getElementById("div_targetPickerPopup")
  const retaliationsStorage = document.getElementById("retaliation_box")
+ const animationPopup = document.getElementById("retal-animation");
 
  //=========================================================//
  //^ Variables ^//
@@ -83,6 +85,7 @@
     socket.on('retal_available', update_retaliations) //Add new retaliation to retaliations array
 
     socket.on('action_declare', action_popup);
+    socket.on('retaliation_declare', handle_retaliation_declare)
 
     socket.on('game_complete', function () {intentionalForward = true; window.location.href = `/playing_online/results?gid=${gameID}`}) //Starts game if game event is recieved
 
@@ -261,7 +264,7 @@
              }else {targetText.innerHTML = target;} //Show who the target is
              
              loadingDots.style.display = "none"; //Hide loading dots
-             setTimeout(function () {waitingForActionPopup.style.display="none";}, 3000) //Close the popup after 3s
+             setTimeout(function () {waitingForActionPopup.style.display="none"; animationPopup.style.display = "none";}, 3000) //Close the popup after 3s
 
          } else //Show loading circles
          {
@@ -278,6 +281,18 @@
  function target_picker(action)
  {
      targetPickerPopup.style.display="block" //Show the popup
+ }
+
+ //=========================================================//
+ //^ Animations of retaliations ^//
+ function handle_retaliation_declare(data)
+ {
+     var image = data["animation-image"]
+     var aniClass = data["animation-class"]
+
+     animationPopup.src = image;
+     animationPopup.classList = aniClass;
+     animationPopup.style.display = "block";
  }
 
  //=========================================================//

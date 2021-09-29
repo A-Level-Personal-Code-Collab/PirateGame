@@ -6,12 +6,13 @@ Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sat Sep 25 2021
+Last Modified: Wed Sep 29 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-09-29	WH	Added animation image template
 2021-09-25	WH	Cash boxes now lists
 2021-09-20	WH	Changed retaliations 'collum' to little pop-out tab
 2021-09-19	WH	Added box for retaliatory implements
@@ -83,7 +84,7 @@ Date      	By	Comments
     <div style="display:none;" class="popupHousing" id="div_waitingPopup">
         <div class="popupbox actionPopUp">
             <div class="popupHeader">
-                Raise your kutless, there be drama on deck!
+                Raise your cutlass, there be drama on deck!
             </div>
             <div class="popupBody">
                <h3 id="h3_perpetrator_text">__perpetrator__</h3> is attempting to <h3 id="h3_action_emphasis_text">💰 steal from 💰</h3><h3 id="h3_target_text"></h3><div id="div_loadingdots"><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div></div> 
@@ -109,5 +110,6 @@ Date      	By	Comments
             </div>
         </div>
     </div>
+    <img style="display:none" id="retal-animation" class="itmShield-animation" src="../static/img/shield.png" alt="retaliation">
 {% endblock %}
 

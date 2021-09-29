@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sun Sep 26 2021
+ * Last Modified: Wed Sep 29 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-09-29	WH	Implemented mirror and shield animations
  * 2021-09-26	WH	Added square picker animation for the selection routine
  * 2021-09-25	WH	Added styling for new cash list item
  * 2021-09-25	WH	Added retaliation disabled style
@@ -338,3 +339,73 @@
 .loadingdot:nth-child(5){
     animation-delay: 1s;
 }
+
+ /*//=========================================================//*/
+ /*^ Retaliation animations ^*/
+ #retal-animation
+ {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    height: 20%;
+ }
+
+ img.itmMirror-animation {
+     transform: translate(-50%,-50%) rotate(-30deg);
+     animation: mirror 0.8s;
+    }
+ img.itmShield-animation {
+     animation: shield 0.8s;
+    }
+
+
+ @keyframes mirror
+ {
+     0%
+     {
+         opacity: 0.3;
+         top: 80%;
+     }
+
+     40%
+     {
+         opacity: 1s;
+         top: 50%;
+     }
+
+     60%
+     {
+        transform: translate(-50%,-50%) rotate(-10deg);
+     }
+
+     70%
+     {
+        transform: translate(-50%,-50%) rotate(-30deg);
+     }
+
+ }
+
+ @keyframes shield {
+    0%
+    {
+        opacity: 0.3;
+        top: 80%;
+    }
+
+    40%
+    {
+        opacity: 1;
+        top: 50%;
+    }
+
+    60%
+    {
+       transform: translate(-35%,-50%) rotate(-5deg);
+    }
+
+    70%
+    {
+       transform: translate(-50%,-50%);
+    }
+ }

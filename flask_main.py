@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Sep 27 2021
+# Last Modified: Wed Sep 29 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-09-29	WH	Declares the retaliation in order to show animation
 # 2021-09-27	WH	Added nickname validation for new_game
 # 2021-09-26	WH	Added game finnished event to forward to results page
 # 2021-09-25	WH	Now sends list of invalied retaliations with action declare
@@ -156,6 +157,9 @@ class retaliatoryAction:
 
     def get_itemNotify(self):
         return "retal_available", {"type": self.ACTION_IDENTIFIER, "image": self.IMAGE_LOCATION}
+
+    def get_pushback_dat(self):
+        return {"type": self.ACTION_IDENTIFIER, "animation-image": self.IMAGE_LOCATION[:-4]+"-notrans.png", "animation-class": self.ACTION_IDENTIFIER+"-animation"}
 
 #=========================================================#
 #^ Action Data classes  - describes what each action does and how it behaves ^#
@@ -867,6 +871,7 @@ def retaliation_decl(data):
                     victim.availableRetaliatios = ",".join(availableRetals)
                     moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dicted in the retaliation's data class
                     emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString) #Add retaliation log entry
+                    emit("retaliation_declare", instance.get_pushback_dat(),room=gameIDString)
                     break #Break to save resources
 
     #---------------#
@@ -893,11 +898,13 @@ def retaliation_decl(data):
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "testifications2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "WWWWWWWWWWWWWWW": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1750, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="TEST USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=500,userBank=200)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="TEST USER 2",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=1000,userBank=300)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0)
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal",isHost=False,userCash=0,userBank=0)
+    testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield",isHost=False,userCash=0,userBank=0)
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)
+    gameDB.session.add(testUser3)
     gameDB.session.add(testGame)
     gameDB.session.commit()
     socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem'), host="0.0.0.0") #SocketIo required for two way communication
