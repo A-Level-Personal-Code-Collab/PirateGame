@@ -6,8 +6,8 @@ Description: The HTML file for the waiting lobby
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sun Sep 26 2021
-Modified By: Will Hall
+Last Modified: Wed Sep 29 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -22,13 +22,14 @@ Date      	By	Comments
     <link rel="stylesheet" href="../static/css/lobby.css">
     <!--<link rel="stylesheet" href="../static/css/game_header.css"> -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js" defer></script>
     <script src="../static/javascript/lobby.js" defer></script>
 {% endblock %}
 {% block body %}
     <div>
         <div id="div_lobbyHeader" class="gameSubheader">
-            <h1 id="hostNick">{{ hostNick }}'s Pirate Game</h1>
-            <h1 id="gameID">{{ gameID  }}</h1>
+            <div id="hostNickContainer"><h1 id="hostNick">{{ hostNick }}'s Pirate Game</h1></div>
+            <div id="gameIDContainer"><h1 id="gameID">{{ gameID  }}</h1></div>
             <div id="hostContent">{{ host_only_content }}</div>
             <div id="controlContent"><input type="button" value="🎵" class="actionButton" id="ipt_musicControl"></div>
         </div>
