@@ -4,8 +4,8 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Sep 27 2021
- * Modified By: Will Hall
+ * Last Modified: Wed Sep 29 2021
+ * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -73,6 +73,15 @@
     mcontrol_btn.addEventListener("click", musicToggle)
     musicPlayer.loop = true
     musicPlayer.play()
+
+
+     //=========================================================//
+    //^ Fits the header text to the parent container ^//
+
+    fitty("#hostNick")
+    fitty("#gameID")
+
+
  }
 
  /*---------------*/

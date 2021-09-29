@@ -4,8 +4,8 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Mon Sep 27 2021
- * Modified By: Will Hall
+ * Last Modified: Wed Sep 29 2021
+ * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
@@ -44,6 +44,10 @@ function onload() {
     custom_game_mode_button.addEventListener("change",disable)
     start_game_button.addEventListener("click",return_settings)
     nicknameinput.addEventListener('input', () => {check_data(); nicknameinput.classList.remove("inputError")});
+
+    /*=========================================================*/
+    // Fitty for this page
+
 }
 
 /*=========================================================*/

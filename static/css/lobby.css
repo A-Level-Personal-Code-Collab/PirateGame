@@ -6,8 +6,8 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sun Sep 26 2021
- * Modified By: Will Hall
+ * Last Modified: Wed Sep 29 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -49,6 +49,7 @@
    line-height: 8vh;
    padding-left: 1vh;
    padding-right: 1vh;
+   flex: 1;
 }
 
 #hostNick {
@@ -69,6 +70,16 @@
     float: right;
 }
 
+ /*//=========================================================//*/
+ /*^ Containers for fitty ^*/
+
+#hostNickContainer {
+    width: 50vh;
+}
+
+#gameIDContainer {
+    width: 25vh;
+}
 
  /*//=========================================================//*/
  /*^ Begin Game Button ^*/
@@ -83,6 +94,7 @@
     color: rgb(145, 145, 145);
     border-radius: 8px;
     margin-right: 0.5vw;
+    height: 6vh;
   }
 
   .actionButton:hover{
