@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Sep 29 2021
+ * Last Modified: Fri Oct 01 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-10-01	WH	Added client side builder for target picker dropdown
+ * 2021-10-01	WH	Switched to handle SIDs sent by client as oppose to RAW usernames and replace these cient side
  * 2021-09-29	WH	Handle retaliation display event to show the animation on retailiations
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Uses dynamic socketio address now
@@ -57,6 +59,7 @@
  var retaliations = [] //A list of available retaliations
  var retaliated = false //Has the user already retaliated to the incomming action
  var intentionalForward = false; //Sets whether the forwarding is intended
+ var usersDictionary = {}
 
  //=========================================================//
  //^ OnLoad Function ^//
@@ -89,6 +92,7 @@
 
     socket.on('game_complete', function () {intentionalForward = true; window.location.href = `/playing_online/results?gid=${gameID}`}) //Starts game if game event is recieved
 
+    socket.on('users_update', function(newDict) {usersDictionary = newDict;})
     /*---------------*/
     //Adds event listeners for page events
     declareButton.addEventListener("click", declare_action);
@@ -159,7 +163,14 @@
  //Updates the game log panel
  function log_update(text)
  {
-     text = text.replace(MY_NICKNAME,"YOU") //Replaces your name with 'YOU'
+     text = text.replace(`!<${MY_SID}>`,"YOU") //Replaces your name with 'YOU'
+
+     //Handles replacement of SID's with nicknames
+     for (const [sid, nick] of Object.entries(usersDictionary))
+     {
+        text = text.replace(`!<${sid}>`,nick)
+     }
+
      logBox.innerHTML += text + "<br>"; //Appends entry to LOG
  }
 
@@ -233,7 +244,7 @@
          waitingForActionPopup.style.display = "block";
 
         //Update the perpatrator text
-         perpetratorText.innerHTML = perpetrator
+         perpetratorText.innerHTML = usersDictionary[perpetrator];
 
          //Set the action text message that is shown e.g. Will Kill ...
          actionText.innerHTML = ftVerbMessage
@@ -245,7 +256,7 @@
          realiations_area.innerHTML = "";
          if (target != "") //If target has been decided
          {
-             if (target.toLowerCase() == MY_NICKNAME.toLowerCase()){
+             if (target == MY_SID){
                  targetText.innerHTML = "YOU";
 
                  retaliated = false;
@@ -261,7 +272,7 @@
 
                  setTimeout(() => {retaliation_declare("none")}, 3000);
                  
-             }else {targetText.innerHTML = target;} //Show who the target is
+             }else {targetText.innerHTML = usersDictionary[target];} //Show who the target is
              
              loadingDots.style.display = "none"; //Hide loading dots
              setTimeout(function () {waitingForActionPopup.style.display="none"; animationPopup.style.display = "none";}, 3000) //Close the popup after 3s
@@ -280,6 +291,23 @@
  //The popup for the perpetrator to select a target
  function target_picker(action)
  {
+     //Generates target picker dropdown from local user list
+     const targetPickerDropdown = document.getElementById("sel_target");
+     targetPickerDropdown.innerHTML = "";
+
+     //Loops through dictionary and sets front text as nickname and value as 
+     for (const [sid, nick] of Object.entries(usersDictionary))
+     {
+        if (MY_SID != sid)
+        {
+            var opt = document.createElement("option");
+            opt.setAttribute('value',`${sid}`);
+            opt.innerHTML=nick;
+            targetPickerDropdown.appendChild(opt);
+        }
+     }
+
+     /*---------------*/
      targetPickerPopup.style.display="block" //Show the popup
  }
 

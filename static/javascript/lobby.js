@@ -4,8 +4,8 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Sep 29 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Fri Oct 01 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-10-01	WH	Handles parsing of active users dictionary into HTML list on page
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Added dynamic socketio address
  * 2021-09-26	WH	Added music plaback control
@@ -29,6 +30,7 @@
  var socket = io.connect(window.location.origin); //Connects to server's socket server
  var musicState = true;
  var intentionalForward = false; //Sets whether the forwarding is intended
+ var ActiveUsers = {}
  
  //=========================================================//
  //^ Performs user functions ^//
@@ -48,11 +50,36 @@
         socket.emit("join",{userSID: userSID, gameID: gameID}) //Sends join event to server which causes the user to get added to a room
     })
     
-    socket.on('message', msg => { //Updates list to match incomming messahe
-        listDiv.innerHTML = msg;
+    /*---------------*/
+    //Updates user list based on user dictionary
+    socket.on('users_update', newUsersDict => { //Updates list to match incomming message
+        ActiveUsers = newUsersDict;
+        
+        /*---------------*/
+        //Add any users to the list who aren't already on there
+        for (const [sid, nick] of Object.entries(newUsersDict))
+        {
+            if (document.getElementById(`${sid}`) == null)
+            {
+                var li = document.createElement("li");
+                li.setAttribute('id',`${sid}`);
+                li.innerHTML=nick;
+                listDiv.appendChild(li);
+            }
+        }
+
+        /*---------------*/
+        //Remove any users from the page that aren't in the array
+        listDiv.childNodes.forEach((node) => {
+            if (!Object.values(ActiveUsers).includes(node.innerHTML))
+            {
+                listDiv.removeChild(node);
+            }
+        }
+        )
 
         //Disabes start button if number of users is below the threshold
-        var numPeople = document.querySelector(".names_list").querySelectorAll("li").length;
+        ActiveUsers.keys.length;
         if (!!btn_BeginGame) //Check button is not null
         {
             if (numPeople < MIN_USERS){

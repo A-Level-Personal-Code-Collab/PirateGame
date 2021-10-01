@@ -6,12 +6,16 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Sep 29 2021
+# Last Modified: Fri Oct 01 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-01	WH	All user information sent to client is now sent as an SID and not as the nickname itself
+# 2021-10-01	WH	Removed server side generation of target picker
+# 2021-10-01	WH	Changed list generator to generate nickname/sid dictionary instead of sending raw html list
+# 2021-10-01	WH	Added on_disconnect function
 # 2021-09-29	WH	Declares the retaliation in order to show animation
 # 2021-09-27	WH	Added nickname validation for new_game
 # 2021-09-26	WH	Added game finnished event to forward to results page
@@ -42,7 +46,7 @@
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
-from re import sub
+from re import A, sub
 import re
 from typing import final
 from weakref import ProxyTypes
@@ -60,7 +64,7 @@ from werkzeug.wrappers import response
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
-socketio = SocketIO(app)
+socketio = SocketIO(app, ping_interval=4, ping_timeout=16)
 
 #---------------#
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
@@ -106,7 +110,7 @@ class actionItem():
     ACTION_EMOJI = "❔"
     ACTION_IDENTIFIER = "itmUNDEF"
     MATHS_EXPRESSION= "vCash=vCash:vBank=vBank|pCash=pCash:pBank=pBank"
-    LOG_MESSAGE = "{emoji} {perpetrator} did undefined action on {victim} {emoji}"
+    LOG_MESSAGE = "{emoji} !<{perpetrator}> did undefined action on !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} UNDEF {emoji}"
     INVALIED_RETALIATIONS = []
 
@@ -144,7 +148,7 @@ class retaliatoryAction:
     '''The base class for retaliatory actions like mirror'''
     ACTION_EMOJI = "❔"
     ACTION_IDENTIFIER = "itmUNDEF"
-    LOG_MESSAGE = "{emoji} {perpetrator} did undefined action on {victim} {emoji}"
+    LOG_MESSAGE = "{emoji} !<{perpetrator}> did undefined action on !<{victim}> {emoji}"
 
     def get_log(self, victim, perpetrator):
         return self.LOG_MESSAGE.format(emoji=self.ACTION_EMOJI,perpetrator=perpetrator,victim=victim)
@@ -169,7 +173,7 @@ class itmKill(actionItem):
     ACTION_EMOJI = "⚔"
     ACTION_IDENTIFIER = "itmKill"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
-    LOG_MESSAGE = "{emoji} {perpetrator} killed {victim} {emoji}"
+    LOG_MESSAGE = "{emoji} !<{perpetrator}> killed !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} KILL {emoji}"
     INVALIED_RETALIATIONS = []
     TARGETTED = True
@@ -181,7 +185,7 @@ class itmSteal(actionItem):
     ACTION_EMOJI = "💰"
     ACTION_IDENTIFIER = "itmSteal"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}+{vCash}:self.pBank={pBank}"
-    LOG_MESSAGE = "{emoji} {perpetrator} has stolen from {victim} {emoji}"
+    LOG_MESSAGE = "{emoji} !<{perpetrator}> stole from !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} STEAL FROM {emoji}"
     INVALIED_RETALIATIONS = []
     TARGETTED = True
@@ -193,7 +197,7 @@ class itmGift(actionItem):
     ACTION_EMOJI = "🎁"
     ACTION_IDENTIFIER = "itmGift"
     MATHS_EXPRESSION= "self.vCash={vCash}+1000:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
-    LOG_MESSAGE = "{emoji} {perpetrator} gifted {victim} {emoji}"
+    LOG_MESSAGE = "{emoji} !<{perpetrator}> gifted !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} GIFT {emoji}"
     INVALIED_RETALIATIONS = []
     TARGETTED = True
@@ -206,7 +210,7 @@ class itmSwap(actionItem):
     ACTION_EMOJI = "🤝"
     ACTION_IDENTIFIER = "itmSwap"
     MATHS_EXPRESSION= "self.vCash={pCash}:self.vBank={vBank}|self.pCash={vCash}:self.pBank={pBank}"
-    LOG_MESSAGE = "{emoji} {perpetrator} swapped with {victim} {emoji}"
+    LOG_MESSAGE = "{emoji} !<{perpetrator}> swapped with !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} SWAP WITH {emoji}"
     INVALIED_RETALIATIONS = ["itmMirror"]
     TARGETTED = True
@@ -240,7 +244,7 @@ class itmMirror(retaliatoryAction):
     IMAGE_LOCATION = "../static/img/mirror.png"
     ACTION_EMOJI = "🪞"
     ACTION_IDENTIFIER = "itmMirror"
-    LOG_MESSAGE = "{emoji} {victim} mirrored that {emoji}"
+    LOG_MESSAGE = "{emoji} !<{victim}> mirrored that {emoji}"
 
     def expression_manipulate(self, expression):
         self.new_expression = expression.replace("self.vCash","___V.CASH___")
@@ -256,7 +260,7 @@ class itmShield(retaliatoryAction):
     IMAGE_LOCATION = "../static/img/shield.png"
     ACTION_EMOJI = "🛡"
     ACTION_IDENTIFIER = "itmShield"
-    LOG_MESSAGE = "{emoji} {victim} blocked that {emoji}"
+    LOG_MESSAGE = "{emoji} !<{victim}> blocked that {emoji}"
 
     def expression_manipulate(self, expression):
         return "self.vCash={vCash}:self.vBank={vBank}:self.pCash={pCash}:self.pBank={pBank}"
@@ -364,15 +368,6 @@ def gameIDValidate(gameID):
     else:
         return False
 
-#---------------#
-#Returns the users that are currently part of a game 
-def getActiveUsersList(gameID):
-    allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID,activeUsers.userGrid!=None).all()
-    listElement = "<list class=\"names_list\">"
-    for user in allUsers:
-        listElement += f"<li>{user.userNickname}</li>"
-    listElement += "</list>"
-    return listElement
 
 #---------------#
 #Checks if a given user SID is the host of a game
@@ -473,6 +468,20 @@ class gameplay:
         activeUsers.query.filter(activeUsers.userGameID==int(gameID)).delete()
 
         gameDB.session.commit()       
+
+#=========================================================#
+#^ Generators class ^#
+#All the functions within the system that generate various things
+class game_generators:
+    #---------------#
+    #Returns the users that are currently part of a game 
+    def getActiveUsersDictionary(self, gameID):
+        self.allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID,activeUsers.userGrid!=None,activeUsers.socketioSID!=None).all()
+        self.SIDNick = {} #Creates dictionary with key of SID and value of nickname
+        for user in self.allUsers:
+            self.SIDNick[user.userSID] = user.userNickname
+
+        return self.SIDNick
 
 #=========================================================#
 #URL routes
@@ -652,7 +661,7 @@ def game():
     userID = request.cookies.get("SID")
     hostSID = activeGames.query.get(gameID).hostSID
     hostNick = activeUsers.query.get(hostSID).userNickname
-    myNick = activeUsers.query.get(userID).userNickname #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
+    mySID = activeUsers.query.get(userID).userSID #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
 
     #Gets grid information from relevant database
     gridSerial = activeUsers.query.get(userID).userGrid
@@ -662,21 +671,10 @@ def game():
     usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
 
     #-#
-    #Gets list of all users from database and builds the target selector dropdown
-    all_users = activeUsers.query.filter(activeUsers.userGameID==gameID).all()
-    dropdown = '<select class="popupDropdown" id="sel_target">'
-    for user in all_users:
-        if not user.userSID == int(userID): #Excludes you from the list as you can't act on yourself
-            nickname = user.userNickname
-            dropdown += f'<option value="{nickname}">{nickname}</option>'
-    dropdown += "</select>"
-    dropdown = Markup(dropdown)
-
-    #-#
     if isHost(userID,gameID):
-        return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick, target_dropdown=dropdown, myNick=myNick)
+        return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
     else:
-        return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, target_dropdown=dropdown, myNick=myNick)
+        return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
 
 @app.route("/playing_online/results")
 def results():
@@ -708,11 +706,26 @@ def on_join(data):
     gameID = data["gameID"]
     userSID = data["userSID"]
     join_room(gameID)
-    send(getActiveUsersList(gameID),room=gameID)
 
     #Stores user's current socketio SID in database 
     activeUsers.query.get(int(userSID)).socketioSID = request.sid
     gameDB.session.commit()
+
+    #Update the user list on all uer's screen
+    emit("users_update", game_generators().getActiveUsersDictionary(gameID),room=gameID)
+
+#---------------#
+#When a user disconnects from the sokcet system
+@socketio.on("disconnect")
+def user_leave():
+    leftUser = activeUsers.query.filter(activeUsers.socketioSID==request.sid).first()
+    leftUser.socketioSID = None #Deletes Socketio SID to denote that a user is no longer playing
+    gameIdString = str(leftUser.userGameID).zfill(8)
+
+    gameDB.session.commit()
+
+    #Update user list for all clients
+    emit("users_update", game_generators().getActiveUsersDictionary(leftUser.userGameID),room=gameIdString)
 
 #---------------#
 #When the host opts to start the game (from lobby)
@@ -761,7 +774,7 @@ def next_round():
 
         sleep(3) #Time for animation to occur on client
 
-        all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString).all()
+        all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString,activeUsers.socketioSID!=None).all()
         actionsRequired = 0 #Used to track whether the next round can begin imediately
         for player in all_players:
             playerGrid = player.userGrid.split(",")
@@ -816,7 +829,7 @@ def next_round():
 @socketio.on("action_declare")
 def action_declared(data):
     requestSID = request.sid
-    targetNickname = data["target"]
+    targetSID = data["target"]
     actionIdentifier = data["action"] #The type of action we are dealing with
     perpetrator = activeUsers.query.filter(activeUsers.socketioSID==requestSID).first() #Get a table row representing the perpetrator's information
     gameID = perpetrator.userGameID #Find game ID by querying based on sid
@@ -825,15 +838,15 @@ def action_declared(data):
     
     #---------------#
     #Handling for once a target has been selcted
-    if targetNickname != "": #If the declaration includes the target information
-        target = activeUsers.query.filter(activeUsers.userNickname==targetNickname).first() #Gets a database record object of the target
+    if targetSID != "": #If the declaration includes the target information
+        target = activeUsers.query.filter(activeUsers.userSID==targetSID).first() #Gets a database record object of the target
 
         for actionType in actionItem.__subclasses__():
             instance = actionType()
             if instance.identify(actionIdentifier):
                 target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions() #Save the expression information to the database based on what event has taken place
                 invalidRetals = ",".join(instance.INVALIED_RETALIATIONS)
-                logEntry = instance.get_log(targetNickname,perpetrator.userNickname) #Log the action to the logs
+                logEntry = instance.get_log(targetSID,perpetrator.userSID) #Log the action to the logs
                 break # Break to save resources
 
         gameDB.session.commit()
@@ -842,7 +855,7 @@ def action_declared(data):
         emit('log_update', logEntry, room=gameIDString)
     
     fTenseMessage = eval(f"{actionIdentifier}().get_popupVerb()") #Uses the dataclass system to get the propper grammer for the popup messgae
-    emit('action_declare', {"target" : targetNickname, "action": actionIdentifier, "perpetrator": perpetrator.userNickname, "ftVerb": fTenseMessage, "invalidRetals": invalidRetals}, room=gameIDString) #Re-broadcast event to enforce popup
+    emit('action_declare', {"target" : targetSID, "action": actionIdentifier, "perpetrator": perpetrator.userSID, "ftVerb": fTenseMessage, "invalidRetals": invalidRetals}, room=gameIDString) #Re-broadcast event to enforce popup
 
 #---------------#
 #Handles when a client declares their response to an action being done against them
@@ -870,7 +883,7 @@ def retaliation_decl(data):
                     availableRetals.remove(retal_type)
                     victim.availableRetaliatios = ",".join(availableRetals)
                     moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dicted in the retaliation's data class
-                    emit("log_update", instance.get_log(victim.userNickname,perpetrator.userNickname),room=gameIDString) #Add retaliation log entry
+                    emit("log_update", instance.get_log(victim.userSID,perpetrator.userSID),room=gameIDString) #Add retaliation log entry
                     emit("retaliation_declare", instance.get_pushback_dat(),room=gameIDString)
                     break #Break to save resources
 
