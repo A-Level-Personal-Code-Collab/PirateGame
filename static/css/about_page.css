@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Sep 26 2021
+ * Last Modified: Sun Oct 10 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -34,9 +34,8 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 8px;
     line-height: 2.2vh;
+    height: 50vh;
 }
-
-
 
 .about_container{
     padding: 0 16px;
@@ -56,15 +55,36 @@
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 8px;
     margin: 2vh;
-    height: 35vh;
+    height: 60vh;
 }
+
+/* How it was created section */
+
 .left_image {
     position: relative;
     float: left;
+    padding-right: 2.5vh;
 }
 
 .text_body {
-    float: left;
     text-align: left;
     margin-left: 5vh;
+    line-height: 3vh;
+}
+
+.br {
+    display: block;
+    margin-bottom: 1.5vh;
+}
+
+/* Sob story text */ 
+
+#sob_story_text{
+    line-height: 3vh;
+    margin-left: 4vh;
+    margin-right: 4vh;
+}
+
+#sob_story_container {
+    height: 28vh;
 }

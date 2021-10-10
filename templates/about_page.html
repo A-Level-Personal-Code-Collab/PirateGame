@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sun Sep 26 2021
+Last Modified: Sun Oct 10 2021
 Modified By: Adam O'Neill
 >>>>>>> deleted 2 people
 -----
@@ -25,7 +25,52 @@ Date      	By	Comments
 {% block body %}
 <div class="about_section">
     <h1>About Us</h1>
-    <p>Who are we? We're a team of sixth form students attending Sir John Lawes Sixth Form studying computer science. 21st Century Pirate Game is our first web design project!</p>
+    <p>Welcome to the about page of the 21st Centry pirate game project</p>
+</div>
+<div class="row">
+    <div class="how_container" id="sob_story_container"> 
+        <h2>A message from us...</h2>
+        <br>
+        <div id="sob_story_text"> <!-- need to add info where to donate -->
+            <p>This project was initially  started during the summer of 2021 when Will approached Adam
+                in the hopes of creating a project. This project snowballed until it became the Pirate
+                Game which you see before you. Later, Ollie joined the team which brings us to the teach today
+                (as seen below). This website is hosted on a server and doesn't just exist by itself which costs
+                us money. Not only this but the URL we have is a recurring fee as well. It would be greatly appreciated
+                if any contributions could be made to keep this project alive! <br>Many thanks from the team!
+            </p>
+        </div>
+    </div>
+</div>
+<!-- How we made the page -->
+<div class="row">
+    <div class="how_container">
+        <h2>How pirate game was created...</h2>
+        <br>
+        <div class="left_image">
+            <img src="../static/img/logo_sqaure.png" alt="Logo">
+        </div>
+        <br>
+        <div class="text_body"> <!-- Span br used to change the height between each section instead of <br> -->
+            <p>This project all started in the summer of 2021 as stated before. It has become an ongoing
+                project for the foreseeable future after. The code is primarily made up of JavaScript, python
+                CSS and Html. <span class="br"></span>Python acts as the server side for the website. This means all the databases
+                of concurrent games are stored on the sever and the roots for the website (URL/roots). <span class="br"></span>The 
+                HTML tells web browsers how to display a web page's words and images. This means all the images
+                and words you see right now are written in Html - even this text! We have tried to make this website as adaptable as
+                possible by using the size measurements as VH where possible meaning the layout should adapt
+                for the size of the view port <span class="br"></span> Html would look incredibly boring if it weren't for the 
+                wonders of CSS. CSS is responsible for describing  the presentation of the web page. This 
+                includes, colours, layout and fonts. <span class="br"></span> These are standard elements
+                to a web page which you see day to day. Throughout our journey, we have taught ourselves
+                how to you these languages on top of the most important part - Python Flask. <span class="br"></span>
+                Python flask is sued to control the flow of data between client and server through web sockets. 
+                In addition, sqlalchemy has been used to create the databases holding all the information
+                for the games to function!
+            </p>
+        </div>
+    </div>
+    <!-- More rows can be added by adding more how_containers -->
 </div>
 <h2 style="text-align: center;">The Team</h2>
 <div class="about_row">
@@ -70,20 +115,6 @@ Date      	By	Comments
             </div>
         </div>
     </div>
-</div>
-<!-- How we made the page -->
-<div class="row">
-    <div class="how_container">
-        <h2>How pirate game was created...</h2>
-        <br>
-        <div class="left_image">
-            <img src="../static/img/logo_sqaure.png" alt="Logo">
-        </div>
-        <div class="text_body">
-            <p>Large lump of text explaing the basic idea</p>
-        </div>
-    </div>
-    <!-- More rows can be added by adding more how_containers -->
 </div>
 
 
