@@ -4,8 +4,8 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Sep 27 2021
- * Modified By: Will Hall
+ * Last Modified: Wed Oct 20 2021
+ * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -169,6 +169,11 @@
   draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', (event) => {dragstartevent(event)})
     draggable.addEventListener('dragend', (event) => {dragendevent(event)})
+
+
+    /*---------------*/
+    /* Fitty */ 
+    fitty("#fitty_container")
   })
 
   /*Add drag over event listeners to each of the grid sqaures*/

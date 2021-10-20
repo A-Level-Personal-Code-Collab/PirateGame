@@ -6,7 +6,7 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Mon Aug 09 2021
+Last Modified: Wed Oct 20 2021
 Modified By: Adam O'Neill
 -----
 HISTORY:
@@ -23,6 +23,7 @@ Date      	By	Comments
 <link rel="stylesheet" href="../static/css/play_sheet.css">
 <link rel="stylesheet" href="../static/css/popup.css">
 <script src="../static/javascript/game_sheet.js" defer></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js"></script>
 <!--Load variables from python-->
 <script>
     var itemsJSONString = '{{itemsMaxJSON | tojson | safe}}'
@@ -63,15 +64,18 @@ Date      	By	Comments
 
     <!--Pop up to confirm grid complete-->
     <div style="display: none;" class="popupbox" id="div_gridFullPopUp">
-        <div class="popupHeader">
+        <div id="fitty_container">
+            <div class="popupHeader">
             Arrr You Ready?
+            </div>
+            <div class="popupBody">
+                If you've got your grid loaded,<br> then lets hoist the sails <br> and pillage your openents to bankruptcy!<br>
+            </div>
+            <div class="popupFooter">
+                <input id="btn_grid_done" class="popupButton" type="button" value="Hoist the sails">
+            </div>
         </div>
-        <div class="popupBody">
-            If you've got your grid loaded, then lets hoist the sails and pillage your openents to bankruptcy!
-        </div>
-        <div class="popupFooter">
-            <input id="btn_grid_done" class="popupButton" type="button" value="Hoist the sails">
-        </div>
+        
     </div>
 </div>
 {% endblock %}
