@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Fri Oct 01 2021
+ * Last Modified: Fri Oct 15 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -78,6 +78,8 @@
     socket.on('connect', () => {
         socket.emit("join",{userSID: userSID, gameID: gameID}) //Sends join event to server which causes the user to get added to a room
     })
+
+    socket.on("ERR", (msg) => {alert("Server Error: " + msg)}); //Displays server error messages
 
     socket.on('new_square', select_sqaure)
     socket.on('cash_update', update_cash)

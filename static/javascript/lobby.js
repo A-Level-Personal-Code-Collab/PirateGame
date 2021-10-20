@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Fri Oct 01 2021
+ * Last Modified: Wed Oct 20 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-10-15	WH	No handles server errors with an alert popup
  * 2021-10-01	WH	Handles parsing of active users dictionary into HTML list on page
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Added dynamic socketio address
@@ -27,10 +28,10 @@
  const musicPlayer = new Audio(`${window.location.origin}/static/audio/lobby_backing.ogg`)
  const MIN_USERS = 3;
 
- var socket = io.connect(window.location.origin); //Connects to server's socket server
+ var socket = io.connect("wss://localhost:5000"); //Connects to server's socket server
  var musicState = true;
  var intentionalForward = false; //Sets whether the forwarding is intended
- var ActiveUsers = {}
+ var ActiveUsers = {};
  
  //=========================================================//
  //^ Performs user functions ^//
@@ -38,8 +39,7 @@
  function on_load()
  {
     //Adds leave page confirmation
-    window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you reall wish to leave this site?"; return "Do you reall wish to leave this site?";}});
-    
+    window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.preventDefault(); event.returnValue = " "}});
     /*---------------*/
     var gameID = getUrlVar("gid")
     var userSID = getCookie("SID")
@@ -49,6 +49,8 @@
     socket.on('connect', () => {
         socket.emit("join",{userSID: userSID, gameID: gameID}) //Sends join event to server which causes the user to get added to a room
     })
+
+    socket.on("ERR", (msg) => {alert("Server Error: " + msg)}); //Displays server error messages
     
     /*---------------*/
     //Updates user list based on user dictionary
@@ -79,7 +81,7 @@
         )
 
         //Disabes start button if number of users is below the threshold
-        ActiveUsers.keys.length;
+        var numPeople = Object.keys(ActiveUsers).length;
         if (!!btn_BeginGame) //Check button is not null
         {
             if (numPeople < MIN_USERS){
@@ -123,7 +125,13 @@
  function musicToggle()
  {
      musicState = !musicState
-     if (musicState) {(musicPlayer.play())} else {musicPlayer.pause()}
+     if (musicState) {
+        musicPlayer.play();
+        mcontrol_btn.value = "🎵";
+    } else {
+        musicPlayer.pause();
+        mcontrol_btn.value = "🔇";
+    }
  }
 
  //=========================================================//

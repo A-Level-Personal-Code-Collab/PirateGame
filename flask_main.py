@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Oct 01 2021
+# Last Modified: Wed Oct 20 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-20	WH	Revereted to working system without disconnect handler
 # 2021-10-01	WH	All user information sent to client is now sent as an SID and not as the nickname itself
 # 2021-10-01	WH	Removed server side generation of target picker
 # 2021-10-01	WH	Changed list generator to generate nickname/sid dictionary instead of sending raw html list
@@ -64,7 +65,7 @@ from werkzeug.wrappers import response
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
-socketio = SocketIO(app, ping_interval=4, ping_timeout=16)
+socketio = SocketIO(app)
 
 #---------------#
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
@@ -373,7 +374,6 @@ def gameIDValidate(gameID):
 #Checks if a given user SID is the host of a game
 def isHost(SID,gameID):
     qurRes = activeGames.query.filter(activeGames.hostSID==SID,activeGames.gameID==gameID).all()
-    print(qurRes)
     if qurRes:
         return True
     else:
@@ -543,7 +543,6 @@ def play_game():
         nickname = ""
         gameID = ""
 
-    print(nicknameError)
     return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
 
 #---------------#
@@ -623,7 +622,6 @@ def game_sheet():
     if request.method == "POST":
         retrievedGrid = request.form.get("grid")
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")): #Checks that number of items in grid matches its size
-            print(retrievedGrid)
             gameDB.session.execute(f"UPDATE activeUsers SET userGrid = \"{retrievedGrid}\" WHERE userSID = {userSID};") #Adds grid info to active user in database
             gameDB.session.commit()
             return redirect(f"/playing_online/lobby?gid={gameID}")
@@ -705,27 +703,18 @@ def results():
 def on_join(data):
     gameID = data["gameID"]
     userSID = data["userSID"]
-    join_room(gameID)
 
-    #Stores user's current socketio SID in database 
-    activeUsers.query.get(int(userSID)).socketioSID = request.sid
-    gameDB.session.commit()
+    try:
+        #Stores user's current socketio SID in database 
+        activeUsers.query.get(int(userSID)).socketioSID = request.sid
+        gameDB.session.commit()
 
-    #Update the user list on all uer's screen
-    emit("users_update", game_generators().getActiveUsersDictionary(gameID),room=gameID)
+        join_room(gameID)
 
-#---------------#
-#When a user disconnects from the sokcet system
-@socketio.on("disconnect")
-def user_leave():
-    leftUser = activeUsers.query.filter(activeUsers.socketioSID==request.sid).first()
-    leftUser.socketioSID = None #Deletes Socketio SID to denote that a user is no longer playing
-    gameIdString = str(leftUser.userGameID).zfill(8)
-
-    gameDB.session.commit()
-
-    #Update user list for all clients
-    emit("users_update", game_generators().getActiveUsersDictionary(leftUser.userGameID),room=gameIdString)
+        #Update the user list on all uer's screen
+        emit("users_update", game_generators().getActiveUsersDictionary(gameID),room=gameID)
+    except AttributeError:
+        emit("ERR", "User ID that was submitted was not found in our DB", room=request.sid)
 
 #---------------#
 #When the host opts to start the game (from lobby)
@@ -906,14 +895,13 @@ def retaliation_decl(data):
 
     gameDB.session.commit()
 
-
 #=========================================================#
 #^ Main app execution ^#
 if __name__ == "__main__":
     testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "testifications2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "WWWWWWWWWWWWWWW": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1750, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0)
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal",isHost=False,userCash=0,userBank=0)
-    testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield",isHost=False,userCash=0,userBank=0)
+    testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0,socketioSID="jkdfhjkjdjkfhunbmbnmvcbhjdbnmjhhejhjfksajkhfdjkhfjh")
+    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal",isHost=False,userCash=0,userBank=0,socketioSID="kfjkjkdkfjhjghsgvfjhfhj")
+    testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield",isHost=False,userCash=0,userBank=0,socketioSID="jdsgfghdjfghjsgfhghjghjgsjf")
     gameDB.create_all() #Creates all defined tables in in-memory database
     gameDB.session.add(testUser)
     gameDB.session.add(testUser2)
