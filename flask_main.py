@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Oct 20 2021
-# Modified By: Will Hall
+# Last Modified: Sat Oct 23 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -72,6 +72,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
 
 gameDB = SQLAlchemy(app)
 
+TotalGames = 0
+GAMEVERSION = "Beta 1.0"
 #=========================================================#
 #^ Database table models ^#
 #(these are required by SQL alchemy to interact with database so the variable names and info must correspond with your database)
@@ -427,6 +429,13 @@ def drawGameplayGrid(xSize,gridSerial):
     gridHTML += "</tr></table>"
     return Markup(gridHTML)
 
+#---------------#
+# gets active games games
+def calcActiveGames():
+    numOfActiveGames = 2 # help needed on how to query database
+    return numOfActiveGames
+
+
 #=========================================================#
 #^ Gameplay Routines Class ^#
 class gameplay:
@@ -489,7 +498,8 @@ class game_generators:
 #The index page
 @app.route("/")
 def index():
-    return render_template("index.html")
+    activegames = calcActiveGames()
+    return render_template("index.html",currentActiveGames = activegames, totalGames = TotalGames, version = GAMEVERSION)
 
 #---------------#
 @app.route("/play_game", methods=["GET","POST"])
@@ -582,6 +592,9 @@ def new_game():
             gameDB.session.add(newUser)
             gameDB.session.commit()
 
+            global TotalGames
+            TotalGames = TotalGames + 1
+
             response = redirect(f"/sheet_builder?gid={gameID}") # Redirects to sheet builder page
             response.set_cookie("SID",str(userSID)) #Save SID for later use
 
@@ -639,6 +652,15 @@ def tutorial():
 @app.route("/about")
 def about_page():
     return render_template("about_page.html")
+
+#---------------#
+@app.route("/patch_notes")
+def patch_notes():
+    return render_template("patch_notes.html")
+
+@app.route("/patch_notes/B1-0")
+def B1_0():
+    return render_template("beta_1-0.html")
 
 #---------------#
 @app.route("/playing_online/lobby")
