@@ -6,8 +6,8 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Wed Aug 18 2021
- * Modified By: Will Hall
+ * Last Modified: Wed Oct 20 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -227,5 +227,5 @@ input:checked + .slider:before {
 {
     top: 75vh;
     left: 60vh;
-    width: 20vh;
+    height: 22.5vh;
 }
