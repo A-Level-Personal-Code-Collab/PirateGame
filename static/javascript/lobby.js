@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Oct 20 2021
+ * Last Modified: Sun Oct 24 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -28,7 +28,7 @@
  const musicPlayer = new Audio(`${window.location.origin}/static/audio/lobby_backing.ogg`)
  const MIN_USERS = 3;
 
- var socket = io.connect("wss://localhost:5000"); //Connects to server's socket server
+ var socket = io.connect(window.location.origin, {transports: ["websocket"]}); //Connects to server's socket server
  var musicState = true;
  var intentionalForward = false; //Sets whether the forwarding is intended
  var ActiveUsers = {};

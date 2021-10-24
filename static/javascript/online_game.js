@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Fri Oct 15 2021
+ * Last Modified: Sun Oct 24 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -50,7 +50,7 @@
 
  //=========================================================//
  //^ Variables ^//
- var socket = io.connect(window.location.origin);
+ var socket = io.connect(window.location.origin, {transports: ["websocket"]});
  var previousSquare = null;
  var recordedCash = 0;
  var recordedBank = 0;

@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Oct 20 2021
+# Last Modified: Sun Oct 24 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -47,6 +47,14 @@
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
+#Execute the program using the WSGI server and gevent
+if __name__ == "__main__":
+    import os
+    os.system("gunicorn -w 4 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload flask_main:app")
+    raise Exception("Program exited")
+
+#=========================================================#
+#^ Imports Modules ^#
 from re import A, sub
 import re
 from typing import final
@@ -63,12 +71,15 @@ from time import sleep
 
 from werkzeug.wrappers import response
 
+#=========================================================#
+#^ Configure flask webserver ^#
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 socketio = SocketIO(app)
 
 #---------------#
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 gameDB = SQLAlchemy(app)
 
@@ -897,15 +908,16 @@ def retaliation_decl(data):
 
 #=========================================================#
 #^ Main app execution ^#
+testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "testifications2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "WWWWWWWWWWWWWWW": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1750, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
+testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0,socketioSID="jkdfhjkjdjkfhunbmbnmvcbhjdbnmjhhejhjfksajkhfdjkhfjh")
+testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal",isHost=False,userCash=0,userBank=0,socketioSID="kfjkjkdkfjhjghsgvfjhfhj")
+testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield",isHost=False,userCash=0,userBank=0,socketioSID="jdsgfghdjfghjsgfhghjghjgsjf")
+gameDB.create_all() #Creates all defined tables in in-memory database
+gameDB.session.add(testUser)
+gameDB.session.add(testUser2)
+gameDB.session.add(testUser3)
+gameDB.session.add(testGame)
+gameDB.session.commit()
+
 if __name__ == "__main__":
-    testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "testifications2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "WWWWWWWWWWWWWWW": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1750, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
-    testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0,socketioSID="jkdfhjkjdjkfhunbmbnmvcbhjdbnmjhhejhjfksajkhfdjkhfjh")
-    testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal",isHost=False,userCash=0,userBank=0,socketioSID="kfjkjkdkfjhjghsgvfjhfhj")
-    testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield",isHost=False,userCash=0,userBank=0,socketioSID="jdsgfghdjfghjsgfhghjghjgsjf")
-    gameDB.create_all() #Creates all defined tables in in-memory database
-    gameDB.session.add(testUser)
-    gameDB.session.add(testUser2)
-    gameDB.session.add(testUser3)
-    gameDB.session.add(testGame)
-    gameDB.session.commit()
     socketio.run(app, debug=True, ssl_context=('selfsigned-cert.pem', 'selfsigned-key.pem'), host="0.0.0.0") #SocketIo required for two way communication
