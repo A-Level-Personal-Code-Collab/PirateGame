@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-25	WH	Moved all subroutines and classes from main file
 #---------------------------------------------------------------------#
 #=========================================================#
 #^ Imports required modules ^#
@@ -216,3 +217,13 @@ class events:
         usersTBL.query.filter(usersTBL.userGameID==int(gameID)).delete()
 
         gameDB.session.commit()
+
+#=========================================================#
+#^ Information Fabricators ^#
+class information:
+    #---------------#
+    #Get information about the number of currently active games
+    def calcActiveGames(self,gamesTBL):
+        self.numActiveGames = 2
+
+        return self.numActiveGames

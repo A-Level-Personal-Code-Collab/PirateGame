@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Wed Oct 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Mon Oct 25 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -28,20 +28,21 @@
 }  
 
 .column{
-    float: left;
     width: 50%;
     margin-bottom: 1.9vh;
     padding:  0.6vh 1vh;
 }
 .row
 {
+    display: flex;
     position: relative;
+    min-height: 40vh;
 }
 
 .card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 2vh;
-    height: 40vh;
+    height: 100%;
 }
 
 
@@ -71,12 +72,10 @@
     transition: all 0.5s ;
     color: rgb(145, 145, 145);
     cursor: pointer;
-    margin: 2.5vh;
+    margin: 0;
     font-size: 3.1vh;
     padding: 2.5vh;
-    width: 37.8vh;
-
-   
+    width: 100%;
 }
 
 #submit_button #new_game_button{
@@ -126,7 +125,7 @@ form input{
 }
 
 table{
-    left: 30%;
+    margin: auto;
     position: relative
 }
 

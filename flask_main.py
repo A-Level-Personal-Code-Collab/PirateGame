@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-25	WH	Moved gameplay class and gameplay generators to gameplay file
 # 2021-10-24	WH	Converted to allow gevent compatibility
 # 2021-10-20	WH	Revereted to working system without disconnect handler
 # 2021-10-01	WH	All user information sent to client is now sent as an SID and not as the nickname itself
@@ -312,7 +313,7 @@ class money:
 #The index page
 @app.route("/")
 def index():
-    activegames = calcActiveGames()
+    activegames = gameplay.information().calcActiveGames(activeGames)
     return render_template("index.html",currentActiveGames = activegames, totalGames = TotalGames, version = GAMEVERSION)
 
 #---------------#
