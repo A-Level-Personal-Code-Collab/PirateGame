@@ -6,8 +6,8 @@ Description: The main welcome file for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Mon Oct 18 2021
-Modified By: Will Hall
+Last Modified: Sat Oct 23 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -27,9 +27,39 @@ Date      	By	Comments
             <form method="GET" action="/play_game">
                 <button type="submit" class="banner_button" style="vertical-align:middle ;"><span>Play Pirate Game </span></button>
             </form>
+            <div class="active_stats"> <!-- Active game stats, total game stats -->
+                <table>
+                    <tr>
+                        <th>Number of active games</th> <!-- Active games -->
+                        <th>{{currentActiveGames}}</th>
+                    </tr>
+                    <tr>
+                        <th>Total number of Games</th><!-- total games -->
+                        <th>{{totalGames}}</th>
+                    </tr>
+                </table>
+            </div>
         </div>
         <div class="banner_image">
             <img src="../static/img/logo.png">
+        </div>
+    </div>
+    <div id="news_section">
+        <div class="news_container">
+            <h2>Pirate Game News...</h2>
+            <div id="patch_notes"> <!-- Patch news -->
+                <h3>Patch Notes....</h3>
+                <br>
+                <p>All patch notes can be viewed <a href="/patch_notes">here</a>.</p>
+                <p>Patch notes for the current version can be viewed <a href="/patch_notes/B1-0">here</a>.
+                <br> We are now currently on the {{version}} version of the pirate game!</p>
+            </div>
+            <div class="vl"></div>
+            <div id="other_news"> <!-- other news -->
+                <h3>Other Pirate Game News...</h3>
+                <br>
+                <p></p> <!-- Body -->
+            </div>
         </div>
     </div>
 {% endblock %}

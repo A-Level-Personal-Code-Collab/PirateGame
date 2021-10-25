@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Sep 25 2021
- * Modified By: Ollie Burroughs
+ * Last Modified: Sat Oct 23 2021
+ * Modified By: Adam O'Neill
  * Details: added ease to header hover
  * HISTORY:
  * Date      	By	Comments
@@ -82,3 +82,10 @@ h1{
       display: block;
     }
   }
+
+/* ----------------------- Footer ------------------------*/
+
+footer {
+    display: table-footer-group;
+    float: right;
+}

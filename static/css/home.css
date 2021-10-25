@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Fri Jul 30 2021
+ * Last Modified: Sat Oct 23 2021
  * Modified By: Adam O'Neill
  * -----
  * HISTORY:
@@ -74,4 +74,38 @@
 
 .banner_button:hover span::after{ /* When it is hovered on it shows the arrow and moves it */ 
     opacity: 1;
+}
+
+/* news section */
+
+.vl{
+    border-left: 2px solid rgba(0, 0, 0, 0.452);
+    position: absolute;
+    height: 30%;
+    left: 50%;
+    margin-left: -3px;
+}
+
+.news_container {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin: 1vh;
+    height: 35vh;
+    text-align: center;
+}
+
+#patch_notes{
+    float: left;
+    height: 80%;
+    width: 40%;
+}
+
+#other_news {
+    text-align: center;
+}
+
+/* Table for games info */
+
+table {
+    text-align: left;
+    display: inline-table;
 }
