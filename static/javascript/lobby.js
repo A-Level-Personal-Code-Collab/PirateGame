@@ -56,6 +56,7 @@
     //Updates user list based on user dictionary
     socket.on('users_update', newUsersDict => { //Updates list to match incomming message
         ActiveUsers = newUsersDict;
+        console.log(ActiveUsers)
         
         /*---------------*/
         //Add any users to the list who aren't already on there

@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Oct 24 2021
+# Last Modified: Mon Oct 25 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-24	WH	Converted to allow gevent compatibility
 # 2021-10-20	WH	Revereted to working system without disconnect handler
 # 2021-10-01	WH	All user information sent to client is now sent as an SID and not as the nickname itself
 # 2021-10-01	WH	Removed server side generation of target picker
@@ -50,7 +51,7 @@
 #Execute the program using the WSGI server and gevent
 if __name__ == "__main__":
     import os
-    os.system("gunicorn -w 4 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload flask_main:app")
+    os.system("gunicorn -w 1 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload --graceful-timeout 3600000 --timeout 999999999 flask_main:app")
     raise Exception("Program exited")
 
 #=========================================================#
@@ -67,10 +68,12 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 import random
 from string import Template
+import time
 from time import sleep
 
 from werkzeug.wrappers import response
 
+import gameplay
 #=========================================================#
 #^ Configure flask webserver ^#
 app = Flask(__name__)
@@ -111,6 +114,7 @@ class activeUsers(gameDB.Model):
     isHost = gameDB.Column(gameDB.Boolean, default=False)
     userCash = gameDB.Column(gameDB.Integer, default=0)
     userPendingExpression = gameDB.Column(gameDB.String(200), default="")
+    userPendingDeclaration = gameDB.Column(gameDB.Boolean, default=False)
     userBank = gameDB.Column(gameDB.Integer, default=0)
     availableRetaliatios = gameDB.Column(gameDB.String(255))
 
@@ -301,201 +305,7 @@ class money:
 
 
 #=========================================================#
-#^ Slave subs ^#
-#---------------#
-#Builds the HTML syntax to draw the game grid - makes the grid easily exapandable + avoid typing repetative HTML code
-def buildGrid(gridX,gridY):
-#Imports modules 
-    #Local Constants
-    CLASS_NAME = "gridSquare" #The name of the class that all td objects will share
-
-    #Grid variable will acumulate the HTML table
-    grid = "<table id=\"tbl_CoordinatesGrid\">"
-
-    collums = [" "] #The lables on the X-Axis
-    for l in range(gridX):
-        collums.append(chr(65+l)) #Generate X axis labels using ASCII character integers
-    rows = list(range(1,gridY+1)) #The Y-axis lables
-
-    #Adds heading row
-    grid += "<tr id=\"trw_gridHeading\">"
-    for l in collums:
-        grid += f"<td class=\"{CLASS_NAME}\" idng dynamic html=\"tdt_gridLabelCol{l}\">{l}</td>"
-    grid += "</tr>"
-
-    #Adds rest of grid
-    for row in rows:
-        grid += "<tr>"
-        for col in collums:
-            if col == " ":
-                grid += f"<td class=\"{CLASS_NAME}\" id=\"tdt_gridLabelCol{row}\">{row}</td>"
-            else:
-                grid += f"<td class=\"{CLASS_NAME} dragReceptical\" id=\"tdt_grid{col}{row}\"></td>"
-        grid += "</tr>"
-
-    grid += "</table>"
-
-    #Return finnished grid as Markdown and not plain text
-    return Markup(grid)
-
-#---------------#
-#Checks that the inputted nickname is valied
-def nicknameValidate(nickname):
-    NICKNAME_MAX_LEN = 15
-    NICKNAME_MIN_LEN = 3
-    BLACKLIST_FILE = "static/nickname-word-blacklist.csv"
-
-    nickname = nickname.lower().replace(" ","")
-
-    #---------------#
-    #Simple length check (secconds javascript check)
-    nicknameLen = len(nickname)
-    if nicknameLen > NICKNAME_MAX_LEN or nicknameLen < NICKNAME_MIN_LEN:
-        return False
-    
-    #---------------#
-    #Checks banned words lists
-    blacklist = open(BLACKLIST_FILE, 'r')
-    rejectWords = blacklist.read().split(",")
-    blacklist.close()
-
-    #Loop through banned words and check them all
-    for word in rejectWords:
-        wordLen = len(word)
-        if not wordLen > nicknameLen: #If word in question is longer than nickname then ignore it
-            if word == nickname: #Check if word _is_ nickname
-                return False
-            numSubstrings = nicknameLen - wordLen + 1 #Calculated how many possible substrings there are of any given word
-            for i in range(numSubstrings): #Finds and checks all substrings of nickname to the length of the check word
-                substring = nickname[i:i+wordLen]
-                if substring == word:
-                    return False
-    return True
-
-#---------------#
-#Checks that the provided game ID exists
-def gameIDValidate(gameID):
-    if activeGames.query.get(int(gameID)):
-        return True
-    else:
-        return False
-
-
-#---------------#
-#Checks if a given user SID is the host of a game
-def isHost(SID,gameID):
-    qurRes = activeGames.query.filter(activeGames.hostSID==SID,activeGames.gameID==gameID).all()
-    if qurRes:
-        return True
-    else:
-        return False
-
-#---------------#
-#Draws the grid but this time in the form of an uneditable play board
-def drawGameplayGrid(xSize,gridSerial):
-    gridList = gridSerial.split(",")
-    gridHTML = '<table id="tbl_playGrid">'
-    gridSquareHTMLTemplate = Template('<td id="$id" class="gridSquare">$inner</td>') #Creates template strings for the individual HTML td elements
-    gridImageTemplate = Template('<img class="gridItems" src="$url"/>') #Template string for the images that go inside the td elements
-    IMAGE_URLS = { #Defines the locations of the images ascoiated with the following items
-        "M5000" : money(5000).IMAGE_LOCATION,
-        "M1000" : money(1000).IMAGE_LOCATION,
-        "M500" : money(500).IMAGE_LOCATION,
-        "M200" : money(200).IMAGE_LOCATION,
-        "itmKill" : itmKill.IMAGE_LOCATION,
-        "itmSwap" : itmSwap.IMAGE_LOCATION,
-        "itmSteal" : itmSteal.IMAGE_LOCATION,
-        "itmGift" : itmGift.IMAGE_LOCATION,
-        "itmBank" : itmBank.IMAGE_LOCATION,
-        "itmBomb" : itmBomb.IMAGE_LOCATION,
-        "itmShield" : itmShield.IMAGE_LOCATION,
-        "itmMirror" : itmMirror.IMAGE_LOCATION
-    }
-
-    #Calculated the y-size as only the X was provided
-    if len(gridList) % xSize != 0:
-        raise "GRID DIMENSION ERROR"
-    ySize = int(len(gridList) / xSize)
-
-    colLabels = [""] + list(map(chr, range(65,65+xSize))) #Creates a list of collum lables using capital letters
-    gridHTML += "<tr>"
-
-    #Creates the collum lables row
-    for col in colLabels:
-        gridHTML += gridSquareHTMLTemplate.substitute(id=None,inner=col)
-
-    #Runs through all other rows
-    counter = 0 #Allows for IDs to be named serially
-    for y in range(ySize):
-        gridHTML += "</tr><tr>"
-        gridHTML += gridSquareHTMLTemplate.substitute(id=None, inner=str(y+1)) #Adds the row lable
-        for x in range(xSize): #Runs through all other collums in that row
-            itemName = gridList[(x+y*xSize)] #Loads the item name from serial list corresponding to the coordinate in question
-            imageUrl = IMAGE_URLS[itemName]
-            gridHTML += gridSquareHTMLTemplate.substitute(id=f"square{counter}",inner=gridImageTemplate.substitute(url=imageUrl)) #Adds new td object based on template string
-            counter += 1
-
-    gridHTML += "</tr></table>"
-    return Markup(gridHTML)
-
-#=========================================================#
-#^ Gameplay Routines Class ^#
-class gameplay:
-    #---------------#
-    #Generates a random order for the gameplay grid
-    def generate_playOrder(self,gridArea):
-        self.playOrder = list(map(str,range(0,gridArea)))
-        random.shuffle(self.playOrder)
-        self.csvString = ",".join(self.playOrder)
-        return self.csvString
-
-    #---------------#
-    #Takes the money expression and calculates actual values with it
-    def parse_expression(self,expression,victim,perpetrator=None):
-        self.vCash = victim.userCash
-        self.vBank = victim.userBank
-        self.pCash = perpetrator.userCash if perpetrator else 0
-        self.pBank = perpetrator.userBank if perpetrator else 0
-
-        #Substitute numbers in to expression to replace variables in order to make latter raplcement easier (e.g. {vCash} to 0)
-        expression = expression.format(vCash=self.vCash,vBank=self.vBank,pCash=self.pCash,pBank=self.pBank)
-
-        #Calculate each part of the formula individually (e.g. self.pCah=300+1000 is one)
-        for e in expression.split(":"):
-            exec(e) #Executes the string expression
-        
-        return self.vCash, self.vBank, self.pCash, self.pBank
-
-    def gameEnd(self, gameID):
-        allUsers = activeUsers.query.filter(activeUsers.userGameID==int(gameID)).all()
-        gameOBJ = activeGames.query.get(int(gameID))
-
-        #collects users final cash amounts and sorts them in a dictionary
-        userscore = {}
-        for User in allUsers:
-            userscore[User.userNickname] = User.userCash + User.userBank
-
-        gameOBJ.resultsScores = json.dumps(userscore)
-        activeUsers.query.filter(activeUsers.userGameID==int(gameID)).delete()
-
-        gameDB.session.commit()       
-
-#=========================================================#
-#^ Generators class ^#
-#All the functions within the system that generate various things
-class game_generators:
-    #---------------#
-    #Returns the users that are currently part of a game 
-    def getActiveUsersDictionary(self, gameID):
-        self.allUsers = activeUsers.query.filter(activeUsers.userGameID==gameID,activeUsers.userGrid!=None,activeUsers.socketioSID!=None).all()
-        self.SIDNick = {} #Creates dictionary with key of SID and value of nickname
-        for user in self.allUsers:
-            self.SIDNick[user.userSID] = user.userNickname
-
-        return self.SIDNick
-
-#=========================================================#
-#URL routes
+#^ URL routes ^#
 #---------------#
 #The index page
 @app.route("/")
@@ -531,12 +341,10 @@ def play_game():
                 return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
 
         #---------------#
-        if gameIDValidate(gameID):
-            if nicknameValidate(nickname):
+        if gameplay.validators().gameIDValidate(gameID,activeGames):
+            if gameplay.validators().nicknameValidate(nickname):
                 #Saves user details to database
-                userSID = random.randint(0,999999)
-                while activeGames.query.get(userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
-                    userSID = random.randint(0,999999)
+                userSID = gameplay.generators().generate_SID(activeUsers)
 
                 newUserActivate = activeUsers(userSID=userSID,userNickname=nickname,userGameID=gameID,isHost=False); #Build new database entry using base class
                 gameDB.session.add(newUserActivate);
@@ -572,7 +380,7 @@ def new_game():
         itemData = gameData[1]
         nickname = request.form.get("nickname")
 
-        if nicknameValidate(nickname):
+        if gameplay.validators().nicknameValidate(nickname):
             #Generate random ID
             gameID = ""
             for x in range(8):
@@ -637,7 +445,7 @@ def game_sheet():
             gameDB.session.commit()
             return redirect(f"/playing_online/lobby?gid={gameID}")
 
-    gridHTML = buildGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
+    gridHTML = gameplay.generators().html.buildEditableGrid(gridJSON["GRID_X"],gridJSON["GRID_Y"]) #Builds grid using values from loaded JSON
 
     return render_template("game_sheet.html", grid = gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON)
 
@@ -654,36 +462,61 @@ def about_page():
 #---------------#
 @app.route("/playing_online/lobby")
 def lobby():
-    gameID = request.args.get("gid")
-    hostSID = activeGames.query.get(gameID).hostSID
-    hostNick = activeUsers.query.get(hostSID).userNickname
-    host_content = ""
-    if isHost(request.cookies.get("SID"),request.args.get("gid")): #Renders host-only controls if the user is the host
-        host_content = Markup(render_template("host_only_lobby.html"))
+    #Redirect away if the user does not have correct cookies
+    if request.cookies.get("SID") == None:
+        return redirect("/play_game")
 
-    return render_template("lobby.html",host_only_content=host_content,gameID=gameID,hostNick=hostNick)
+    try:
+        gameID = request.args.get("gid")
+        gameLine = activeGames.query.get(int(gameID))
+        hostSID = gameLine.hostSID
+        hostNick = activeUsers.query.get(hostSID).userNickname
+        host_content = ""
+        if gameplay.validators().isHost(request.cookies.get("SID"),request.args.get("gid"),activeGames): #Renders host-only controls if the user is the host
+            host_content = Markup(render_template("host_only_lobby.html"))
+
+        return render_template("lobby.html",host_only_content=host_content,gameID=gameID,hostNick=hostNick)
+    except AttributeError:
+        return redirect("/play_game")
 
 #---------------#
 @app.route("/playing_online/game")
 def game():
     gameID = request.args.get("gid")
     userID = request.cookies.get("SID")
-    hostSID = activeGames.query.get(gameID).hostSID
-    hostNick = activeUsers.query.get(hostSID).userNickname
-    mySID = activeUsers.query.get(userID).userSID #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
 
-    #Gets grid information from relevant database
-    gridSerial = activeUsers.query.get(userID).userGrid
-    gridSettingsJSON = json.loads(activeGames.query.get(gameID).gridSettings)
-    gridX = int(gridSettingsJSON["GRID_X"])
-    
-    usersGrid = drawGameplayGrid(gridX,gridSerial) #Gets the HTML for the grid to draw
+    try:
+        hostSID = activeGames.query.get(gameID).hostSID
+        hostNick = activeUsers.query.get(hostSID).userNickname
+        mySID = activeUsers.query.get(userID).userSID #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
 
-    #-#
-    if isHost(userID,gameID):
-        return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
-    else:
-        return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
+        #Gets grid information from relevant database
+        gridSerial = activeUsers.query.get(userID).userGrid
+        gridSettingsJSON = json.loads(activeGames.query.get(gameID).gridSettings)
+        gridX = int(gridSettingsJSON["GRID_X"])
+        IMAGE_URLS = { #Defines the locations of the images ascoiated with the following items
+            "M5000" : money(5000).IMAGE_LOCATION,
+            "M1000" : money(1000).IMAGE_LOCATION,
+            "M500" : money(500).IMAGE_LOCATION,
+            "M200" : money(200).IMAGE_LOCATION,
+            "itmKill" : itmKill.IMAGE_LOCATION,
+            "itmSwap" : itmSwap.IMAGE_LOCATION,
+            "itmSteal" : itmSteal.IMAGE_LOCATION,
+            "itmGift" : itmGift.IMAGE_LOCATION,
+            "itmBank" : itmBank.IMAGE_LOCATION,
+            "itmBomb" : itmBomb.IMAGE_LOCATION,
+            "itmShield" : itmShield.IMAGE_LOCATION,
+            "itmMirror" : itmMirror.IMAGE_LOCATION
+        }
+        usersGrid = gameplay.generators().html.drawGameplayGrid(gridX,gridSerial,IMAGE_URLS) #Gets the HTML for the grid to draw
+
+        #-#
+        if gameplay.validators().isHost(userID,gameID,activeGames):
+            return render_template("playing_online_host.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
+        else:
+            return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
+    except AttributeError:
+        return redirect("/play_game")
 
 @app.route("/playing_online/results")
 def results():
@@ -714,18 +547,43 @@ def results():
 def on_join(data):
     gameID = data["gameID"]
     userSID = data["userSID"]
+    print(f"New user joined the game {gameID} with a userSID of {userSID}")
 
     try:
         #Stores user's current socketio SID in database 
-        activeUsers.query.get(int(userSID)).socketioSID = request.sid
+        user = activeUsers.query.filter(activeUsers.userSID==int(userSID)).first()
+        print(user)
+        user.socketioSID = request.sid
         gameDB.session.commit()
 
         join_room(gameID)
 
         #Update the user list on all uer's screen
-        emit("users_update", game_generators().getActiveUsersDictionary(gameID),room=gameID)
-    except AttributeError:
+        online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
+        print(online_users)
+        print(f"emiting connect at {time.time()}")
+        emit("users_update", online_users,room=gameID)
+    except AttributeError or ValueError:
         emit("ERR", "User ID that was submitted was not found in our DB", room=request.sid)
+
+#---------------#
+#When a user gets to disconnect from a page
+@socketio.on("disconnect")
+def disconnect():
+    userLine = activeUsers.query.filter(activeUsers.socketioSID==request.sid).first()
+    if userLine != None:
+        print(f"User {userLine.userNickname} has just disconnected from a game")
+        userLine.socketioSID = None
+        if userLine.userPendingDeclaration:
+            activeGames.query.get(userLine.userGameID).remainingActions -= 1
+        userLine.userPendingDeclaration = False
+        gameID = str(userLine.userGameID).zfill(8)
+        #Update the user list on all uer's screen
+        gameDB.session.commit()
+        online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
+        print(online_users)
+        print(f"emiting disconnect at {time.time()}")
+        emit("users_update", online_users,room=gameID)
 
 #---------------#
 #When the host opts to start the game (from lobby)
@@ -734,7 +592,7 @@ def start_game(data):
     gameID = data["gameID"]
     userSID = data ["userSID"]
 
-    if isHost(userSID,gameID): #Confirms if user is host and re-broadcasts start event
+    if gameplay.validators().isHost(userSID,gameID,activeGames): #Confirms if user is host and re-broadcasts start event
         emit("start",room=gameID)
 
         #Load grid data from database
@@ -743,7 +601,7 @@ def start_game(data):
         gridSize = int(gridJSON["GRID_X"])*int(gridJSON["GRID_Y"])
 
         #Generate grid order
-        gpClass = gameplay()
+        gpClass = gameplay.generators()
         order = gpClass.generate_playOrder(gridSize)
 
         #Add selection order ro database
@@ -765,7 +623,7 @@ def next_round():
     allSquares = gameObject.squareOrder.split(",")
 
     if currentRound > len(allSquares):
-        gameplay().gameEnd(gameID)
+        gameplay.events().gameEnd(gameID,activeGames,activeUsers,gameDB)
         emit("game_complete", room=gameIDString)
 
     else:
@@ -795,7 +653,7 @@ def next_round():
                 if instance.identify(item): #Use the identify method to test if the action in question is the desired action
                     if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
                         actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
-                        player.userCash, player.userBank , null, null = gameplay().parse_expression(actionExpression,player) #Parse expression
+                        player.userCash, player.userBank , null, null = gameplay.parsers().parse_money(actionExpression,player) #Parse expression
                         emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
                         emit("bank_update", player.userBank, room=player.socketioSID)
                     else:
@@ -869,7 +727,6 @@ def retaliation_decl(data):
     gameID = perpetrator.userGameID #Find game ID from perpetrator
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     retal_type = data["type"] #Gets the string dictating the clients response
-    gameHandler = gameplay()
     aktvGame = activeGames.query.get(gameID)
 
     #---------------#
@@ -889,7 +746,7 @@ def retaliation_decl(data):
 
     #---------------#
     #Actually parse new (or un-updated) money expression to new cash values
-    victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank = gameHandler.parse_expression(moneyHandlingExpression, victim, perpetrator)
+    victim.userCash, victim.userBank, perpetrator.userCash, perpetrator.userBank = gameplay.parsers().parse_money(moneyHandlingExpression, victim, perpetrator)
 
     #---------------#
     #Send cash updates and bank updates to users as well as resetting their pending expression
