@@ -1,3 +1,4 @@
+#!/bin/python3
 #---------------------------------------------------------------------#
 # File: A-Level-Personal-Code-Collab/PirateGame/flask_main.py
 # Project: A-Level-Personal-Code-Collab/PirateGame
@@ -6,7 +7,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Oct 25 2021
+# Last Modified: Tue Oct 26 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -49,12 +50,6 @@
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
 #---------------------------------------------------------------------#
-#Execute the program using the WSGI server and gevent
-if __name__ == "__main__":
-    import os
-    os.system("gunicorn -w 1 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload --graceful-timeout 3600000 --timeout 999999999 flask_main:app")
-    raise Exception("Program exited")
-
 #=========================================================#
 #^ Imports Modules ^#
 from re import A, sub
@@ -588,18 +583,20 @@ def on_join(data):
 def disconnect():
     userLine = activeUsers.query.filter(activeUsers.socketioSID==request.sid).first()
     if userLine != None:
-        print(f"User {userLine.userNickname} has just disconnected from a game")
-        userLine.socketioSID = None
-        if userLine.userPendingDeclaration:
-            activeGames.query.get(userLine.userGameID).remainingActions -= 1
-        userLine.userPendingDeclaration = False
         gameID = str(userLine.userGameID).zfill(8)
-        #Update the user list on all uer's screen
-        gameDB.session.commit()
-        online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
-        print(online_users)
-        print(f"emiting disconnect at {time.time()}")
-        emit("users_update", online_users,room=gameID)
+        if gameplay.validators().isHost(request.sid,gameID,activeGames):
+            print(f"HOST {userLine.userNickname} has just disconnected from a game")
+        else:
+            print(f"User {userLine.userNickname} has just disconnected from a game")
+            userLine.socketioSID = None
+            if userLine.userPendingDeclaration:
+                activeGames.query.get(userLine.userGameID).remainingActions -= 1
+            userLine.userPendingDeclaration = False
+            #Update the user list on all uer's screen
+            gameDB.session.commit()
+            online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
+            emit("users_update", online_users,room=gameID)
+            
 
 #---------------#
 #When the host opts to start the game (from lobby)
