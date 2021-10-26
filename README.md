@@ -21,6 +21,7 @@ a docker container. To setup a pirategame container:
 Some common commands can be used to manipulate the created container
 ```docker container ls``` - Lists the running containers so as to
 determine the name of the created container
+
 ```docker container restart <container_name>``` - Restart the game
 
 This will host the pirate game on the localhost under port 8000 under
