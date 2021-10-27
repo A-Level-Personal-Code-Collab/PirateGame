@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Oct 24 2021
+ * Last Modified: Wed Oct 27 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -56,7 +56,6 @@
     //Updates user list based on user dictionary
     socket.on('users_update', newUsersDict => { //Updates list to match incomming message
         ActiveUsers = newUsersDict;
-        console.log(ActiveUsers)
         
         /*---------------*/
         //Add any users to the list who aren't already on there

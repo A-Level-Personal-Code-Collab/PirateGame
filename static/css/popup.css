@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Wed Oct 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Wed Oct 27 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date          By    Comments
  * ----------    ---    ---------------------------------------------------------
+ * 2021-10-27	WH	Improved responsive centring
  * 2021-09-02	 WH	    Added dropdown CSS
  */
  
@@ -33,7 +34,6 @@
 
  .popupFooter
  {
-     position: absolute;
      bottom: 4%;
      width: 100%;
  }
@@ -57,7 +57,7 @@
 
  .popupButton:hover
  {
-     font-size: 22px;
+    background-color: #bea516;
  }
 
  .popupDropdown
@@ -81,5 +81,6 @@
      border-radius: 10px;
      position: absolute;
      padding: 10px;
-     height: 30vh;
+     left: 50%;
+     transform: translate(-50%, 0);
  }

@@ -6,20 +6,28 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Oct 25 2021
+# Last Modified: Wed Oct 27 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-27	WH	Added an isOnline function to check if a user is online
+# 2021-10-27	WH	Added error generator routine
+# 2021-10-27	WH	Modified GameIDVerify to allow reconnecting users to a closed game
+# 2021-10-27	WH	Added decorator routine to verify requested information when a user connects to a game
+# 2021-10-27	WH	Modified gameID validator
+# 2021-10-27	WH	Added is online validator
+# 2021-10-27	WH	Added class loggers and disconnect logger
 # 2021-10-25	WH	Moved all subroutines and classes from main file
 #---------------------------------------------------------------------#
 #=========================================================#
 #^ Imports required modules ^#
-from flask import Markup
+from flask import Markup, request, redirect
 from string import Template
 import random
 import json
+from functools import wraps
 
 #=========================================================#
 #^ Game generaion systems ^#
@@ -101,7 +109,7 @@ class generators:
     #---------------#
     #Returns the users that are currently part of a game 
     def getActiveUsersDictionary(self, gameID,userTBL):
-        self.allUsers = userTBL.query.filter(userTBL.userGameID==gameID,userTBL.userGrid!=None,userTBL.socketioSID!=None).all()
+        self.allUsers = userTBL.query.filter(userTBL.userGameID==gameID,userTBL.userGrid!=None).all()
         self.SIDNick = {} #Creates dictionary with key of SID and value of nickname
         for user in self.allUsers:
             self.SIDNick[user.userSID] = user.userNickname
@@ -163,12 +171,19 @@ class validators:
         return True
     
     #---------------#
-    #Checks that the provided game ID exists
-    def gameIDValidate(self,gameID,gameTBL):
-        if gameTBL.query.get(int(gameID)):
-            return True
-        else:
-            return False
+    #Checks that the provided game ID exists and is open to join
+    def gameIDValidate(self,gameID,gameTBL,usersTBL=None,userID=None):
+        self.matchingGame = gameTBL.query.filter(gameTBL.gameID==int(gameID)).first()
+        if self.matchingGame != None: #Check game exists
+            if self.matchingGame.isOpen: #Check if game is open
+                return True
+            else: # If game isn't open
+                if userID != None: #Check user info is provided
+                    userLine = usersTBL.query.get(userID)
+                    if int(userLine.userGameID) == int(gameID): #Check the user is connected to a game already
+                        return True
+                
+        return False
     
     #---------------#
     #Checks if a given user SID is the host of a game
@@ -178,6 +193,32 @@ class validators:
             return True
         else:
             return False
+    
+    #---------------#
+    #Check if a user clarifies as being online or not
+    def isOnline(self,userID,usersTBL):
+        if usersTBL.query.get(userID).socketioSID != None:
+            return True
+        else:
+            return False
+
+    #---------------#
+    #Decorator to validate that a user is allowed to visit a page
+    def pageControlValidate(usersTBL,gamesTBL):
+        def decorator(func):
+            @wraps(func)
+            def function_wrapper(*args, **kwargs):
+                userSID = request.cookies.get("SID") #Loads from client cookies
+                gameID = request.args.get("gid") #Loads from URL bar
+                userLine = usersTBL.query.get(userSID)
+                if validators().gameIDValidate(gameID,gamesTBL,usersTBL,userSID):
+                    if userLine:
+                        return func(*args, **kwargs)
+                
+                return redirect("/error?code=GAMEINVALIED")
+
+            return function_wrapper
+        return decorator
 
 #=========================================================#
 #^ Parsing system ^#
@@ -198,6 +239,19 @@ class parsers:
             exec(e) #Executes the string expression
         
         return self.vCash, self.vBank, self.pCash, self.pBank
+    
+    #---------------#
+    #Get the error message from a given code
+    def getERROR(self,code):
+        ERRORS = { #Available error messages and their corresponding code
+            "GAMEINVALIED" : "The game page you requested is unavailable. <br> This may be becuase the game does not exist or is already in progress.",
+            "NOSID" : "Your user has not been assigned an SID. Join a game or create one to get a SID cookie."
+        }
+        try:
+            self.message = ERRORS[code.upper()] + f"<br><b>ERROR CODE : {code.upper()}</b>" #Append code to message
+        except:
+            self.message = "Error code not found!"
+        return Markup(self.message)
 
 #=========================================================#
 #^ Gameplay Events ^#
@@ -219,6 +273,16 @@ class events:
         gameDB.session.commit()
 
 #=========================================================#
+#^ Gampeplay Functions ^#
+class functions:
+    #---------------#
+    #Runs when an action has been completed and checks whether a round has completed or not
+    def actionComplete(self, gameOBJ):
+        gameOBJ.remainingActions -= 1
+        if gameOBJ.remainingActions == 0:
+            return True
+
+#=========================================================#
 #^ Information Fabricators ^#
 class information:
     #---------------#
@@ -227,3 +291,22 @@ class information:
         self.numActiveGames = 2
 
         return self.numActiveGames
+
+#=========================================================#
+#^ Loggers ^#
+class loggers:
+    #---------------#
+    #Defines how data should be logged for a user disconnect
+    def userDisconnect(self, userNickname):
+        LOG_FORMAT = "🚪 {user} has left the game 🚪"
+
+        self.finalEntry = LOG_FORMAT.format(user=userNickname)
+
+        return self.finalEntry
+    #---------------#
+    #Defines how data should be logged for a user connection
+    def userConnect(self, userNickname):
+        LOG_FORMAT = "👋 {user} joined the game 👋"
+
+        self.finalEntry = LOG_FORMAT.format(user=userNickname)
+        return self.finalEntry

@@ -7,12 +7,17 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Tue Oct 26 2021
+# Last Modified: Wed Oct 27 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-27	WH	Added automatic commit to actions to users that are offline
+# 2021-10-27	WH	Added new URL route for error pages
+# 2021-10-27	WH	Added access control to lobby, sheet builder and gameplay pages to return an error if the game does not exist
+# 2021-10-27	WH	Added isOpen property to all games
+# 2021-10-27	WH	Added disconnect handling
 # 2021-10-25	WH	Moved gameplay class and gameplay generators to gameplay file
 # 2021-10-24	WH	Converted to allow gevent compatibility
 # 2021-10-20	WH	Revereted to working system without disconnect handler
@@ -99,6 +104,7 @@ class activeGames(gameDB.Model):
     squareOrder = gameDB.Column(gameDB.String(300))
     remainingActions = gameDB.Column(gameDB.Integer, default=0)
     resultsScores = gameDB.Column(gameDB.String(1000))
+    isOpen = gameDB.Column(gameDB.Boolean, default=True)
 
 #---------------#
 #The table that stores a log of all active users and their grids
@@ -312,6 +318,14 @@ def index():
     return render_template("index.html",currentActiveGames = activegames, totalGames = TotalGames, version = GAMEVERSION)
 
 #---------------#
+#Error pages
+@app.route("/error")
+def error():
+    code = request.args.get("code")
+    message = gameplay.parsers().getERROR(code) #Get error message from code
+    return render_template("errors/error_base.html",message=message)
+
+#---------------#
 @app.route("/play_game", methods=["GET","POST"])
 def play_game():
     #Below variables should be set to match the error class in the event of an error
@@ -412,6 +426,7 @@ def new_game():
 
 #---------------#
 @app.route("/sheet_builder", methods=["GET","POST"])
+@gameplay.validators.pageControlValidate(activeUsers,activeGames)
 def game_sheet():
     #Load values from client provided info
     userSID = request.cookies.get("SID") #Loads from client cookies
@@ -472,14 +487,17 @@ def B1_0():
 
 #---------------#
 @app.route("/playing_online/lobby")
+@gameplay.validators.pageControlValidate(activeUsers,activeGames)
 def lobby():
     #Redirect away if the user does not have correct cookies
     if request.cookies.get("SID") == None:
-        return redirect("/play_game")
+        return redirect("/error?code=NOSID")
 
     try:
         gameID = request.args.get("gid")
         gameLine = activeGames.query.get(int(gameID))
+        if gameLine.isOpen == False:
+            return redirect(f"/playing_online/game?gid={gameID}")
         hostSID = gameLine.hostSID
         hostNick = activeUsers.query.get(hostSID).userNickname
         host_content = ""
@@ -487,11 +505,12 @@ def lobby():
             host_content = Markup(render_template("host_only_lobby.html"))
 
         return render_template("lobby.html",host_only_content=host_content,gameID=gameID,hostNick=hostNick)
-    except AttributeError:
-        return redirect("/play_game")
+    except AttributeError: #Redirect away if game does not exist
+        return redirect("/error?code=GAMEINVALIED")
 
 #---------------#
 @app.route("/playing_online/game")
+@gameplay.validators.pageControlValidate(activeUsers,activeGames)
 def game():
     gameID = request.args.get("gid")
     userID = request.cookies.get("SID")
@@ -527,7 +546,7 @@ def game():
         else:
             return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
     except AttributeError:
-        return redirect("/play_game")
+        return redirect("/error?code=GAMEINVALIED")
 
 @app.route("/playing_online/results")
 def results():
@@ -571,9 +590,8 @@ def on_join(data):
 
         #Update the user list on all uer's screen
         online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
-        print(online_users)
-        print(f"emiting connect at {time.time()}")
         emit("users_update", online_users,room=gameID)
+        emit("log_update", gameplay.loggers().userConnect(user.userNickname),room=gameID) #Show log entry if a user leaves
     except AttributeError or ValueError:
         emit("ERR", "User ID that was submitted was not found in our DB", room=request.sid)
 
@@ -590,12 +608,16 @@ def disconnect():
             print(f"User {userLine.userNickname} has just disconnected from a game")
             userLine.socketioSID = None
             if userLine.userPendingDeclaration:
-                activeGames.query.get(userLine.userGameID).remainingActions -= 1
+                gameLine = activeGames.query.get(userLine.userGameID)
+                if gameplay.functions().actionComplete(gameLine): #Completed action and runs event if this completed a round
+                    emit("round_complete",room=gameID)
+
             userLine.userPendingDeclaration = False
             #Update the user list on all uer's screen
             gameDB.session.commit()
             online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
             emit("users_update", online_users,room=gameID)
+            emit("log_update", gameplay.loggers().userDisconnect(userLine.userNickname),room=gameID)
             
 
 #---------------#
@@ -620,6 +642,10 @@ def start_game(data):
         #Add selection order ro database
         gameData.squareOrder = order
         gameData.currentRound = 0
+
+        #Close game
+        gameData.isOpen = False
+        
         gameDB.session.commit()
 
         
@@ -669,8 +695,9 @@ def next_round():
                         player.userCash, player.userBank , null, null = gameplay.parsers().parse_money(actionExpression,player) #Parse expression
                         emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
                         emit("bank_update", player.userBank, room=player.socketioSID)
-                    else:
+                    elif gameplay.validators().isOnline(player.userSID,activeUsers): #Only handle actionable events if they are onlie
                         actionsRequired += 1
+                        player.userPendingDeclaration = True
                         event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
                         emit(event, data,room=player.socketioSID)
                     break #Break loop after detecting correct item to save resources
@@ -718,6 +745,17 @@ def action_declared(data):
                 target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions() #Save the expression information to the database based on what event has taken place
                 invalidRetals = ",".join(instance.INVALIED_RETALIATIONS)
                 logEntry = instance.get_log(targetSID,perpetrator.userSID) #Log the action to the logs
+                if not gameplay.validators().isOnline(target.userSID,activeUsers): #Automatically commit action if user is offline
+                    moneyHandlingExpression = target.userPendingExpression+":"+perpetrator.userPendingExpression #Create combined expression for money that tells what happens to both parties
+                    target.userCash, target.userBank, perpetrator.userCash, perpetrator.userBank = gameplay.parsers().parse_money(moneyHandlingExpression, target, perpetrator)
+                    for user in [target,perpetrator]:
+                        user.userPendingExpression = ""
+                        #Updates the cash boxes of both the perpetrator and victim
+                        emit("cash_update", user.userCash, room=user.socketioSID)
+                        emit("bank_update", user.userBank, room=user.socketioSID)
+
+                    if gameplay.functions().actionComplete(activeGames.query.get(gameID)): #Completed action and runs event if this completed a round
+                        emit("round_complete",room=gameIDString)
                 break # Break to save resources
 
         gameDB.session.commit()
@@ -770,8 +808,7 @@ def retaliation_decl(data):
         emit("cash_update", user.userCash, room=user.socketioSID)
         emit("bank_update", user.userBank, room=user.socketioSID)
 
-    aktvGame.remainingActions -= 1
-    if aktvGame.remainingActions == 0:
+    if gameplay.functions().actionComplete(aktvGame): #Completed action and runs event if this completed a round
         emit("round_complete",room=gameIDString)
 
     gameDB.session.commit()
