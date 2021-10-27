@@ -4,8 +4,8 @@
  * Created Date: Sunday, September 19th 2021, 8:35:59 pm
  * Author: Ollie Burroughs
  * -----
- * Last Modified: Mon Sep 27 2021
- * Modified By: Will Hall
+ * Last Modified: Tue Oct 26 2021
+ * Modified By: Ollie Burroughs
  * -----
  * Copyright (c) 2021 SchmetCorp.
  * ------------------------------------
@@ -20,6 +20,9 @@
 const firsttxt = document.getElementById("firsttxt")
 const secondtxt = document.getElementById("secondtxt")
 const thirdtxt = document.getElementById("thirdtxt")
+const firstcash = document.getElementById("firstcash")
+const secondcash = document.getElementById("secondcash")
+const thirdcash = document.getElementById("thirdcash")
 
 function on_load()
 {
@@ -33,6 +36,10 @@ function on_load()
     firsttxt.innerHTML = sortedArray[0][0]
     secondtxt.innerHTML = sortedArray[1][0]
     thirdtxt.innerHTML = sortedArray[2][0]
+    firstcash.innerHTML = sortedArray[0][1]
+    secondcash.innerHTML = sortedArray[1][1]
+    thirdcash.innerHTML = sortedArray[2][1]
+
 
     /*---------------*/
     //Run resize function to fit winner's names on podium

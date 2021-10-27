@@ -1,7 +1,9 @@
 # PirateGame
+
 Know the pirate game we all love from school? Want a digital version?
 Our A Level team are aiming to make a fully functioning prirate game!
 Run on localHost while developing
+
 ---------------------------------------------------------------------
 ### Running using docker
 The pirate game comes with the relevant docker filesystems to
@@ -18,10 +20,14 @@ a docker container. To setup a pirategame container:
 ```docker-compose up -d --build```
 3. This will automatically create an image and container
 
-Some common commands can be used to manipulate the created container
-```docker container ls``` - Lists the running containers so as to
+Some common commands can be used to manipulate the created container:
+1. ```docker container ls``` - Lists the running containers so as to
 determine the name of the created container
-```docker container restart <container_name>``` - Restart the game
+2. ```docker container restart <container_name>``` - Restart the game
+3. ```docker container logs <container_name>``` - Show the historical
+output of the the python program.
+4. ```docker container attach <container_name>``` - Show all current
+output of the program on the console
 
 This will host the pirate game on the localhost under port 8000 under
 a gunicord wsgi server
