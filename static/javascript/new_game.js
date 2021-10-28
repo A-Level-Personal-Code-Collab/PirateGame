@@ -4,7 +4,7 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Wed Sep 29 2021
+ * Last Modified: Thu Oct 28 2021
  * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Adam O'Neill
@@ -41,7 +41,8 @@ const nicknameinput = document.getElementById("ipt_nickname")
 /*=========================================================*/
 function onload() {
     //Adds OnClick Listener
-    custom_game_mode_button.addEventListener("change",disable)
+    /*
+    custom_game_mode_button.addEventListener("change",disable)*/
     start_game_button.addEventListener("click",return_settings)
     nicknameinput.addEventListener('input', () => {check_data(); nicknameinput.classList.remove("inputError")});
 
@@ -105,8 +106,12 @@ function disable() {
 // Collect data from page
 
 function return_settings() {
+    /* Content for custom game
     var grid_sliders = {GRID_X:Number(grid_slider.value), GRID_Y:Number(grid_slider.value)}
     var item_settings = {M5000:Number(M5000_slider.value), M1000:Number(M1000_slider.value), M500:Number(M500_slider.value), M200:Number(M200_slider.value), itmShield:Number(shield_slider.value), itmKill:Number(kill_slider.value), itmSteal:Number(steal_slider.value), itmMirror:Number(mirror_slider.value), itmBomb:Number(bomb_slider.value), itmBank:Number(bank_slider.value), itmSwap:Number(swap_slider.value), itmGift:Number(gift_slider.value)}
+    */
+    var grid_sliders = {GRID_X:6, GRID_Y:6}
+    var item_settings = {M5000:1, M1000:3, M500:5, M200:18, itmShield:1, itmKill:1, itmSteal:1, itmMirror:1, itmBomb:1, itmBank:2, itmSwap:1, itmGift:1}
     var nickname = nicknameinput.value
     var grid_sliders_string = JSON.stringify(grid_sliders)
     var item_settings_string = JSON.stringify(item_settings)
