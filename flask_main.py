@@ -7,7 +7,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Oct 27 2021
+# Last Modified: Fri Oct 29 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -354,7 +354,7 @@ def play_game():
                 return render_template("pre_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
 
         #---------------#
-        if gameplay.validators().gameIDValidate(gameID,activeGames):
+        if gameplay.validators().gameIDValidate(gameID,activeGames, usersTBL=activeUsers):
             if gameplay.validators().nicknameValidate(nickname):
                 #Saves user details to database
                 userSID = gameplay.generators().generate_SID(activeUsers)

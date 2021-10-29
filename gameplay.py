@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Oct 27 2021
+# Last Modified: Fri Oct 29 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-29	WH	Implemented a hard cap on the number of users per game (80 persons) Issue #105
 # 2021-10-27	WH	Added an isOnline function to check if a user is online
 # 2021-10-27	WH	Added error generator routine
 # 2021-10-27	WH	Modified GameIDVerify to allow reconnecting users to a closed game
@@ -173,10 +174,16 @@ class validators:
     #---------------#
     #Checks that the provided game ID exists and is open to join
     def gameIDValidate(self,gameID,gameTBL,usersTBL=None,userID=None):
+        MAX_USERS = 80
         self.matchingGame = gameTBL.query.filter(gameTBL.gameID==int(gameID)).first()
         if self.matchingGame != None: #Check game exists
             if self.matchingGame.isOpen: #Check if game is open
-                return True
+                if usersTBL != None: #Check user info is provided
+                    gamePlayers = usersTBL.query.filter(usersTBL.userGameID==gameID).all()
+                    if len(gamePlayers) < MAX_USERS:
+                        return True
+                else:
+                    return True
             else: # If game isn't open
                 if userID != None: #Check user info is provided
                     userLine = usersTBL.query.get(userID)
