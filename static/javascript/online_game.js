@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Oct 27 2021
+ * Last Modified: Fri Oct 29 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-10-29	WH	Added function to restrict height of log box to the height of the grid
  * 2021-10-01	WH	Added client side builder for target picker dropdown
  * 2021-10-01	WH	Switched to handle SIDs sent by client as oppose to RAW usernames and replace these cient side
  * 2021-09-29	WH	Handle retaliation display event to show the animation on retailiations
@@ -101,7 +102,8 @@
     chooseButton.addEventListener("click", declare_target);
 
     /*---------------*/
-    //Updates the page to its correct values
+    //Restrict height of the game information boxes to the height of the grid
+    document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
 
  }
 

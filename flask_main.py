@@ -13,6 +13,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-29	WH	Added game object deletion routine (Issue#90)
 # 2021-10-27	WH	Added automatic commit to actions to users that are offline
 # 2021-10-27	WH	Added new URL route for error pages
 # 2021-10-27	WH	Added access control to lobby, sheet builder and gameplay pages to return an error if the game does not exist
@@ -61,7 +62,7 @@ from re import A, sub
 import re
 from typing import final
 from weakref import ProxyTypes
-from flask import Flask, render_template, Markup, send_file, request
+from flask import Flask, render_template, Markup, send_file, request, make_response
 from flask_socketio import SocketIO, join_room, rooms, send, emit
 from flask.helpers import url_for
 from werkzeug.utils import redirect
@@ -103,8 +104,9 @@ class activeGames(gameDB.Model):
     currentRound = gameDB.Column(gameDB.Integer)
     squareOrder = gameDB.Column(gameDB.String(300))
     remainingActions = gameDB.Column(gameDB.Integer, default=0)
-    resultsScores = gameDB.Column(gameDB.String(1000))
+    resultsScores = gameDB.Column(gameDB.String(10000))
     isOpen = gameDB.Column(gameDB.Boolean, default=True)
+    deletionTime = gameDB.Column(gameDB.Integer,default=-1)
 
 #---------------#
 #The table that stores a log of all active users and their grids
@@ -394,6 +396,10 @@ def new_game():
         nickname = request.form.get("nickname")
 
         if gameplay.validators().nicknameValidate(nickname):
+            #Check database for old games pending deletion
+            activeGames.query.filter(activeGames.deletionTime < int(time.time()),activeGames.deletionTime!=-1).delete()
+
+            #-#
             #Generate random ID
             gameID = ""
             for x in range(8):
@@ -516,6 +522,9 @@ def game():
     userID = request.cookies.get("SID")
 
     try:
+        if gameplay.validators().isFinnished(gameID,activeGames):
+            return redirect(f"/playing_online/results?gid={gameID}")
+
         hostSID = activeGames.query.get(gameID).hostSID
         hostNick = activeUsers.query.get(hostSID).userNickname
         mySID = activeUsers.query.get(userID).userSID #Gets your own nickname and passes it to JS in order to replace it with 'YOU'
@@ -549,25 +558,32 @@ def game():
         return redirect("/error?code=GAMEINVALIED")
 
 @app.route("/playing_online/results")
+@gameplay.validators.pageControlValidate(activeUsers,activeGames)
 def results():
     #fetches user data
     gameID = request.args.get("gid")
-    userID = request.cookies.get("SID")
+    
+    if gameplay.validators().isFinnished(gameID,activeGames):
+        userID = request.cookies.get("SID")
 
-    userscores = json.loads(activeGames.query.get(gameID).resultsScores)
+        userscores = json.loads(activeGames.query.get(gameID).resultsScores)
 
-    sorted_scores = dict(sorted(userscores.items(),key = lambda x:x[1],reverse=True ))
-    final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td></td><td> Player </td> <td> Final Cash </td> </tr> "
-    placing = 1
-    podiumscores = {}
-    for name,score in sorted_scores.items():
-        if placing <=3:
-            podiumscores[name] = score
-        else:
-            final_scores_table += f"<tr> <td>{placing}</td> <td> {name} </td> <td> {score} </td> </tr>"
-        placing += 1 
-    final_scores_table += "</table>"
-    return render_template ("results.html",results_table = Markup (final_scores_table),podiumscores = podiumscores)
+        sorted_scores = dict(sorted(userscores.items(),key = lambda x:x[1],reverse=True ))
+        final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td></td><td> Player </td> <td> Final Cash </td> </tr> "
+        placing = 1
+        podiumscores = {}
+        for name,score in sorted_scores.items():
+            if placing <=3:
+                podiumscores[name] = score
+            else:
+                final_scores_table += f"<tr> <td>{placing}</td> <td> {name} </td> <td> {score} </td> </tr>"
+            placing += 1 
+        final_scores_table += "</table>"
+        response = make_response(render_template("results.html",results_table = Markup (final_scores_table),podiumscores = podiumscores))
+        response.delete_cookie("SID")
+        return response
+
+    return redirect("/error?code=GAMEONGOING")
 
 #=========================================================#
 #^ Socketio Functions ^#
@@ -582,7 +598,6 @@ def on_join(data):
     try:
         #Stores user's current socketio SID in database 
         user = activeUsers.query.filter(activeUsers.userSID==int(userSID)).first()
-        print(user)
         user.socketioSID = request.sid
         gameDB.session.commit()
 
@@ -711,15 +726,16 @@ def next_round():
                     event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
                     emit(event, data,room=player.socketioSID)
 
-    #---------------#
-    if actionsRequired == 0:
-        emit("round_complete",room=gameIDString)
-    else:
-        gameObject.remainingActions = actionsRequired
+        #---------------#
+        if actionsRequired == 0:
+            emit("round_complete",room=gameIDString)
+        else:
+            gameObject.remainingActions = actionsRequired
 
-    #---------------#
-    #Update values in database to newest
-    gameObject.currentRound = currentRound
+        #---------------#
+        #Update values in database to newest
+        gameObject.currentRound = currentRound
+    
     gameDB.session.commit()
 
 #---------------#
@@ -817,8 +833,8 @@ def retaliation_decl(data):
 #^ Main app execution ^#
 testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "testifications2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "WWWWWWWWWWWWWWW": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1750, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
 testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0,socketioSID="jkdfhjkjdjkfhunbmbnmvcbhjdbnmjhhejhjfksajkhfdjkhfjh")
-testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal,itmSteal",isHost=False,userCash=0,userBank=0,socketioSID="kfjkjkdkfjhjghsgvfjhfhj")
-testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmMirror,itmSteal,itmSteal,itmSteal,itmSteal,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield,itmShield",isHost=False,userCash=0,userBank=0,socketioSID="jdsgfghdjfghjsgfhghjghjgsjf")
+testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=0,userBank=0,socketioSID="kfjkjkdkfjhjghsgvfjhfhj")
+testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=0,userBank=0,socketioSID="jdsgfghdjfghjsgfhghjghjgsjf")
 gameDB.create_all() #Creates all defined tables in in-memory database
 gameDB.session.add(testUser)
 gameDB.session.add(testUser2)

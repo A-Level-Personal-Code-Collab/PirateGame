@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Wed Oct 27 2021
+ * Last Modified: Fri Oct 29 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -96,6 +96,14 @@
      flex-grow: 1;
      margin-left: 20px;
      text-align: center;
+     overflow-y:scroll;
+     -ms-overflow-style: none;  /* IE and Edge */
+     scrollbar-width: none;  /* Firefox */
+ }
+
+ .gameContainer::-webkit-scrollbar
+ {
+     display: none;
  }
 
  #div_gameDataGroup
@@ -104,6 +112,10 @@
      margin-right: 2%;
      display: inline-flex;
      width: 96%;
+ }
+ #div_cashBox
+ {
+    min-width: 90px;
  }
 
  .moneyList

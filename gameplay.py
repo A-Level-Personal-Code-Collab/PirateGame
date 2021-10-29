@@ -12,6 +12,8 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-29	WH	Added deletion scheduling to game end routine
+# 2021-10-29	WH	Added check for if a game is complete or not
 # 2021-10-29	WH	Implemented a hard cap on the number of users per game (80 persons) Issue #105
 # 2021-10-27	WH	Added an isOnline function to check if a user is online
 # 2021-10-27	WH	Added error generator routine
@@ -24,6 +26,7 @@
 #---------------------------------------------------------------------#
 #=========================================================#
 #^ Imports required modules ^#
+import time
 from flask import Markup, request, redirect
 from string import Template
 import random
@@ -210,6 +213,14 @@ class validators:
             return False
 
     #---------------#
+    #Check if a given game is over and that the results have been saved
+    def isFinnished(self, gameID,gamesTBL):
+        if gamesTBL.query.get(gameID).resultsScores != None:
+            return True
+        
+        return False
+
+    #---------------#
     #Decorator to validate that a user is allowed to visit a page
     def pageControlValidate(usersTBL,gamesTBL):
         def decorator(func):
@@ -217,10 +228,12 @@ class validators:
             def function_wrapper(*args, **kwargs):
                 userSID = request.cookies.get("SID") #Loads from client cookies
                 gameID = request.args.get("gid") #Loads from URL bar
-                userLine = usersTBL.query.get(userSID)
+                userLine = usersTBL.query.filter(usersTBL.userSID==userSID,usersTBL.userGameID==gameID)
                 if validators().gameIDValidate(gameID,gamesTBL,usersTBL,userSID):
                     if userLine:
                         return func(*args, **kwargs)
+                    else:
+                        return redirect("/error?code=INVALIEDSID")
                 
                 return redirect("/error?code=GAMEINVALIED")
 
@@ -252,7 +265,9 @@ class parsers:
     def getERROR(self,code):
         ERRORS = { #Available error messages and their corresponding code
             "GAMEINVALIED" : "The game page you requested is unavailable. <br> This may be becuase the game does not exist or is already in progress.",
-            "NOSID" : "Your user has not been assigned an SID. Join a game or create one to get a SID cookie."
+            "NOSID" : "Your user has not been assigned an SID. Join a game or create one to get a SID cookie.",
+            "GAMEONGOING" : "You have attempted to vist the results page however the game has not yet finnished",
+            "INVALIEDSID" : "The SID value provided by your client is not permitted to access this game information. This may be because no SID was provided"
         }
         try:
             self.message = ERRORS[code.upper()] + f"<br><b>ERROR CODE : {code.upper()}</b>" #Append code to message
@@ -266,6 +281,7 @@ class events:
     #---------------#
     #Ends the game just before the progression to the results page
     def gameEnd(self, gameID,gameTBL,usersTBL,gameDB):
+        DELETION_DELAY = 1000 #Time in secconds to wait before an old game is deleted from the database
         self.allUsers = usersTBL.query.filter(usersTBL.userGameID==int(gameID)).all()
         self.gameOBJ = gameTBL.query.get(int(gameID))
 
@@ -275,7 +291,8 @@ class events:
             userscore[User.userNickname] = User.userCash + User.userBank
 
         self.gameOBJ.resultsScores = json.dumps(userscore)
-        usersTBL.query.filter(usersTBL.userGameID==int(gameID)).delete()
+        self.gameOBJ.deletionTime = int(time.time()) + DELETION_DELAY
+        usersTBL.query.filter(usersTBL.userGameID==int(gameID)).delete() #Delete all users relating to that game from the database
 
         gameDB.session.commit()
 
