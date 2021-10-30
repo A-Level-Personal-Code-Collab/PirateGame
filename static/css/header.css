@@ -7,7 +7,7 @@
  * Copyright (c) 2021 Adam O'Neill
  * -----
  * Last Modified: Sat Oct 30 2021
- * Modified By: Adam O'Neill
+ * Modified By: Will Hall
  * Details: added ease to header hover
  * HISTORY:
  * Date      	By	Comments
@@ -32,6 +32,10 @@ a:link{
     overflow: hidden;
     background-color: #ffd900;
     padding: 20px 10px; /* size of the header on the page */ 
+}
+.waring
+{
+    background-color: #ffd900;
 }
 
 .Header a {
