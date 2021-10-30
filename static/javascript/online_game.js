@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Fri Oct 29 2021
+ * Last Modified: Sat Oct 30 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-10-30	WH	Fixed  incorrect retaliation removal
  * 2021-10-29	WH	Added function to restrict height of log box to the height of the grid
  * 2021-10-01	WH	Added client side builder for target picker dropdown
  * 2021-10-01	WH	Switched to handle SIDs sent by client as oppose to RAW usernames and replace these cient side
@@ -221,7 +222,8 @@
      if (!retaliated) { //Check a retaliation hasn't already been sent
         socket.emit("retaliation_declare", {type: type}); //Send back to server
         if (type != "none") {
-            retaliations.splice(retaliations.indexOf(type),1); //Remove retaliation from available retaliations events
+            var index = retaliations.map(function(d) { return d['type']; }).indexOf(type)
+            retaliations.splice(index,1); //Remove retaliation from available retaliations events
             update_retaliations(); //Update the retaliations box on the page
         }
         retaliated = true;
