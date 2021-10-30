@@ -12,6 +12,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-10-30	WH	Added css for social media buttons and similar
+ * 2021-10-30	WH	Added dynamic resize of news area
  * 2021-10-30	WH	Changed width of banner image to use auto margins rather than oversized width
  */
 
@@ -92,8 +94,9 @@
 .news_container {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 1vh;
-    height: 35vh;
+    height: fit-content;
     text-align: center;
+    padding: 1vh;
 }
 
 #patch_notes{
@@ -104,6 +107,8 @@
 
 #other_news {
     text-align: center;
+    width: 40%;
+    margin-left: 52%;
 }
 
 /* Table for games info */
@@ -111,4 +116,16 @@
 table {
     text-align: left;
     display: inline-table;
+}
+
+/*//=========================================================//*/
+/*^ Socials ^*/
+.socials_box
+{
+    width: 45vw;
+}
+.social_logo
+{
+    height: 4vh;
+    margin: 1vh;
 }
