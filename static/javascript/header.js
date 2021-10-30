@@ -14,12 +14,14 @@
 
 window.onscroll = function() {Scrolling()}
 
+
 var mainHeader = document.getElementById("mainHeader");
 var headerOffSet = mainHeader.offsetTop
 
 function Scrolling() {
     if (window.pageYOffset > headerOffSet) {
         mainHeader.classList.add("sticky");
+        fitty("#mainHeader")
     }
     else {
         mainHeader.classList.remove("sticky")

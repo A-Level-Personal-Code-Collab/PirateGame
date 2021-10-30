@@ -51,6 +51,8 @@ a:link{
     position: fixed;
     width: 100%;
     top: 0;
+    opacity: 97%;
+    z-index: 1;
 }
 
 
