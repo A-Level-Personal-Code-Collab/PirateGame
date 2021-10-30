@@ -8,7 +8,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Sat Oct 30 2021
-# Modified By: Ollie Burroughs
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -575,7 +575,7 @@ def results():
         podiumscores = {}
         for name,score in sorted_scores.items():
             if placing <=3:
-                podiumscores[name] = "£" + str(score)
+                podiumscores[name] = score
             else:
                 final_scores_table += f"<tr> <td>{placing}</td> <td> {name} </td> <td> £{score} </td> </tr>"
             placing += 1 
