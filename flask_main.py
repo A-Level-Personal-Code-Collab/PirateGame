@@ -8,7 +8,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Sat Oct 30 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -88,8 +88,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 gameDB = SQLAlchemy(app)
 
-TotalGames = 0
+#---------------#
 GAMEVERSION = "Beta 1.0"
+
 #=========================================================#
 #^ Database table models ^#
 #(these are required by SQL alchemy to interact with database so the variable names and info must correspond with your database)
@@ -316,6 +317,7 @@ class money:
 #The index page
 @app.route("/")
 def index():
+    TotalGames = gameplay.information().getTotalGames()
     activegames = gameplay.information().calcActiveGames(activeGames)
     return render_template("index.html",currentActiveGames = activegames, totalGames = TotalGames, version = GAMEVERSION)
 
@@ -420,8 +422,7 @@ def new_game():
             gameDB.session.add(newUser)
             gameDB.session.commit()
 
-            global TotalGames
-            TotalGames = TotalGames + 1
+            gameplay.information().incrementTotalGames()
 
             response = redirect(f"/sheet_builder?gid={gameID}") # Redirects to sheet builder page
             response.set_cookie("SID",str(userSID)) #Save SID for later use

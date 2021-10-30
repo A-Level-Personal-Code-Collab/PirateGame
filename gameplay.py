@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Sat Oct 30 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -321,8 +321,20 @@ class information:
     #Get information about the number of currently active games
     def calcActiveGames(self,gamesTBL):
         self.numActiveGames = 2
-
         return self.numActiveGames
+
+    def getTotalGames(self):
+        self.totalgamesfile = open("totalGames.txt","r")
+        return self.totalgamesfile.read()
+
+    def incrementTotalGames(self):
+        totalgamesfile = open("totalGames.txt","r")
+        self.totalgamescount = totalgamesfile.read()
+        self.totalgamescount = totalgamesfile + 1
+        totalgamesfile.close()
+        totalgamesfile = open("totalGames.txt","w")
+        totalgamesfile.write(self.totalgamescount)
+        totalgamesfile.close()
 
 #=========================================================#
 #^ Loggers ^#
