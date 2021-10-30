@@ -7,7 +7,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Oct 29 2021
+# Last Modified: Sat Oct 30 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -662,6 +662,9 @@ def start_game(data):
         gameData.isOpen = False
         
         gameDB.session.commit()
+    
+    else:
+        emit("ERR", "User ID that was submitted is not the host of this game. Have you attempted to join a seccond game?", room=request.sid)
 
         
 
@@ -831,7 +834,7 @@ def retaliation_decl(data):
 
 #=========================================================#
 #^ Main app execution ^#
-testGame = activeGames(gameID=1,hostSID=1,resultsScores='{"tuser1": 5000, "testifications2": 5587, "tuser2":4000, "test3": 2870, "test4": 2587, "test5": 3540, "test6": 1234, "WWWWWWWWWWWWWWW": 5343, "test8": 1750, "test9": 4300, "test10": 2900, "test11": 2800, "test12": 1750, "test13": 1700, "test14": 3900, "test15": 1500, "test16": 4700, "test17": 3500}',gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
+testGame = activeGames(gameID=1,hostSID=1,gridSettings='{"GRID_X": 5, "GRID_Y": 5}',itemSettings='{"M5000":1,"M1000":0,"M500":0,"M200":18,"itmShield":1,"itmKill":0,"itmSteal":0,"itmMirror":1,"itmBomb":2,"itmBank":1,"itmSwap":1,"itmGift":0}') #Creates active game for test purposes
 testUser = activeUsers(userSID=1,userGameID=1,userNickname="MONEY USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=True,userCash=0,userBank=0,socketioSID="jkdfhjkjdjkfhunbmbnmvcbhjdbnmjhhejhjfksajkhfdjkhfjh")
 testUser2 = activeUsers(userSID=2,userGameID=1,userNickname="ACTIONS USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=0,userBank=0,socketioSID="kfjkjkdkfjhjghsgvfjhfhj")
 testUser3 = activeUsers(userSID=3,userGameID=1,userNickname="RETALIATIONS USER",userGrid="M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,M5000,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank,itmBank",isHost=False,userCash=0,userBank=0,socketioSID="jdsgfghdjfghjsgfhghjghjgsjf")

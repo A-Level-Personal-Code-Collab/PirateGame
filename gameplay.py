@@ -6,12 +6,14 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Oct 29 2021
+# Last Modified: Sat Oct 30 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-30	WH	Added checks to gameIDValidate to allow no-sid access to results page
+# 2021-10-30	WH	Handler for null or invalied gameID in validation routine
 # 2021-10-29	WH	Added deletion scheduling to game end routine
 # 2021-10-29	WH	Added check for if a game is complete or not
 # 2021-10-29	WH	Implemented a hard cap on the number of users per game (80 persons) Issue #105
@@ -178,22 +180,24 @@ class validators:
     #Checks that the provided game ID exists and is open to join
     def gameIDValidate(self,gameID,gameTBL,usersTBL=None,userID=None):
         MAX_USERS = 80
-        self.matchingGame = gameTBL.query.filter(gameTBL.gameID==int(gameID)).first()
-        if self.matchingGame != None: #Check game exists
-            if self.matchingGame.isOpen: #Check if game is open
-                if usersTBL != None: #Check user info is provided
-                    gamePlayers = usersTBL.query.filter(usersTBL.userGameID==gameID).all()
-                    if len(gamePlayers) < MAX_USERS:
+        try:
+            self.matchingGame = gameTBL.query.filter(gameTBL.gameID==int(gameID)).first()
+            if self.matchingGame != None: #Check game exists
+                if self.matchingGame.isOpen or validators().isFinnished(gameID,gameTBL): #Check if game is open or finnished - in either case anyone is allowed in
+                    if usersTBL != None: #Check user info is provided
+                        gamePlayers = usersTBL.query.filter(usersTBL.userGameID==gameID).all() #Check game isn't full
+                        if len(gamePlayers) < MAX_USERS:
+                            return True
+                    else:
                         return True
-                else:
-                    return True
-            else: # If game isn't open
-                if userID != None: #Check user info is provided
-                    userLine = usersTBL.query.get(userID)
-                    if int(userLine.userGameID) == int(gameID): #Check the user is connected to a game already
-                        return True
-                
-        return False
+                else: # If game isn't open
+                    userLine = usersTBL.query.filter(usersTBL.userSID==userID).first()
+                    if userLine != None: #Check user info is provided
+                        if int(userLine.userGameID) == int(gameID): #Check the user is connected to a game already
+                            return True
+            return False
+        except TypeError or AttributeError: #Handles if a null or invalied gameID is submitted
+            return False
     
     #---------------#
     #Checks if a given user SID is the host of a game
@@ -226,17 +230,21 @@ class validators:
         def decorator(func):
             @wraps(func)
             def function_wrapper(*args, **kwargs):
-                userSID = request.cookies.get("SID") #Loads from client cookies
-                gameID = request.args.get("gid") #Loads from URL bar
-                userLine = usersTBL.query.filter(usersTBL.userSID==userSID,usersTBL.userGameID==gameID)
-                if validators().gameIDValidate(gameID,gamesTBL,usersTBL,userSID):
-                    if userLine:
-                        return func(*args, **kwargs)
-                    else:
-                        return redirect("/error?code=INVALIEDSID")
-                
-                return redirect("/error?code=GAMEINVALIED")
-
+                try:
+                    userSID = request.cookies.get("SID") #Loads from client cookies
+                    gameID = request.args.get("gid") #Loads from URL bar
+                    userLine = usersTBL.query.filter(usersTBL.userSID==userSID,usersTBL.userGameID==gameID).first()
+                    if validators().gameIDValidate(gameID,gamesTBL,usersTBL,userSID):
+                        if userLine == None: #If the gameIDValidator has allowed a non type sid then allow it
+                            return func(*args, **kwargs)
+                        elif userLine.userGameID == int(gameID):
+                            return func(*args, **kwargs)
+                    
+                    return redirect("/error?code=GAMEINVALIED")
+                except TypeError:
+                    return redirect("/error?code=GAMEINVALIED")
+                except AttributeError:
+                    return redirect("/error?code=INVALIEDSID")
             return function_wrapper
         return decorator
 
