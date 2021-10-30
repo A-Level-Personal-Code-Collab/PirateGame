@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Oct 23 2021
+ * Last Modified: Sat Oct 30 2021
  * Modified By: Adam O'Neill
  * Details: added ease to header hover
  * HISTORY:
@@ -15,7 +15,7 @@
  */
 *{
     margin: 0;
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 html {
@@ -46,6 +46,17 @@ a:link{
     font-weight: bold;
     transition: all 0.3s ease;
 }
+
+.sticky { /* given to the header once scroll is reacher */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    opacity: 97%;
+    z-index: 1;
+}
+
+
+
 
 .Header a:hover{
     background-color: gray;
