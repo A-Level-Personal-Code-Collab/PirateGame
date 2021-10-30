@@ -5,7 +5,7 @@
  * Author: Ollie Burroughs
  * -----
  * Last Modified: Sat Oct 30 2021
- * Modified By: Will Hall
+ * Modified By: Ollie Burroughs
  * -----
  * Copyright (c) 2021 SchmetCorp.
  * ------------------------------------
@@ -21,9 +21,9 @@
 const firsttxt = document.getElementById("firsttxt")
 const secondtxt = document.getElementById("secondtxt")
 const thirdtxt = document.getElementById("thirdtxt")
-//const firstcash = document.getElementById("firstcash")
-//const secondcash = document.getElementById("secondcash")
-//const thirdcash = document.getElementById("thirdcash")
+const firstcash = document.getElementById("firstcash")
+const secondcash = document.getElementById("secondcash")
+const thirdcash = document.getElementById("thirdcash")
 
 function on_load()
 {
@@ -37,9 +37,9 @@ function on_load()
     firsttxt.innerHTML = sortedArray[0][0]
     secondtxt.innerHTML = sortedArray[1][0]
     thirdtxt.innerHTML = sortedArray[2][0]
-    //firstcash.innerHTML = sortedArray[0][1]
-    //secondcash.innerHTML = sortedArray[1][1]
-    //thirdcash.innerHTML = sortedArray[2][1]
+    firstcash.innerHTML = sortedArray[0][1]
+    secondcash.innerHTML = sortedArray[1][1]
+    thirdcash.innerHTML = sortedArray[2][1]
 
 
     /*---------------*/
