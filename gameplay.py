@@ -329,12 +329,13 @@ class information:
 
     def incrementTotalGames(self):
         totalgamesfile = open("totalGames.txt","r")
-        self.totalgamescount = totalgamesfile.read()
-        self.totalgamescount = totalgamesfile + 1
+        totalgamescount = totalgamesfile.read()
+        totalgamescount = int(totalgamescount) 
+        totalgamescount += 1
         totalgamesfile.close()
         totalgamesfile = open("totalGames.txt","w")
-        totalgamesfile.write(self.totalgamescount)
-        totalgamesfile.close()
+        totalgamesfile.write(str(totalgamescount))
+        
 
 #=========================================================#
 #^ Loggers ^#
