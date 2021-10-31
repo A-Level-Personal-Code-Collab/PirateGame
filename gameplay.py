@@ -6,14 +6,15 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Oct 30 2021
-# Modified By: Adam O'Neill
+# Last Modified: Sun Oct 31 2021
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-31	WH	Spelling corrections
 # 2021-10-30	WH	Added checks to gameIDValidate to allow no-sid access to results page
-# 2021-10-30	WH	Handler for null or invalied gameID in validation routine
+# 2021-10-30	WH	Handler for null or invalid gameID in validation routine
 # 2021-10-29	WH	Added deletion scheduling to game end routine
 # 2021-10-29	WH	Added check for if a game is complete or not
 # 2021-10-29	WH	Implemented a hard cap on the number of users per game (80 persons) Issue #105
@@ -55,10 +56,10 @@ class generators:
                 raise "GRID DIMENSION ERROR"
             ySize = int(len(self.gridList) / xSize)
 
-            colLabels = [""] + list(map(chr, range(65,65+xSize))) #Creates a list of collum lables using capital letters
+            colLabels = [""] + list(map(chr, range(65,65+xSize))) #Creates a list of column lables using capital letters
             self.gridHTML += "<tr>"
 
-            #Creates the collum lables row
+            #Creates the column lables row
             for col in colLabels:
                 self.gridHTML += self.gridSquareHTMLTemplate.substitute(id=None,inner=col)
 
@@ -66,8 +67,8 @@ class generators:
             counter = 0 #Allows for IDs to be named serially
             for y in range(ySize):
                 self.gridHTML += "</tr><tr>"
-                self.gridHTML += self.gridSquareHTMLTemplate.substitute(id=None, inner=str(y+1)) #Adds the row lable
-                for x in range(xSize): #Runs through all other collums in that row
+                self.gridHTML += self.gridSquareHTMLTemplate.substitute(id=None, inner=str(y+1)) #Adds the row label
+                for x in range(xSize): #Runs through all other columns in that row
                     itemName = self.gridList[(x+y*xSize)] #Loads the item name from serial list corresponding to the coordinate in question
                     imageUrl = IMAGE_URLS[itemName]
                     self.gridHTML += self.gridSquareHTMLTemplate.substitute(id=f"square{counter}",inner=self.gridImageTemplate.substitute(url=imageUrl)) #Adds new td object based on template string
@@ -77,39 +78,39 @@ class generators:
             return Markup(self.gridHTML)
         
         #---------------#
-        #Builds the HTML syntax to draw the game grid - makes the grid easily exapandable + avoid typing repetative HTML code
+        #Builds the HTML syntax to draw the game grid - makes the grid easily expandable + avoid typing repetitive HTML code
         def buildEditableGrid(self,gridX,gridY):
         #Imports modules 
             #Local Constants
             CLASS_NAME = "gridSquare" #The name of the class that all td objects will share
 
-            #Grid variable will acumulate the HTML table
+            #Grid variable will accumulate the HTML table
             self.grid = "<table id=\"tbl_CoordinatesGrid\">"
 
-            self.collums = [" "] #The lables on the X-Axis
+            self.columns = [" "] #The lables on the X-Axis
             for l in range(gridX):
-                self.collums.append(chr(65+l)) #Generate X axis labels using ASCII character integers
+                self.columns.append(chr(65+l)) #Generate X axis labels using ASCII character integers
             self.rows = list(range(1,gridY+1)) #The Y-axis lables
 
             #Adds heading row
             self.grid += "<tr id=\"trw_gridHeading\">"
-            for l in self.collums:
-                self.grid += f"<td class=\"{CLASS_NAME}\" idng dynamic html=\"tdt_gridLabelCol{l}\">{l}</td>"
+            for l in self.columns:
+                self.grid += f"<td class=\"{CLASS_NAME}\" dynamic html=\"tdt_gridLabelCol{l}\">{l}</td>"
             self.grid += "</tr>"
 
             #Adds rest of grid
             for row in self.rows:
                 self.grid += "<tr>"
-                for col in self.collums:
+                for col in self.columns:
                     if col == " ":
                         self.grid += f"<td class=\"{CLASS_NAME}\" id=\"tdt_gridLabelCol{row}\">{row}</td>"
                     else:
-                        self.grid += f"<td class=\"{CLASS_NAME} dragReceptical\" id=\"tdt_grid{col}{row}\"></td>"
+                        self.grid += f"<td class=\"{CLASS_NAME} dragReceptacle\" id=\"tdt_grid{col}{row}\"></td>"
                 self.grid += "</tr>"
 
             self.grid += "</table>"
 
-            #Return finnished grid as Markdown and not plain text
+            #Return finished grid as Markdown and not plain text
             return Markup(self.grid)
 
     #---------------#
@@ -152,7 +153,7 @@ class validators:
         nickname = nickname.lower().replace(" ","")
 
         #---------------#
-        #Simple length check (secconds javascript check)
+        #Simple length check (seconds javascript check)
         self.nicknameLen = len(nickname)
         if self.nicknameLen > NICKNAME_MAX_LEN or self.nicknameLen < NICKNAME_MIN_LEN:
             return False
@@ -183,7 +184,7 @@ class validators:
         try:
             self.matchingGame = gameTBL.query.filter(gameTBL.gameID==int(gameID)).first()
             if self.matchingGame != None: #Check game exists
-                if self.matchingGame.isOpen or validators().isFinnished(gameID,gameTBL): #Check if game is open or finnished - in either case anyone is allowed in
+                if self.matchingGame.isOpen or validators().isFinished(gameID,gameTBL): #Check if game is open or finished - in either case anyone is allowed in
                     if usersTBL != None: #Check user info is provided
                         gamePlayers = usersTBL.query.filter(usersTBL.userGameID==gameID).all() #Check game isn't full
                         if len(gamePlayers) < MAX_USERS:
@@ -196,7 +197,7 @@ class validators:
                         if int(userLine.userGameID) == int(gameID): #Check the user is connected to a game already
                             return True
             return False
-        except TypeError or AttributeError: #Handles if a null or invalied gameID is submitted
+        except TypeError or AttributeError: #Handles if a null or invalid gameID is submitted
             return False
     
     #---------------#
@@ -218,7 +219,7 @@ class validators:
 
     #---------------#
     #Check if a given game is over and that the results have been saved
-    def isFinnished(self, gameID,gamesTBL):
+    def isFinished(self, gameID,gamesTBL):
         if gamesTBL.query.get(gameID).resultsScores != None:
             return True
         
@@ -240,11 +241,11 @@ class validators:
                         elif userLine.userGameID == int(gameID):
                             return func(*args, **kwargs)
                     
-                    return redirect("/error?code=GAMEINVALIED")
+                    return redirect("/error?code=GAMEINVALID")
                 except TypeError:
-                    return redirect("/error?code=GAMEINVALIED")
+                    return redirect("/error?code=GAMEINVALID")
                 except AttributeError:
-                    return redirect("/error?code=INVALIEDSID")
+                    return redirect("/error?code=INVALIDSID")
             return function_wrapper
         return decorator
 
@@ -259,7 +260,7 @@ class parsers:
         self.pCash = perpetrator.userCash if perpetrator else 0
         self.pBank = perpetrator.userBank if perpetrator else 0
 
-        #Substitute numbers in to expression to replace variables in order to make latter raplcement easier (e.g. {vCash} to 0)
+        #Substitute numbers in to expression to replace variables in order to make latter replacement easier (e.g. {vCash} to 0)
         expression = expression.format(vCash=self.vCash,vBank=self.vBank,pCash=self.pCash,pBank=self.pBank)
 
         #Calculate each part of the formula individually (e.g. self.pCah=300+1000 is one)
@@ -272,10 +273,10 @@ class parsers:
     #Get the error message from a given code
     def getERROR(self,code):
         ERRORS = { #Available error messages and their corresponding code
-            "GAMEINVALIED" : "The game page you requested is unavailable. <br> This may be becuase the game does not exist or is already in progress.",
+            "GAMEINVALID" : "The game page you requested is unavailable. <br> This may be because the game does not exist or is already in progress.",
             "NOSID" : "Your user has not been assigned an SID. Join a game or create one to get a SID cookie.",
-            "GAMEONGOING" : "You have attempted to vist the results page however the game has not yet finnished",
-            "INVALIEDSID" : "The SID value provided by your client is not permitted to access this game information. This may be because no SID was provided"
+            "GAMEONGOING" : "You have attempted to visit the results page however the game has not yet finished",
+            "INVALIDSID" : "The SID value provided by your client is not permitted to access this game information. This may be because no SID was provided"
         }
         try:
             self.message = ERRORS[code.upper()] + f"<br><b>ERROR CODE : {code.upper()}</b>" #Append code to message
@@ -289,7 +290,7 @@ class events:
     #---------------#
     #Ends the game just before the progression to the results page
     def gameEnd(self, gameID,gameTBL,usersTBL,gameDB):
-        DELETION_DELAY = 1000 #Time in secconds to wait before an old game is deleted from the database
+        DELETION_DELAY = 1000 #Time in seconds to wait before an old game is deleted from the database
         self.allUsers = usersTBL.query.filter(usersTBL.userGameID==int(gameID)).all()
         self.gameOBJ = gameTBL.query.get(int(gameID))
 

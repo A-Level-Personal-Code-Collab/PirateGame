@@ -4,8 +4,8 @@
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Thu Oct 28 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill
  * ------------------------------------
@@ -16,7 +16,7 @@
  * 2021-09-27	WH	Added code to alert users if their nickname is rejected
  * 2021-08-09	WH	Fixed problem where output boxes failed to update on custom-mode-disable (issue#33)
  * 2021-08-02	WH	Fixed disable item code and tidied File
- * 2021-08-02	AO	Added basic code aiming to disabale game customisation if master slider off
+ * 2021-08-02	AO	Added basic code aiming to disables game customization if master slider off
  */
 
 const disablables = document.querySelectorAll(".disablable")
@@ -81,7 +81,7 @@ function disable() {
     }
     else     {
         disablables.forEach(i => {i.classList.add("disablable"); i.disabled = true;})
-        // Resets the switches to their defult positions
+        // Resets the switches to their default positions
         grid_slider.value = 6
         steal_slider.value = 1
         kill_slider.value = 1

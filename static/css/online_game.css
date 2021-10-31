@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Fri Oct 29 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -21,7 +21,7 @@
  * 2021-09-20	WH	Created absolutely positioned Retaliations pop-out tab
  * 2021-09-19	WH	Added styling for some retaliation scenarios
  * 2021-09-02	WH	Added animation for some loading dots
- * 2021-09-02	WH	Added code for page-specifc popup settings
+ * 2021-09-02	WH	Added code for page-specific popup settings
  * 2021-08-28	WH	Added .completed class
  * 2021-08-28	WH	Added next-round button styling
  * 2021-08-28	WH	Added host-only next round button styling
@@ -154,7 +154,7 @@
  }
 
  /*---------------*/
- /*The realiation bank on page item styling*/
+ /*The retaliation bank on page item styling*/
  .retaliationItems /* The image items in the item bank*/
  {
      width: 7.5vh;
@@ -279,7 +279,7 @@
      position: relative;
  }
 
- .realiationOption
+ .retaliationOption
  {
      position: relative;
      height: 5vh;
@@ -290,13 +290,13 @@
      transition: all 0.2s;
  }
 
- .realiationOption:hover
+ .retaliationOption:hover
  {
      background-color: #ffd900;
      padding: 5px;
  }
 
- .realiationOption.disabled
+ .retaliationOption.disabled
  {
      pointer-events: none;
      filter: blur(1px) grayscale(100%);

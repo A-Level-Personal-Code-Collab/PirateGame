@@ -4,8 +4,8 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Oct 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -29,15 +29,15 @@
  //=========================================================//
  //^ Get elements from the page ^//
  const draggables = document.querySelectorAll('div.gridItems')
- const containers = document.querySelectorAll('.dragReceptical')
+ const containers = document.querySelectorAll('.dragReceptacle')
  const moneyItemBank = document.getElementById("div_moneyItems")
  const specialItemBank = document.getElementById("div_specialItems")
  const popupDiv = document.getElementById("div_gridFullPopUp")
 
  //=========================================================//
- //^ Contant parameters ^//
+ //^ Constant parameters ^//
  /*--*/
- /*Constant variable for the maximumum amount of each type of item*/
+ /*Constant variable for the maximum amount of each type of item*/
  const maxItems = 
  {
   M5000 : 1,
@@ -72,7 +72,7 @@
    itmSteal : 1,
    itmSwap : 1,
    itmGift : 1,
-   itmSheild : 1,
+   itmShield : 1,
    itmMirror : 1,
    itmBomb : 1,
    itmBank : 1
@@ -92,7 +92,7 @@
   if(draggable.parentNode.classList.contains("itemStack")) { //Checks if the item is coming from the bank
     /*--*/
     draggable.classList.forEach(cssclass => {
-      if (numItems[cssclass] != null) /*Igores other classes that don't determine item type*/
+      if (numItems[cssclass] != null) /*Ignores other classes that don't determine item type*/
       {
         if (numItems[cssclass] > 0) /*Checks if a new item can be created*/
         {
@@ -161,7 +161,7 @@
  function on_load() {
   /*--*/
   //Adds leave page confirmation
-  window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you reall wish to leave this site?"; return "Do you reall wish to leave this site?";}});
+  window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you really wish to leave this site?"; return "Do you really wish to leave this site?";}});
     
   /*---------------*/
   /*Add event listeners*/
@@ -176,12 +176,12 @@
     fitty("#fitty_container")
   })
 
-  /*Add drag over event listeners to each of the grid sqaures*/
+  /*Add drag over event listeners to each of the grid squares*/
   containers.forEach(container => {
     container.addEventListener('dragover', () => {dragoverevent(container)})
   })
 
-  //Event listener for on completeion button
+  //Event listener for on completion button
   document.getElementById("btn_grid_done").addEventListener("click", send_grid);
 
   //Adds double click listener to 200s
@@ -221,7 +221,7 @@
       if (squareID.substring(0,8) == "tdt_grid") //Check if any items left in bank and break if so break the loop
       {
         var squareCol = squareID.charCodeAt(8) - 65 //Convert the capital letter into a number by taking away the unicode value of 'A'
-        var squareRow = Number(squareID.substring(9)) - 1 //Convert remainder of ID to a number (should support 2 diget nums)
+        var squareRow = Number(squareID.substring(9)) - 1 //Convert remainder of ID to a number (should support 2 digit numbers)
         
         //Find class of interest from class list
         item.classList.forEach(cssclass => {
@@ -262,7 +262,7 @@
          document.getElementById(cssclass+"_counter").innerHTML = count; //Update counter spans
          if (count == 0)
          {
-           itm.classList.add("emptyStack") //Adds the empty stack class to show items have been exhaused
+           itm.classList.add("emptyStack") //Adds the empty stack class to show items have been exhausted
            itm.draggable = false; //Prevents further dragging of items
          } else
          {
@@ -279,10 +279,10 @@
  function fill_200s(event)
  {
    var originalM200 = event.target;
-   containers.forEach(sqaure => {
+   containers.forEach(square => {
      if (numItems["M200"] > 0) //Checks if there are 200s left
      {
-       if (sqaure.innerHTML == "") //Only adds to empty cells
+       if (square.innerHTML == "") //Only adds to empty cells
        {
          var newNote = originalM200.cloneNode(true) //Clones from original
 
@@ -290,7 +290,7 @@
          newNote.addEventListener('dragstart', (event) => {dragstartevent(event)});
          newNote.addEventListener('dragend', (event) => {dragendevent(event)});
 
-         sqaure.appendChild(newNote) //Adds cloned item to empty square
+         square.appendChild(newNote) //Adds cloned item to empty square
          numItems["M200"] --;
        }
      } else //Breaks loop if 200s have run out

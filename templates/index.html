@@ -6,7 +6,7 @@ Description: The main welcome file for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sat Oct 30 2021
+Last Modified: Sun Oct 31 2021
 Modified By: Will Hall
 -----
 HISTORY:
@@ -50,11 +50,18 @@ Date      	By	Comments
         <div class="news_container">
             <h2>Pirate Game News...</h2>
             <div id="patch_notes"> <!-- Patch news -->
-                <h3>Patch Notes....</h3>
+                <h3>Version News and [eye] patch notes</h3>
                 <br>
+                <div id="div_currentVersion">
+                    <h3>{{version}}</h3>
+                    <div id="div_versionFlex">
+                        <img id="img_releaseCelebration" src="../static/img/Celebrating_Logo.png" alt="Logo with party blower">
+                        <div class="release_summery">Welcome to the first ever incarnation of The [digital] Pirate Game. Much hard work has gone into building this version of the site with 100s of hours being spent developing the back-end server and website design: all from the ground up. Despite all of this work, there is still a long way to go and, in recognition of the miles left to sail, this is still a beta release.
+                            <br>Read the release notes in full <a href="/patch_notes/B1-0">here</a>.
+                        </div>
+                    </div>
+                </div>
                 <p>All patch notes can be viewed <a href="/patch_notes">here</a>.</p>
-                <p>Patch notes for the current version can be viewed <a href="/patch_notes/B1-0">here</a>.
-                <br> We are now currently on the {{version}} version of the pirate game!</p>
             </div>
             <div class="vl"></div>
             <div id="other_news"> <!-- other news -->

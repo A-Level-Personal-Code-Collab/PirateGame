@@ -4,8 +4,8 @@
  * Created Date: Wednesday, August 4th 2021, 10:32:28 am
  * Author: Will Hall
  * -----
- * Last Modified: Mon Sep 27 2021
- * Modified By: Ollie Burroughs
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -20,14 +20,14 @@
  //Checks an entered nickname for length and characters
  function check_nickname(text)
  {
-     const VERIFICATION_STAGES = 2; //Required value of varification value to allow submission
+     const VERIFICATION_STAGES = 2; //Required value of verification value to allow submission
      const NICKNAME_LEN = 15;
      const NICKNAME_MIN = 3;
  
      var verificationValue = 0; 
      if (text.length <= NICKNAME_LEN && text.length >= NICKNAME_MIN) {verificationValue ++;}
  
-     //Checks that nickaname contains ONLY english letters
+     //Checks that nickname contains ONLY english letters
      verificationValue ++;
      for (var l = 0; l < text.length; l++)
      {
@@ -42,9 +42,9 @@
  //Checks an entered ID for length and number check
  function check_ID(idText)
  {
-     //Values set for varification
+     //Values set for verification
      const GAMECODE_LEN = 8;
-     const VERIFICATION_STAGES = 2; //Required value of varification value to allow submission
+     const VERIFICATION_STAGES = 2; //Required value of verification value to allow submission
  
      var verificationValue = 0; 
      if (idText.length == GAMECODE_LEN) {verificationValue ++;}

@@ -6,8 +6,8 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Wed Oct 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -204,7 +204,7 @@
     border-radius: 50%; /* Makes the center circle round */
 }
 
-.slider::before { /* Defult position at left and gray */
+.slider::before { /* Default position at left and gray */
     position: absolute;
     content: "";
     height: 2vh; /* Size of the little circle */

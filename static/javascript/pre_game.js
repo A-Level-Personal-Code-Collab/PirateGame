@@ -4,7 +4,7 @@
  * Created Date: Sunday, August 1st 2021, 3:48:42 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Sun Oct 24 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill
@@ -14,8 +14,8 @@
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  * 2021-08-19	WH	Added listeners for existing SID cookie popup
- * 2021-08-04	WH	Moved actual verification rotines to other js file (ensure this is loaded)
- * 2021-08-02	WH	Added basic varification of join game inputs before submitting information to server
+ * 2021-08-04	WH	Moved actual verification routines to other js file (ensure this is loaded)
+ * 2021-08-02	WH	Added basic verification of join game inputs before submitting information to server
  */
 
 const submitButton = document.getElementById("btn_submit_button");

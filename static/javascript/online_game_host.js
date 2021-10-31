@@ -2,10 +2,10 @@
  * File: /home/will/GitHub Repos/PirateGame/static/javascript/online_game_host.js
  * Project: /home/will/GitHub Repos/PirateGame/static/javascript
  * Created Date: Saturday, August 28th 2021, 1:29:43 pm
- * Decription: Gameplay CSS for the host's controls
+ * Description: Game-play CSS for the host's controls
  * Author: Will Hall
  * -----
- * Last Modified: Sun Sep 26 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -43,7 +43,7 @@
     socket.emit("next_round");
     nextRound_btn.disabled = true;
     var remainingSquares = document.querySelectorAll(".gridSquare:not(.completed):not(#None)").length
-    if (remainingSquares == 2) {nextRound_btn.value = "Get Reults ➪"}
+    if (remainingSquares == 2) {nextRound_btn.value = "Get Results ➪"}
  }
 
  function round_complete()

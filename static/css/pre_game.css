@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Oct 25 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -62,7 +62,7 @@
 }
  /* Button */
 
-.game_button{ /* inital button settings */
+.game_button{ /* initial button settings */
     display: inline-block;
     text-align: center;
     background-color: #ffd900;
@@ -94,7 +94,7 @@
     top: 10vh; 
 }
 
-.game_button span{ /* span is used so the arrow is a seperate entity from the text */
+.game_button span{ /* span is used so the arrow is a separate entity from the text */
     transition: 0.5s;
     display: inline-block;
     position: relative;

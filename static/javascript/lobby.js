@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Oct 27 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -17,7 +17,7 @@
  * 2021-10-01	WH	Handles parsing of active users dictionary into HTML list on page
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Added dynamic socketio address
- * 2021-09-26	WH	Added music plaback control
+ * 2021-09-26	WH	Added music playback control
  * 2021-09-25	WH	Disables start button if number of users is too small
  * 2021-08-28	WH	Join event now sends userID to server also
  * 2021-08-09	WH	Added fetch function to pull data from the active users
@@ -54,7 +54,7 @@
     
     /*---------------*/
     //Updates user list based on user dictionary
-    socket.on('users_update', newUsersDict => { //Updates list to match incomming message
+    socket.on('users_update', newUsersDict => { //Updates list to match incoming message
         ActiveUsers = newUsersDict;
         
         /*---------------*/
@@ -80,7 +80,7 @@
         }
         )
 
-        //Disabes start button if number of users is below the threshold
+        //Disables start button if number of users is below the threshold
         var numPeople = Object.keys(ActiveUsers).length;
         if (!!btn_BeginGame) //Check button is not null
         {
@@ -95,7 +95,7 @@
         
     })
 
-    socket.on('start', function () {intentionalForward = true; window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is recieved
+    socket.on('start', function () {intentionalForward = true; window.location.href = `/playing_online/game?gid=${gameID}`}) //Starts game if game event is received
 
     /*---------------*/
     //Handles background music playback

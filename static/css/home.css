@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Oct 30 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -102,7 +102,7 @@
 #patch_notes{
     float: left;
     height: 80%;
-    width: 40%;
+    width: 46%;
 }
 
 #other_news {
@@ -128,4 +128,28 @@ table {
 {
     height: 4vh;
     margin: 1vh;
+}
+
+/*//=========================================================//*/
+/*^ Versions ^*/
+#div_currentVersion
+{
+    border-radius: 4px;
+    border-bottom: lightgray solid 2px;
+}
+
+#div_versionFlex
+{
+    display: flex;
+}
+
+#img_releaseCelebration
+{
+    width: 18vw;
+}
+
+.release_summery
+{
+    margin: 0.6vw;
+    padding: 0.2vw
 }

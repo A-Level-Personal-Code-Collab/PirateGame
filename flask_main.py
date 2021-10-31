@@ -7,12 +7,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Oct 30 2021
+# Last Modified: Sun Oct 31 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-31	WH	Spelling corrections
 # 2021-10-29	WH	Added game object deletion routine (Issue#90)
 # 2021-10-27	WH	Added automatic commit to actions to users that are offline
 # 2021-10-27	WH	Added new URL route for error pages
@@ -28,30 +29,30 @@
 # 2021-10-01	WH	Added on_disconnect function
 # 2021-09-29	WH	Declares the retaliation in order to show animation
 # 2021-09-27	WH	Added nickname validation for new_game
-# 2021-09-26	WH	Added game finnished event to forward to results page
-# 2021-09-25	WH	Now sends list of invalied retaliations with action declare
+# 2021-09-26	WH	Added game finished event to forward to results page
+# 2021-09-25	WH	Now sends list of invalid retaliations with action declare
 # 2021-09-25	WH	Data classes now also define the future tense version of the event name for the popup
 # 2021-09-19	WH	Added comments and tidy code
 # 2021-09-19	WH	Added retaliation system for all other retaliation options
 # 2021-09-18	WH	Added equation parser script
-# 2021-09-18	WH	Dataclasses now contain an expression that is parsed to calculale how each action effects all the cash containers
-# 2021-09-17	WH	standardised refrence to item names so, for example, kill is refrenced as itmKill everywhere
+# 2021-09-18	WH	Dataclasses now contain an expression that is parsed to calculate how each action effects all the cash containers
+# 2021-09-17	WH	standardized reference to item names so, for example, kill is referenced as itmKill everywhere
 # 2021-09-17	WH	Changed perpetrate_<action> events to notify events as this makes more sense
 # 2021-09-17	WH	Major overhaul of action definitions as they are now in data classes 
 # 2021-09-02	WH	Now handles Kill, Gift, Swap and Steal
 # 2021-09-02	WH	Added handling for special action declaration
 # 2021-08-28	WH	Added handling for Money, Bank and Bomb items being selected
 # 2021-08-28	WH	Added method to respond to the pushing of the NEXT-ROUND button
-# 2021-08-28	WH	Added function to generate the squence of squares
-# 2021-08-24	WH	Playing game draw-grid function now operates as inteded
+# 2021-08-28	WH	Added function to generate the sequence of squares
+# 2021-08-24	WH	Playing game draw-grid function now operates as intended
 # 2021-08-23	WH	Began work on online play draw grid function
-# 2021-08-19	WH	Added pop-upto warn users if they are already signed in in another tab
+# 2021-08-19	WH	Added pop-up to warn users if they are already signed in in another tab
 # 2021-08-05	WH	Converted application to use sqlite in-memory database to track active games
-# 2021-08-05	WH	Grid is addded to user database when sheet is submitted and user is redirected
+# 2021-08-05	WH	Grid is added to user database when sheet is submitted and user is redirected
 # 2021-08-05	WH	Adds user to active users database when they join a game from the join game screen
 # 2021-08-05	WH	Create system to query database when join game requested
 # 2021-08-05	WH	Create link to MySQL database
-# 2021-08-02	WH	Added nickname validator routine which, if sucessful, redirects user to /sheet_builder
+# 2021-08-02	WH	Added nickname validator routine which, if successful, redirects user to /sheet_builder
 # 2021-08-02	WH	Converted application to socketio application
 # 2021-07-09	WH	Added code to generate and serve basic playing grid
 # 2021-07-08	WH	Added very basic flask server structure
@@ -89,7 +90,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 gameDB = SQLAlchemy(app)
 
 #---------------#
-GAMEVERSION = "Beta 1.0"
+GAMEVERSION = "0.0.0B"
 
 #=========================================================#
 #^ Database table models ^#
@@ -123,19 +124,19 @@ class activeUsers(gameDB.Model):
     userPendingExpression = gameDB.Column(gameDB.String(200), default="")
     userPendingDeclaration = gameDB.Column(gameDB.Boolean, default=False)
     userBank = gameDB.Column(gameDB.Integer, default=0)
-    availableRetaliatios = gameDB.Column(gameDB.String(255))
+    availableRetaliations = gameDB.Column(gameDB.String(255))
 
 
 #=========================================================#
 #^ Data classes to define the action's model ^#
 class actionItem():
-    '''The base class for any action obejct that is created'''
+    '''The base class for any action object that is created'''
     ACTION_EMOJI = "❔"
     ACTION_IDENTIFIER = "itmUNDEF"
     MATHS_EXPRESSION= "vCash=vCash:vBank=vBank|pCash=pCash:pBank=pBank"
     LOG_MESSAGE = "{emoji} !<{perpetrator}> did undefined action on !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} UNDEF {emoji}"
-    INVALIED_RETALIATIONS = []
+    INVALID_RETALIATIONS = []
 
     def get_log(self, victim, perpetrator):
         return self.LOG_MESSAGE.format(emoji=self.ACTION_EMOJI,perpetrator=perpetrator,victim=victim)
@@ -161,7 +162,7 @@ class actionItem():
             return expression[0], expression[1]
 
     def isRetalValid(self,retalType):
-        if retalType in self.INVALIED_RETALIATIONS:
+        if retalType in self.INVALID_RETALIATIONS:
             return False
         else: 
             return True
@@ -198,7 +199,7 @@ class itmKill(actionItem):
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} !<{perpetrator}> killed !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} KILL {emoji}"
-    INVALIED_RETALIATIONS = []
+    INVALID_RETALIATIONS = []
     TARGETTED = True
 
 #---------------#
@@ -210,19 +211,19 @@ class itmSteal(actionItem):
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}+{vCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} !<{perpetrator}> stole from !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} STEAL FROM {emoji}"
-    INVALIED_RETALIATIONS = []
+    INVALID_RETALIATIONS = []
     TARGETTED = True
 
 #---------------#
 class itmGift(actionItem):
-    '''Class for gift item (victim recieves 1000M from nowhere)'''
+    '''Class for gift item (victim receives 1000M from nowhere)'''
     IMAGE_LOCATION = "../static/img/gift.png"
     ACTION_EMOJI = "🎁"
     ACTION_IDENTIFIER = "itmGift"
     MATHS_EXPRESSION= "self.vCash={vCash}+1000:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} !<{perpetrator}> gifted !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} GIFT {emoji}"
-    INVALIED_RETALIATIONS = []
+    INVALID_RETALIATIONS = []
     TARGETTED = True
 
 
@@ -235,7 +236,7 @@ class itmSwap(actionItem):
     MATHS_EXPRESSION= "self.vCash={pCash}:self.vBank={vBank}|self.pCash={vCash}:self.pBank={pBank}"
     LOG_MESSAGE = "{emoji} !<{perpetrator}> swapped with !<{victim}> {emoji}"
     FUTURE_TENSE_VERB_MSG = "{emoji} SWAP WITH {emoji}"
-    INVALIED_RETALIATIONS = ["itmMirror"]
+    INVALID_RETALIATIONS = ["itmMirror"]
     TARGETTED = True
 
 #---------------#
@@ -246,7 +247,7 @@ class itmBomb(actionItem):
     ACTION_IDENTIFIER = "itmBomb"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}"
     LOG_MESSAGE = ""
-    INVALIED_RETALIATIONS = ["itmShield","itmMirror"]
+    INVALID_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 
 #---------------#
@@ -257,7 +258,7 @@ class itmBank(actionItem):
     ACTION_IDENTIFIER = "itmBank"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}+{vCash}"
     LOG_MESSAGE = ""
-    INVALIED_RETALIATIONS = ["itmShield","itmMirror"]
+    INVALID_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 
 #=========================================================#
@@ -384,7 +385,7 @@ def play_game():
 #---------------#
 @app.route("/online_game")
 def online_game():
-    return render_template("online_game.hhtml")
+    return render_template("online_game.html")
 
 #---------------#
 @app.route('/new_game', methods=["GET","POST"])
@@ -513,7 +514,7 @@ def lobby():
 
         return render_template("lobby.html",host_only_content=host_content,gameID=gameID,hostNick=hostNick)
     except AttributeError: #Redirect away if game does not exist
-        return redirect("/error?code=GAMEINVALIED")
+        return redirect("/error?code=GAMEINVALID")
 
 #---------------#
 @app.route("/playing_online/game")
@@ -523,7 +524,7 @@ def game():
     userID = request.cookies.get("SID")
 
     try:
-        if gameplay.validators().isFinnished(gameID,activeGames):
+        if gameplay.validators().isFinished(gameID,activeGames):
             return redirect(f"/playing_online/results?gid={gameID}")
 
         hostSID = activeGames.query.get(gameID).hostSID
@@ -534,7 +535,7 @@ def game():
         gridSerial = activeUsers.query.get(userID).userGrid
         gridSettingsJSON = json.loads(activeGames.query.get(gameID).gridSettings)
         gridX = int(gridSettingsJSON["GRID_X"])
-        IMAGE_URLS = { #Defines the locations of the images ascoiated with the following items
+        IMAGE_URLS = { #Defines the locations of the images associated with the following items
             "M5000" : money(5000).IMAGE_LOCATION,
             "M1000" : money(1000).IMAGE_LOCATION,
             "M500" : money(500).IMAGE_LOCATION,
@@ -556,7 +557,7 @@ def game():
         else:
             return render_template("online_game.html", grid=usersGrid, hostNick=hostNick, mySID=mySID)
     except AttributeError:
-        return redirect("/error?code=GAMEINVALIED")
+        return redirect("/error?code=GAMEINVALID")
 
 @app.route("/playing_online/results")
 @gameplay.validators.pageControlValidate(activeUsers,activeGames)
@@ -564,7 +565,7 @@ def results():
     #fetches user data
     gameID = request.args.get("gid")
     
-    if gameplay.validators().isFinnished(gameID,activeGames):
+    if gameplay.validators().isFinished(gameID,activeGames):
         userID = request.cookies.get("SID")
 
         userscores = json.loads(activeGames.query.get(gameID).resultsScores)
@@ -604,7 +605,7 @@ def on_join(data):
 
         join_room(gameID)
 
-        #Update the user list on all uer's screen
+        #Update the user list on all user's screen
         online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
         emit("users_update", online_users,room=gameID)
         emit("log_update", gameplay.loggers().userConnect(user.userNickname),room=gameID) #Show log entry if a user leaves
@@ -629,7 +630,7 @@ def disconnect():
                     emit("round_complete",room=gameID)
 
             userLine.userPendingDeclaration = False
-            #Update the user list on all uer's screen
+            #Update the user list on all user's screen
             gameDB.session.commit()
             online_users = gameplay.generators().getActiveUsersDictionary(gameID,activeUsers)
             emit("users_update", online_users,room=gameID)
@@ -665,7 +666,7 @@ def start_game(data):
         gameDB.session.commit()
     
     else:
-        emit("ERR", "User ID that was submitted is not the host of this game. Have you attempted to join a seccond game?", room=request.sid)
+        emit("ERR", "User ID that was submitted is not the host of this game. Have you attempted to join a second game?", room=request.sid)
 
         
 
@@ -691,7 +692,7 @@ def next_round():
         sleep(3) #Time for animation to occur on client
 
         all_players = activeUsers.query.filter(activeUsers.userGameID==gameIDString,activeUsers.socketioSID!=None).all()
-        actionsRequired = 0 #Used to track whether the next round can begin imediately
+        actionsRequired = 0 #Used to track whether the next round can begin immediately
         for player in all_players:
             playerGrid = player.userGrid.split(",")
             item = playerGrid[int(square)]
@@ -709,12 +710,12 @@ def next_round():
             for action in actionItem.__subclasses__():
                 instance = action()
                 if instance.identify(item): #Use the identify method to test if the action in question is the desired action
-                    if not action.TARGETTED: #For actions that do not have target selectors, apply them imediately
-                        actionExpression, null = instance.get_expressions() #Get the expression, discarding the seccond half as it doesn't have a seccond player involved
+                    if not action.TARGETTED: #For actions that do not have target selectors, apply them immediately
+                        actionExpression, null = instance.get_expressions() #Get the expression, discarding the second half as it doesn't have a second player involved
                         player.userCash, player.userBank , null, null = gameplay.parsers().parse_money(actionExpression,player) #Parse expression
                         emit("cash_update", player.userCash, room=player.socketioSID) #Run cash updates
                         emit("bank_update", player.userBank, room=player.socketioSID)
-                    elif gameplay.validators().isOnline(player.userSID,activeUsers): #Only handle actionable events if they are onlie
+                    elif gameplay.validators().isOnline(player.userSID,activeUsers): #Only handle actionable events if they are online
                         actionsRequired += 1
                         player.userPendingDeclaration = True
                         event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
@@ -726,7 +727,7 @@ def next_round():
             for action in retaliatoryAction.__subclasses__():
                 instance = action()
                 if instance.identify(item):
-                    player.availableRetaliatios = f"{player.availableRetaliatios},{item}"
+                    player.availableRetaliations = f"{player.availableRetaliations},{item}"
                     event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
                     emit(event, data,room=player.socketioSID)
 
@@ -755,7 +756,7 @@ def action_declared(data):
     invalidRetals = ""
     
     #---------------#
-    #Handling for once a target has been selcted
+    #Handling for once a target has been selected
     if targetSID != "": #If the declaration includes the target information
         target = activeUsers.query.filter(activeUsers.userSID==targetSID).first() #Gets a database record object of the target
 
@@ -763,7 +764,7 @@ def action_declared(data):
             instance = actionType()
             if instance.identify(actionIdentifier):
                 target.userPendingExpression, perpetrator.userPendingExpression = instance.get_expressions() #Save the expression information to the database based on what event has taken place
-                invalidRetals = ",".join(instance.INVALIED_RETALIATIONS)
+                invalidRetals = ",".join(instance.INVALID_RETALIATIONS)
                 logEntry = instance.get_log(targetSID,perpetrator.userSID) #Log the action to the logs
                 if not gameplay.validators().isOnline(target.userSID,activeUsers): #Automatically commit action if user is offline
                     moneyHandlingExpression = target.userPendingExpression+":"+perpetrator.userPendingExpression #Create combined expression for money that tells what happens to both parties
@@ -783,7 +784,7 @@ def action_declared(data):
         #Updates the log
         emit('log_update', logEntry, room=gameIDString)
     
-    fTenseMessage = eval(f"{actionIdentifier}().get_popupVerb()") #Uses the dataclass system to get the propper grammer for the popup messgae
+    fTenseMessage = eval(f"{actionIdentifier}().get_popupVerb()") #Uses the dataclass system to get the propper grammer for the popup message
     emit('action_declare', {"target" : targetSID, "action": actionIdentifier, "perpetrator": perpetrator.userSID, "ftVerb": fTenseMessage, "invalidRetals": invalidRetals}, room=gameIDString) #Re-broadcast event to enforce popup
 
 #---------------#
@@ -801,16 +802,16 @@ def retaliation_decl(data):
     aktvGame = activeGames.query.get(gameID)
 
     #---------------#
-    #Loops through avilable retaliations to check if it matches any of those
+    #Loops through available retaliations to check if it matches any of those
     if retal_type != "none":
         for action in retaliatoryAction.__subclasses__():
             instance = action()
             if instance.identify(retal_type):
-                availableRetals = victim.availableRetaliatios.split(",")
+                availableRetals = victim.availableRetaliations.split(",")
                 if retal_type in availableRetals:
                     availableRetals.remove(retal_type)
-                    victim.availableRetaliatios = ",".join(availableRetals)
-                    moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dicted in the retaliation's data class
+                    victim.availableRetaliations = ",".join(availableRetals)
+                    moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dictated in the retaliation's data class
                     emit("log_update", instance.get_log(victim.userSID,perpetrator.userSID),room=gameIDString) #Add retaliation log entry
                     emit("retaliation_declare", instance.get_pushback_dat(),room=gameIDString)
                     break #Break to save resources
