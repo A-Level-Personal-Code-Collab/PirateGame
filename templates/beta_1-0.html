@@ -26,7 +26,7 @@ Date      	By	Comments
     </div>
     <div class="notes_container">
         <h3>Overview</h3>
-        <p>This is our very first deployment of the game and thus, literally everything is brand new! Read through the below list to see the key features of this release!</p>
+        <p>This is our very first deployment of the game and thus, literally everything is brand new! Read through the below list to see the key features of this release! Information given in these notes may be incomplete or nondescript as notes were not recorded during development. Future versions will see better logging.</p>
         <h3>Homepage</h3>
         <li>Added index homepage</li>
         <li>Added PirateGame logo (Image Credit: Jack Hegarty)</li>
@@ -34,7 +34,43 @@ Date      	By	Comments
         <li>Added patch notes and release information panel</li>
         <li>Added social information and links</li>
         <h3>Tutorial</h3>
-        <li>Added tutorial page</li> 
+        <li>Added tutorial page</li>
+        <li>Added overview of all game actions in tutorial</li>
+        <h3>Join Game</h3>
+        <li>Added join game functionality</li>
+        <li>Added functionality to create a new game</li>
+        <li>Added functionality to accept spaces in nicknames</li>
+        <li>Added popup to warn users of the effect of joining more than one game</li>
+        <h3>About</h3>
+        <li>Added about page to show authors of the PirateGame</li>
+        <li>Added information about the game itself</li>
+        <h3>Grid Builder</h3>
+        <li>Added game sheet page</li>
+        <li>Renamed page to sheet builder</li>
+        <li>Created grid functionality</li>
+        <li>Added javascript to allow for dragging</li>
+        <li>Added event for popup to submit the data to the server</li>
+        <li>Added browser leave page confirmation</li>
+        <h3>Lobby</h3>
+        <li>Added lobby page</li>
+        <li>Added socketio transport functionality</li>
+        <li>Added handling for user updates</li>
+        <li>Added music playback and accompanying controls (Music Credit: Charlie Kay)</li>
+        <li>Added minimum user count of 3</li>
+        <h3>Game</h3>
+        <li>Added gameplay page</li>
+        <li>Added function to draw a users grid again in uneditable form</li>
+        <li>Added cash, bank and log boxes to screen</li>
+        <li>Added target picker and action popups to HTML</li>
+        <li>Added js handling of all socket events</li>
+        <li>Added functionality to display server errors as alerts</li>
+        <li>Added select square animation</li>
+        <h3>Results</h3>
+        <li>Added results page</li>
+        <li>Added python functionality to build up runners up table</li>
+        <li>Added podium drawing functionality</li>
+        <li>Add cash values to podium</li>
+        <li>Once a results page has been access the game is qued for deletion and all game's users are deleted</li>
     </div>
     
 {% endblock %}

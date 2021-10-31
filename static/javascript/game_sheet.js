@@ -15,13 +15,13 @@
  * ----------	---	---------------------------------------------------------
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-08-05	WH	Added stack counters to each item including their update routines
- * 2021-08-05	WH	Completely rewrote bank system grey-out items when a stack is exhaused
- * 2021-08-02	WH	Added function to show and hide the finnished pop-up based on whether the grid is full or not
+ * 2021-08-05	WH	Completely rewrote bank system grey-out items when a stack is exhausted
+ * 2021-08-02	WH	Added function to show and hide the finished pop-up based on whether the grid is full or not
  * 2021-08-02	WH	Added grid builder function in preparation to send grid to server
- * 2021-08-01	WH	Tidied up code significantly including making stacking mechanic work for all items (not just money) and adding iteration to acheive this
- * 2021-07-31	WH	Removed code that aimed to remove ghost image as this was casuing a notable resource catastrophy within browsers (See Issue#2)
+ * 2021-08-01	WH	Tidied up code significantly including making stacking mechanic work for all items (not just money) and adding iteration to achieve this
+ * 2021-07-31	WH	Removed code that aimed to remove ghost image as this was causing a notable resource catastrophe within browsers (See Issue#2)
  * 2021-07-29	WH	Money items now operate correctly in terms of duplicating themselves if they are allowed and re-combining when they are placed back into the bank
- * 2021-07-20	WH	Dropping may now occur in the bank section and items will return to the correct collum based on whether they are money or other items
+ * 2021-07-20	WH	Dropping may now occur in the bank section and items will return to the correct column based on whether they are money or other items
  * 2021-07-20	WH	Modified drop script so items can oly be dropped in empty cells.
  * 2021-07-11	WH	Created required javascript to allow for draggable grid elements
  */

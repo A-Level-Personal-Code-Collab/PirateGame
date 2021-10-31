@@ -13,7 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
- * 2021-10-15	WH	No handles server errors with an alert popup
+ * 2021-10-15	WH	Now handles server errors with an alert popup
  * 2021-10-01	WH	Handles parsing of active users dictionary into HTML list on page
  * 2021-09-27	WH	Added leave page confirmation
  * 2021-09-26	WH	Added dynamic socketio address

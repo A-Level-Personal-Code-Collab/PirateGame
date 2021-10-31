@@ -28,7 +28,7 @@ Date      	By	Comments
 {% block body %}
     <div class="pre_game_header"> <!-- MAKE THIS GREY IN CSS -->
     <h1 id=pre_game_title> Play Pirate Game!</h1>
-    <p>Welcome to the 21 century pirate game. You may be thinking how to play? Visit the <a href="/tutorial" id="tutorial_link">tutorial</a> to learn the ways of captain hook! <br> Now the tough decision, should you play "Game sheet" or should you play "Online Game". Read below to decide!</p>
+    <p>Welcome to the 21st century reincarnation  of pirate game. If you're unsure how to play, visit the <a href="/tutorial" id="tutorial_link">tutorial</a> to learn the ways of captain hook!</p>
     </div>
     <div class="row">
         <div class ="column">
@@ -36,7 +36,7 @@ Date      	By	Comments
                 <div class="container">
                     <h2>New Game</h2>
                     <br>
-                    <p>Play a new game of Pirate Game!. Customize your game settings then prepare the grid for battle! Give the lobby ID to new players to allow them to join. Now get ready for battle</p>
+                    <p>Start a new Pirate Game. Set up your own gid then invite at least 3 friends to play with you!</p>
                     <form method="GET" action="/new_game" id="new_game_button">
                         <button type="submit" class="game_button" style="vertical-align:middle ;"><span>New Game </span></button>
                     </form>
@@ -48,7 +48,7 @@ Date      	By	Comments
                 <div class="container">
                     <h2>Join Game</h2>
                     <br>
-                    <p>Input details below to join an active Pirate Game!</p>
+                    <p>Join an existing pirate game. Ask whoever is hosting to provide a gameID and enter the details below</p>
                     <form name="joinform" method="POST">
                         <table>
                             <tr>
@@ -56,7 +56,7 @@ Date      	By	Comments
                                 <td><input value="{{gameID}}" type="text" id="ipt_game_ID" name="ipt_game_ID" class="{{gameIDErrClass}}"></tr>
                             </tr>                          
                             <tr>
-                                <td><span class="info_circle" title="Allows letters only. Some nicknames will be rejected due to explicity!">&#9432</span><label for="ipt_nickname"> Nickname:</label></td>
+                                <td><span class="info_circle" title="Allows ASCII letters and spaces only. Some nicknames will be rejected due to explicity!">&#9432</span><label for="ipt_nickname"> Nickname:</label></td>
                                 <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}"></td>
                             </tr>
                         </table>
