@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Oct 16 2021
+ * Last Modified: Sun Oct 31 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -14,7 +14,7 @@
  * ----------	---	---------------------------------------------------------
  * 2021-09-25	WH	Added disabled style for start button
  * 2021-08-24	WH	Moved lobby header styling to game_header.css so the same styles can be applied in the game screen also
- * 2021-08-10	WH	Added list item formatiing and list animation
+ * 2021-08-10	WH	Added list item formatting and list animation
  */
 
  /*//=========================================================//*/
@@ -141,7 +141,7 @@
  /*^ Page background ^*/
 body
 {
-    background-image: url("../img/NONFINAL-agedPaper.jpg"); /*Temoary background only - copyright to use*/
+    background-image: url("../img/LobbyBackground.jpg"); /*Temporary background only - copyright to use*/
     background-size: cover;
 }
 
