@@ -13,6 +13,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-10-31	WH	Zeros no longer allowed in gameID to ensure always 8 digits
 # 2021-10-31	WH	Spelling corrections
 # 2021-10-29	WH	Added game object deletion routine (Issue#90)
 # 2021-10-27	WH	Added automatic commit to actions to users that are offline
@@ -406,7 +407,7 @@ def new_game():
             #Generate random ID
             gameID = ""
             for x in range(8):
-                gameID = gameID + str(random.randint(0,9))
+                gameID = gameID + str(random.randint(1,9))
             while activeGames.query.get(int(gameID)) != None: #Check if chosen gameID already exists and keep regerating until it doesn't
                         gameID = ""
                         for x in range(8):
