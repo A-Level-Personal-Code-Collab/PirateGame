@@ -621,9 +621,8 @@ def disconnect():
     if userLine != None:
         gameID = str(userLine.userGameID).zfill(8)
         if gameplay.validators().isHost(request.sid,gameID,activeGames):
-            print(f"HOST {userLine.userNickname} has just disconnected from a game")
+            emit("ERR", "The host of this game has left. If they do not return them the game cannot continue.",room=gameID)
         else:
-            print(f"User {userLine.userNickname} has just disconnected from a game")
             userLine.socketioSID = None
             if userLine.userPendingDeclaration:
                 gameLine = activeGames.query.get(userLine.userGameID)
