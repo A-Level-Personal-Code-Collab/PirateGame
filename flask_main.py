@@ -7,8 +7,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Oct 31 2021
-# Modified By: Will Hall
+# Last Modified: Mon Nov 01 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -490,9 +490,9 @@ def about_page():
 def patch_notes():
     return render_template("patch_notes.html")
 
-@app.route("/patch_notes/B1-0")
-def B1_0():
-    return render_template("beta_1-0.html")
+@app.route("/patch_notes/B-0-0-0")
+def B_0_0_0():
+    return render_template("beta_0-0-0.html")
 
 #---------------#
 @app.route("/playing_online/lobby")
