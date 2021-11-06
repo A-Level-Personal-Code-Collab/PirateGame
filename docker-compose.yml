@@ -4,10 +4,11 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
+            target: development
         ports:
             - "8000:8000"
         command: /usr/local/bin/gunicorn -w 1 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload --graceful-timeout 3600000 --timeout 999999999 --bind 0.0.0.0:8000 flask_main:app
         volumes:
-            - ./:/application
+            - ./app:/application
         stdin_open: true
         tty: true 
