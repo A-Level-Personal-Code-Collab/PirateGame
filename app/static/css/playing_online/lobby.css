@@ -1,0 +1,148 @@
+/*
+ * File: https://github.com/Lime-Parallelogram/PirateGame/static/css/playing_online/lobby.css
+ * Project: https://github.com/Lime-Parallelogram/PirateGame
+ * Created Date: Monday, August 9th 2021, 12:10:47 pm
+ * Description: The CSS for the lobby page
+ * Author: Will Hall
+ * Copyright (c) 2021 Lime Parallelogram
+ * -----
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2021-09-25	WH	Added disabled style for start button
+ * 2021-08-24	WH	Moved lobby header styling to playing_online/game_global.css so the same styles can be applied in the game screen also
+ * 2021-08-10	WH	Added list item formatting and list animation
+ */
+
+ /*//=========================================================//*/
+ /*^ Css animation ^*/
+ /*Pop in animation from the internet*/
+ @-webkit-keyframes pop-in {
+0% { opacity: 0; -webkit-transform: scale(0.5); }
+100% { opacity: 1; -webkit-transform: scale(1); }
+}
+@-moz-keyframes pop-in {
+0% { opacity: 0; -moz-transform: scale(0.5); }
+100% { opacity: 1; -moz-transform: scale(1); }
+}
+@keyframes pop-in {
+0% { opacity: 0; transform: scale(0.5); }
+100% { opacity: 1; transform: scale(1); }
+}
+
+
+ /*//=========================================================//*/
+ /*^ Lobby header ^*/
+
+.gameSubheader
+{
+   background-color: #474e5d;
+   color: white;
+   height: 8vh;
+   min-height: max-content;
+   margin-bottom: 1vh;
+   position: relative;
+   text-align: center;
+   line-height: 8vh;
+   padding-left: 1vh;
+   padding-right: 1vh;
+   flex: 1;
+}
+
+#hostNick {
+    float:left ;
+}
+
+#gameID {
+    position: absolute;
+    left: 45%;
+}
+
+#hostContent {
+    float: right;
+}
+
+#controlContent
+{
+    float: right;
+}
+
+ /*//=========================================================//*/
+ /*^ Containers for fitty ^*/
+
+#hostNickContainer {
+    width: 50vh;
+}
+
+#gameIDContainer {
+    width: 25vh;
+}
+
+ /*//=========================================================//*/
+ /*^ Buttons ^*/
+
+ .actionButton{
+    border: none;
+    cursor: pointer;
+    background-color: #ffd900;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.535);
+    font-size: 2vh;
+    padding: 1.5vh;
+    color: rgb(145, 145, 145);
+    border-radius: 8px;
+    margin-right: 0.5vw;
+    height: 6vh;
+  }
+
+  .actionButton:hover{
+    background-color: #fade3d;
+  }
+
+  .actionButton:active:not(:disabled){
+    background-color: #fade3d;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
+    transform: translateY(0.1vh);
+  }
+
+  .actionButton:disabled{
+      background-color: darkgray;
+      cursor: not-allowed;
+  }
+
+
+ /*//=========================================================//*/
+ /*^ Names list ^*/
+.names_list
+{
+    list-style: none;
+}
+.names_list li
+{
+    display: inline-flex;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgba(161, 161, 161, 0.767);
+    border-radius: 8px;
+    margin: 10px;
+    font-size: 40px;
+    font-family: "Noto Sans ExtraBold";
+    -webkit-animation:pop-in 0.5s;
+    -moz-animation:pop-in 0.5s;
+    -ms-animation:pop-in 0.5s;
+    animation: pop-in 0.5s;
+    color: white;
+}
+
+ /*//=========================================================//*/
+ /*^ Page background ^*/
+body
+{
+    background-image: url("../img/LobbyBackground.jpg"); /*Temporary background only - copyright to use*/
+    background-size: cover;
+}
+
+

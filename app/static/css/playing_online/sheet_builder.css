@@ -1,0 +1,231 @@
+/*
+ * File: /home/will/GitHub Repos/PirateGame/assets/css/playing_online/sheet_builder.css
+ * Project: /home/will/GitHub Repos/PirateGame/assets/css
+ * Created Date: Friday, July 9th 2021, 9:26:56 pm
+ * Description: The CSS for the actual page that will replace your paper playing sheet
+ * Author: Will Hall
+ * Copyright (c) 2021 Lime Parallelogram
+ * -----
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2021-07-11	WH	Formatting for grid and grid draggable elements
+ */
+
+ /*Page formatting*/
+ #div_coordinateGrid, #div_itemBank, #div_moneyStorage, #div_actionsBank
+ {
+    float: left;
+    margin: 2vh;
+    vertical-align: top;
+ }
+
+ #div_sheetArea
+ {
+     width: 100%;
+     height: 100%;
+     display: flex;
+ }
+
+ /*Grid information*/
+.gridSquare
+{
+    height: 10vh;
+    width: 10vh;
+    border: 3px solid black;
+    margin: 0;
+    padding: 0.5vh;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+#tbl_CoordinatesGrid
+{
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.gridItems
+{
+    width: 8.6vh;
+    height: 8.6vh;
+    cursor: move;
+}
+
+.gridItems img
+{
+    pointer-events: none;
+    width: 8.5vh;
+    height: 8.5vh;
+    
+}
+
+.emptyStack
+{
+    opacity: 0.4;
+    filter: grayscale(100%);
+}
+
+.stackCounter
+{
+    background-color: #474e5d;
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    bottom: 1vh;
+    right: 1vh;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.itemStack
+{
+    position: relative;
+}
+
+.gridItems.dragging
+{
+    opacity: 0.5;
+}
+
+/*Item bank*/
+#div_itemBank
+{
+    border: 3px solid black;
+    text-align: center;
+}
+
+#div_moneyItems
+{
+    float: right;
+    width: 9vh;
+    border-left: 1px dashed black;
+}
+
+#div_specialItems
+{
+    width: 9vh;
+    float: left;
+}
+
+/*Money storage box*/
+.moneyBox
+{
+    border: black solid 3px;
+    position: absolute;
+    width: inherit;
+}
+
+#div_moneyStorage
+{
+    height: 70vh;
+    width: 100%;
+    position: relative;
+}
+
+#div_cashBox
+{
+    height: 70%;      
+    
+}
+
+#div_bankBox
+{
+    height: 20%;
+    bottom: 0;
+}
+
+/* Actions Bank */
+
+#div_actionsBank{
+    width: 20vh;
+    height: 70vh;
+    border: 3px solid black;
+}
+
+.action_buttons{
+    border: none;
+    border-radius: 4px;
+    background-color: rgb(141, 141, 141);
+    color: white;
+    width: 80%; /* Percent because it is within the box (not vh)*/
+    margin: 1vh;
+    padding: 3vh;
+    cursor: pointer;
+}
+
+.action_buttons:hover{
+    color: lightgray;
+}
+
+.action_buttons:active{
+    color: white;
+    background-color: darkgray;
+}
+
+/* Switch */
+
+.spinner_switch{
+    position: relative;
+    display: inline-block;
+    width: 8vh;
+    height: 4vh;
+}
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* The slider */
+
+  .spinner_switch{ /* Size of the spinner switch */
+    width: 80%;
+}
+
+.slider{
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(141, 141, 141);
+    transition: .4s;
+    border-radius: 34px; /* Round the outside of the button */
+}
+
+.slider::before{
+    border-radius: 50%; /* Makes the center circle round */
+}
+
+.slider::before { /* Default position at left and gray */
+    position: absolute;
+    content: "";
+    height: 2vh; /* Size of the little circle */
+    width: 2vh;
+    left: 1vh;
+    bottom: 1vh;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider { /* Changes the colour to blue */
+    background-color: #2196F3;
+  }
+
+input:checked + .slider:before {
+    transform: translateX(550%);
+}
+
+#div_gridFullPopUp
+{
+    top: 75vh;
+    left: 60vh;
+    height: 22.5vh;
+}

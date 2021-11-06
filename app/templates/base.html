@@ -1,0 +1,67 @@
+<!--
+File: c:\Adam\coding\1. VC Coding projects\PirateGame\static\html\header.html
+Project: c:\Adam\coding\1. VC Coding projects\PirateGame\static\html
+Created Date: Sunday, July 11th 2021, 3:41:44 pm
+Description: 
+Author: Adam O'Neill
+Copyright (c) 2021 Adam O'Neill
+-----
+Last Modified: Sat Nov 06 2021
+Modified By: Will Hall
+-----
+HISTORY:
+Date      	By	Comments
+----------	---	---------------------------------------------------------
+2021-08-28	WH	Added font definitions
+-->
+
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!--Downloaded fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" rel="stylesheet"> 
+
+    <!--CSS for base file-->
+    <link rel="stylesheet" href="../static/css/global/header.css">
+    <link rel="stylesheet" href="../static/css/global/footer.css">
+    <link rel="shortcut icon" type="image/png" href="../static/img/logos/logo.png">
+    
+    <!-- Link the js script -->
+    <script src="../static/js/header.js" defer></script>
+    <script src="../static/js/libraries/fitty.min.js"></script>
+    <script defer>
+        function isMobile() { return ('ontouchstart' in document.documentElement); }
+        if (isMobile()) {alert("We have detected your device has a touch screen. Unfortunately touch devices are not yet supported - we're working on this to fix this in the next release.")}
+    </script>
+
+    {% block head %}
+    {% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+    <!-- Links to the other sheets-->
+    <div class="Header" id="mainHeader">
+        <a href="/">Home</a>
+        <div class = "Header-right">
+            <a href="/play_game">Play Game</a>
+            <a href="/tutorial">Tutorial</a>
+            <a href="/about">About</a> 
+        </div>
+    </div>
+    <div class="Warning">This version of The PirateGame is a beta release and is not fully polished yet</div>
+</head>
+<body>
+    {% block body %}  
+    {% endblock %}
+</body>
+<footer>
+    {% block footer%}
+    {% endblock %}
+    <p class="version">version 0.0.0B</p> <!-- Current release-->
+</footer>
+</html>
+
+
+

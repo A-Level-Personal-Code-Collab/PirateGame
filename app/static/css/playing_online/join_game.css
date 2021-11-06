@@ -1,0 +1,156 @@
+/*
+ * File: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css\playing_online/join_game.css
+ * Project: c:\Adam\coding\1. VC Coding projects\PirateGame\static\css
+ * Created Date: Monday, July 12th 2021, 6:18:49 pm
+ * Description: 
+ * Author: Adam O'Neill
+ * Copyright (c) 2021 Adam O'Neill
+ * -----
+ * Last Modified: Sun Oct 31 2021
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+/* Pre game page */
+
+ *
+ {
+     transition: 0.5s;
+ }
+ 
+ .pre_game_header{
+    padding: 50px;
+    text-align: center;
+    background-color: #474e5d;
+    color: white;
+}  
+
+.column{
+    width: 50%;
+    margin-bottom: 1.9vh;
+    padding:  0.6vh 1vh;
+}
+.row
+{
+    display: flex;
+    position: relative;
+    min-height: 40vh;
+}
+
+.card{
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin: 2vh;
+    height: 100%;
+}
+
+
+.container{
+    padding: 5vh 4vh;
+    position: relative;
+}
+
+.container::after, .container::after{
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#tutorial_link{
+    color: rgb(145, 145, 145);
+}
+ /* Button */
+
+.game_button{ /* initial button settings */
+    display: inline-block;
+    text-align: center;
+    background-color: #ffd900;
+    border-radius: 4px;
+    border: none;
+    font-size: 20px;
+    transition: all 0.5s ;
+    color: rgb(145, 145, 145);
+    cursor: pointer;
+    margin: 0;
+    font-size: 3.1vh;
+    padding: 2.5vh;
+    width: 100%;
+}
+
+#submit_button #new_game_button{
+    position: relative;
+    display: inline-block;
+}
+
+#btn_submit_button.disallowed
+{
+    background-color: lightgrey;
+    cursor: not-allowed;
+}
+
+#new_game_button{
+    position: relative;
+    top: 10vh; 
+}
+
+.game_button span{ /* span is used so the arrow is a separate entity from the text */
+    transition: 0.5s;
+    display: inline-block;
+    position: relative;
+}
+
+.game_button:not(.disallowed) span:after{ /* adds the arrow to the <span> and hides it */
+    content: "\00bb"; /* arrow */
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px; /* movement of arrow*/
+}
+
+.game_button:hover:not(.disallowed) span{ /* Makes space for the arrow*/
+    padding-left: 15px;
+}
+
+.game_button:hover span::after{ /* When it is hovered on it shows the arrow and moves it */ 
+    opacity: 1;
+}
+ /* Join Game Box */
+
+form input{
+    border-radius: 4px;
+    border: 1px solid #555;
+    text-indent: 0.5vh;
+
+}
+
+table{
+    margin: auto;
+    position: relative
+}
+
+th, td{
+    padding: 1.8vh;    
+    text-align: left;
+}
+
+.inputError
+{
+    background-color: #C7536A;
+    border-radius: 7px;
+}
+
+/*  */
+
+.info_circle {
+    font-weight: bold; 
+    cursor: pointer;
+}
+
+/* Game error popup */
+#div_gameopen_popup
+{
+    width: 30vw;
+    margin-top: 30vh;
+    left: 35%;
+}

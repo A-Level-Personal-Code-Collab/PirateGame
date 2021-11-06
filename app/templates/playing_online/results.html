@@ -1,0 +1,49 @@
+<!--
+ * File: c:\Users\ollie\OneDrive\Desktop\Documents\GitHub Repos\PirateGame\templates\results_page
+ * Project: c:\Users\ollie\OneDrive\Desktop\Documents\GitHub Repos\PirateGame\templates
+ * Created Date: Sunday, September 19th 2021, 8:34:49 pm
+ * Description: Displays score results of each game
+ * Author: Ollie Burroughs
+ * Copyright (c) 2021 SchmetCorp.
+ * -----
+ * Last Modified: 
+ * Modified By: 
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2021-09-19	OB	created file
+ */-->
+
+ {% extends 'base.html' %}
+
+ {% block title %} Results {% endblock %}
+ {% block head %}
+     <link rel="stylesheet" href="../static/css/playing_online/results.css">
+     <script> var top3str = '{{podiumscores | tojson | safe}}' </script>
+     <script src="../static/js/libraries/fitty.min.js"></script>
+     <script src="../static/js/game/results.js" defer></script>
+ {% endblock %}
+ {% block body %}
+<div id = "podiumcontainer">
+    <div id = "secondcontainer" class = "columncontainer">
+        <h3 id = "secondtxt" class = "podtext">SECOND</h3>
+        <div id = "secondcol" class = "podcol">
+        <div id = "secondcash" class = "podcash"></div>
+        </div>
+    </div>
+    <div id = "firstcontainer" class = "columncontainer">
+        <h3 id = "firsttxt" class = "podtext">FIRST</h3>
+        <div id = "firstcol" class = "podcol">
+        <div id = "firstcash" class = "podcash"></div>
+        </div>
+    </div>
+    <div id = "thirdcontainer" class = "columncontainer">
+        <h3 id = "thirdtxt" class = "podtext">THIRD</h3>
+        <div id = "thirdcol" class = "podcol">
+        <div id = "thirdcash" class = "podcash"></div>
+        </div>
+    </div>
+</div>
+ <div class = "sidebarresults">{{results_table}}</div>
+ {% endblock %}
