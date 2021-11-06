@@ -490,9 +490,9 @@ def about_page():
 def patch_notes():
     return render_template("accessory/patch_notes.html")
 
-@app.route("/patch_notes/B1-0")
-def B1_0():
-    return render_template("accessory/beta_1-0.html")
+@app.route("/patch_notes/B-0-0-0")
+def B_0_0_0():
+    return render_template("accessory/beta_0-0-0.html")
 
 #---------------#
 @app.route("/playing_online/lobby")
