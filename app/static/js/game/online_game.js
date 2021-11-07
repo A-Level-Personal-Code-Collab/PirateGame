@@ -52,7 +52,7 @@
 
  //=========================================================//
  //^ Variables ^//
- var socket = io.connect(window.location.origin, {transports: ["websocket"]});
+ var socket = io.connect("http://localhost:8001", {transports: ["websocket"]});
  var previousSquare = null;
  var recordedCash = 0;
  var recordedBank = 0;

@@ -31,7 +31,7 @@ function on_load()
     //Adds event listeners to various objects
     nicknameInput.addEventListener('input', () => {check_data(); nicknameInput.classList.remove("inputError")});
     gameIDInput.addEventListener('input', () => {check_data(); gameIDInput.classList.remove("inputError")});
-    returnActive.addEventListener('click', () => {window.location.href = "/sheet_builder?gid="+gameIDInput.value})
+    returnActive.addEventListener('click', () => {window.location.href = "/playing_online/sheet_builder?gid="+gameIDInput.value})
     playHere.addEventListener('click', () => {submitButton.value="Playing here instead"; submitButton.click()}) //We use the button's value to signal we wish to accept the new SID and discard the old one
 
     //Checks data on load in case backspace has been pressed and data is already present

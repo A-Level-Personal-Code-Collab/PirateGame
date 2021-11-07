@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sun Oct 31 2021
+ * Last Modified: Sat Nov 06 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -141,7 +141,7 @@
  /*^ Page background ^*/
 body
 {
-    background-image: url("../img/LobbyBackground.jpg"); /*Temporary background only - copyright to use*/
+    background-image: url("../../img/LobbyBackground.jpg"); /*Temporary background only - copyright to use*/
     background-size: cover;
 }
 

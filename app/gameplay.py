@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Oct 31 2021
+# Last Modified: Sun Nov 07 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -33,9 +33,12 @@ import time
 from flask import Markup, request, redirect
 from string import Template
 import random
+import database
 import json
 from functools import wraps
 
+usersTBL = database.activeUsers
+gamesTBL = database.activeGames
 #=========================================================#
 #^ Game generaion systems ^#
 class generators:
@@ -115,11 +118,11 @@ class generators:
 
     #---------------#
     #Returns the users that are currently part of a game 
-    def getActiveUsersDictionary(self, gameID,userTBL):
-        self.allUsers = userTBL.query.filter(userTBL.userGameID==gameID,userTBL.userGrid!=None).all()
+    def getActiveUsersDictionary(self, gameID):
+        self.allUsers = database.get_players(gameID)
         self.SIDNick = {} #Creates dictionary with key of SID and value of nickname
         for user in self.allUsers:
-            self.SIDNick[user.userSID] = user.userNickname
+            self.SIDNick[user.user_id] = user.user_nickname
 
         return self.SIDNick
     
@@ -132,13 +135,25 @@ class generators:
         return self.csvString
 
     #---------------#
-    def generate_SID(self,usersTBL):
+    #Generate a user sid that is guaranteed to be unique
+    def generate_SID(self):
         ID_MAX = 99999999
         self.userSID = random.randint(0,ID_MAX)
-        while usersTBL.query.get(self.userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+        while database.get_user(self.userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
             self.userSID = random.randint(0,ID_MAX)
         
         return self.userSID
+    
+    #---------------#
+    #Generate random game ID guaranteed to be unique
+    def generate_gameID(self):
+        ID_MAX = 99999999
+        self.gameID = random.randint(0,ID_MAX)
+        while database.get_game(self.gameID) != None:
+            self.gameID = random.randint(0,ID_MAX)
+            
+        return self.gameID
+
 
 #=========================================================#
 #^ Data validation routines ^#
@@ -179,22 +194,22 @@ class validators:
     
     #---------------#
     #Checks that the provided game ID exists and is open to join
-    def gameIDValidate(self,gameID,gameTBL,usersTBL=None,userID=None):
+    def gameIDValidate(self,gameID,userID=None):
         MAX_USERS = 80
         try:
-            self.matchingGame = gameTBL.query.filter(gameTBL.gameID==int(gameID)).first()
+            self.matchingGame = database.get_game(gameID)
             if self.matchingGame != None: #Check game exists
-                if self.matchingGame.isOpen or validators().isFinished(gameID,gameTBL): #Check if game is open or finished - in either case anyone is allowed in
+                if self.matchingGame.is_open or validators().isFinished(gameID): #Check if game is open or finished - in either case anyone is allowed in
                     if usersTBL != None: #Check user info is provided
-                        gamePlayers = usersTBL.query.filter(usersTBL.userGameID==gameID).all() #Check game isn't full
+                        gamePlayers = database.get_players(gameID) #Check game isn't full
                         if len(gamePlayers) < MAX_USERS:
                             return True
                     else:
                         return True
                 else: # If game isn't open
-                    userLine = usersTBL.query.filter(usersTBL.userSID==userID).first()
+                    userLine = database.get_user(userID)
                     if userLine != None: #Check user info is provided
-                        if int(userLine.userGameID) == int(gameID): #Check the user is connected to a game already
+                        if userLine.user_game_id == int(gameID): #Check the user is connected to a game already
                             return True
             return False
         except TypeError or AttributeError: #Handles if a null or invalid gameID is submitted
@@ -202,43 +217,44 @@ class validators:
     
     #---------------#
     #Checks if a given user SID is the host of a game
-    def isHost(self,SID,gameID,gameTBL):
-        self.qurRes = gameTBL.query.filter(gameTBL.hostSID==SID,gameTBL.gameID==gameID).all()
+    def isHost(self,SID,gameID):
+        self.qurRes = database.get_game(gameID)
         if self.qurRes:
-            return True
-        else:
-            return False
+            if self.qurRes.host_id == int(SID):
+                return True
+
+        return False
     
     #---------------#
     #Check if a user clarifies as being online or not
-    def isOnline(self,userID,usersTBL):
-        if usersTBL.query.get(userID).socketioSID != None:
+    def isOnline(self,userID):
+        if database.get_user(userID).socketio_id != None:
             return True
         else:
             return False
 
     #---------------#
     #Check if a given game is over and that the results have been saved
-    def isFinished(self, gameID,gamesTBL):
-        if gamesTBL.query.get(gameID).resultsScores != None:
+    def isFinished(self, gameID):
+        if database.get_game(gameID).results_json != None:
             return True
         
         return False
 
     #---------------#
     #Decorator to validate that a user is allowed to visit a page
-    def pageControlValidate(usersTBL,gamesTBL):
+    def pageControlValidate():
         def decorator(func):
             @wraps(func)
             def function_wrapper(*args, **kwargs):
                 try:
                     userSID = request.cookies.get("SID") #Loads from client cookies
                     gameID = request.args.get("gid") #Loads from URL bar
-                    userLine = usersTBL.query.filter(usersTBL.userSID==userSID,usersTBL.userGameID==gameID).first()
-                    if validators().gameIDValidate(gameID,gamesTBL,usersTBL,userSID):
+                    userLine = database.get_user(userSID)
+                    if validators().gameIDValidate(gameID,userSID):
                         if userLine == None: #If the gameIDValidator has allowed a non type sid then allow it
                             return func(*args, **kwargs)
-                        elif userLine.userGameID == int(gameID):
+                        elif userLine.user_game_id == int(gameID):
                             return func(*args, **kwargs)
                     
                     return redirect("/error?code=GAMEINVALID")
@@ -255,10 +271,10 @@ class parsers:
     #---------------#
     #Takes the money expression and calculates actual values with it
     def parse_money(self,expression,victim,perpetrator=None):
-        self.vCash = victim.userCash
-        self.vBank = victim.userBank
-        self.pCash = perpetrator.userCash if perpetrator else 0
-        self.pBank = perpetrator.userBank if perpetrator else 0
+        self.vCash = victim.user_cash
+        self.vBank = victim.user_bank
+        self.pCash = perpetrator.user_cash if perpetrator else 0
+        self.pBank = perpetrator.user_bank if perpetrator else 0
 
         #Substitute numbers in to expression to replace variables in order to make latter replacement easier (e.g. {vCash} to 0)
         expression = expression.format(vCash=self.vCash,vBank=self.vBank,pCash=self.pCash,pBank=self.pBank)
@@ -289,30 +305,30 @@ class parsers:
 class events:
     #---------------#
     #Ends the game just before the progression to the results page
-    def gameEnd(self, gameID,gameTBL,usersTBL,gameDB):
+    def gameEnd(self, gameID):
         DELETION_DELAY = 1000 #Time in seconds to wait before an old game is deleted from the database
-        self.allUsers = usersTBL.query.filter(usersTBL.userGameID==int(gameID)).all()
-        self.gameOBJ = gameTBL.query.get(int(gameID))
+        self.allUsers = database.get_players(gameID)
+        self.gameOBJ = database.get_game(gameID)
 
         #collects users final cash amounts and sorts them in a dictionary
         userscore = {}
         for User in self.allUsers:
-            userscore[User.userNickname] = User.userCash + User.userBank
+            userscore[User.user_nickname] = User.user_cash + User.user_bank
 
-        self.gameOBJ.resultsScores = json.dumps(userscore)
-        self.gameOBJ.deletionTime = int(time.time()) + DELETION_DELAY
-        usersTBL.query.filter(usersTBL.userGameID==int(gameID)).delete() #Delete all users relating to that game from the database
+        self.gameOBJ.results_json = json.dumps(userscore)
+        self.gameOBJ.deletion_time = int(time.time()) + DELETION_DELAY
+        database.delete_players(gameID) #Delete all users relating to that game from the database
 
-        gameDB.session.commit()
+        database.gameDB.commit()
 
 #=========================================================#
 #^ Gampeplay Functions ^#
 class functions:
     #---------------#
     #Runs when an action has been completed and checks whether a round has completed or not
-    def actionComplete(self, gameOBJ):
-        gameOBJ.remainingActions -= 1
-        if gameOBJ.remainingActions == 0:
+    def actionComplete(self,gameLine):
+        gameLine.round_remaining_actions -= 1
+        if gameLine.round_remaining_actions == 0:
             return True
 
 #=========================================================#
@@ -320,7 +336,7 @@ class functions:
 class information:
     #---------------#
     #Get information about the number of currently active games
-    def calcActiveGames(self,gamesTBL):
+    def calcActiveGames(self):
         self.numActiveGames = 2
         return self.numActiveGames
 

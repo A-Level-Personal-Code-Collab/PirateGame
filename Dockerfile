@@ -1,4 +1,4 @@
-FROM python:3 as development
+FROM python:3.9 as development
 
 RUN mkdir /application
 WORKDIR /application

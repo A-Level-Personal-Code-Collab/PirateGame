@@ -28,7 +28,7 @@
  const musicPlayer = new Audio(`${window.location.origin}/static/audio/lobby_backing.ogg`)
  const MIN_USERS = 3;
 
- var socket = io.connect(window.location.origin, {transports: ["websocket"]}); //Connects to server's socket server
+ var socket = io.connect("http://localhost:8001", {transports: ["websocket"]}); //Connects to server's socket server
  var musicState = true;
  var intentionalForward = false; //Sets whether the forwarding is intended
  var ActiveUsers = {};

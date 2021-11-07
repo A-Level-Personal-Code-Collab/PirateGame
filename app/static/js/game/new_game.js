@@ -1,10 +1,10 @@
 /**
- * File: c:\Adam\coding\1. VC Coding projects\PirateGame\static\javascript\game/new_game.js
- * Project: c:\Adam\coding\1. VC Coding projects\PirateGame\static\javascript
+ * File: https://github.com/Lime-Parallelogram/PirateGame/static/js/game/new_game.js
+ * Project: https://github.com/Lime-Parallelogram/PirateGame
  * Created Date: Monday, August 2nd 2021, 1:24:07 pm
  * Author: Adam O'Neill
  * -----
- * Last Modified: Sun Oct 31 2021
+ * Last Modified: Sat Nov 06 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Adam O'Neill

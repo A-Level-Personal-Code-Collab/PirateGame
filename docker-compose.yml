@@ -1,14 +1,40 @@
 version: '3'
 services:
-    pirategame:
+    webserver:
         build:
             context: .
             dockerfile: Dockerfile
             target: development
+        hostname: pirategame_websvr1
         ports:
             - "8000:8000"
-        command: /usr/local/bin/gunicorn -w 1 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload --graceful-timeout 3600000 --timeout 999999999 --bind 0.0.0.0:8000 flask_main:app
+        command: /usr/local/bin/gunicorn -w 4 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --certfile selfsigned-cert.pem --keyfile selfsigned-key.pem --reload --graceful-timeout 3600000 --timeout 999999999 --bind 0.0.0.0:8000 flask_main:app
         volumes:
             - ./app:/application
-        stdin_open: true
-        tty: true 
+
+    database:
+        image: mariadb:latest
+        hostname: pirategame_dbsvr1
+        environment:
+            MARIADB_ROOT_PASSWORD: local-only
+            MARIADB_USER: pirategame_python
+            MARIADB_PASSWORD: local-only
+            MARIADB_DATABASE: pirategame
+        ports:
+            - "3306:3306"
+        volumes:
+            - pirategame_db:/var/lib/mysql
+
+    gameserver:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: development
+        hostname: pirategame_gamesvr1
+        ports:
+            - "8001:5000"
+        command: python3 /application/gameserver.py
+        volumes:
+            - ./app:/application
+volumes:
+    pirategame_db: {}
