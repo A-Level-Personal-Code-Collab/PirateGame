@@ -1,7 +1,7 @@
 Version 0.1.0(B)
 ^Overview
 
-^Patch notes
+^Patch notes pages
 - Patch notes pages built on demand by the server for ease of writing #141
 - Update Home page (index page) notes to contain the latest #159
 - Updated patch page with new patch notes
