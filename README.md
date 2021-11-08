@@ -6,19 +6,21 @@ Run on localHost while developing
 
 ---------------------------------------------------------------------
 ### Running using docker
-The pirate game comes with the relevant docker filesystems to
-faciliate debugging it within a docker environment. In order to do
+The pirate game comes with the relevant docker file-systems to
+facilitate debugging it within a docker environment. In order to do
 this, one must have an instance of docker installed on your system.
 This may be downloaded from the official website https://www.docker.com
 or the packages ```docker``` and ```docker-compose``` may be installed
 from the repos of your linux system.
 
 Once docker is installed, you can use the files in this repo to setup
-a docker container. To setup a pirategame container:
+a docker container. To setup the relevant containers:
 1. Navigate to the directory in which the piragegame is downloaded
-2. Execute the following command to run the docker container
+2. Execute the following command to run the docker containers
 ```docker-compose up -d --build```
-3. This will automatically create an image and container
+3. This will automatically create a custom pirate game image as well as 3 containers
+In order for the game to function correctly, all 3 must be running
+4. In order to use the pirategame the database must have some tables in it. Execute the 'database.py' file manually to create the tables in your database. Note: You only need to do this once per installation. Running it again will wipe all data from the database.
 
 Some common commands can be used to manipulate the created container:
 1. ```docker container ls``` - Lists the running containers so as to
