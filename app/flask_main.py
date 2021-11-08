@@ -83,7 +83,7 @@ usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 
 #---------------#
-GAMEVERSION = "0.0.0(B)"
+GAMEVERSION = "0.1.0(B)"
 
 #=========================================================#
 #^ URL routes ^#
