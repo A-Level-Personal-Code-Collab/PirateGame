@@ -7,12 +7,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Nov 07 2021
-# Modified By: Will Hall
+# Last Modified: Mon Nov 08 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-08	AO	Added the patch notes routes and tests whether they are a valid root or not
 # 2021-11-07	WH	Runs deletion routine for users and games whenever a new game is created
 # 2021-11-06	WH	Sheet builder and new game subdomain of playing_online
 # 2021-11-06	WH	New game route now uses userID and gameID generators in gameplay.py
@@ -263,9 +264,17 @@ def about_page():
 def patch_notes():
     return render_template("accessory/patch_notes.html")
 
-@app.route("/patch_notes/B-0-0-0")
-def B_0_0_0():
-    return render_template("accessory/beta_0-0-0.html")
+@app.route("/patch_notes/<version>")
+def versioninfo(version):
+    print(version)
+    try:
+        f=open(f"static/patchnotes/{version}.txt","r") # THis doesnt work
+        displayhtml = gameplay.parsers.convertTxtToHtml(f)
+        return render_template("accessory/patch_notes_base.html", body=displayhtml)
+    except:
+        return redirect("/error?code=VERSIONINVALID")
+        
+
 
 #---------------#
 @app.route("/playing_online/lobby")

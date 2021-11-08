@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Nov 07 2021
-# Modified By: Will Hall
+# Last Modified: Mon Nov 08 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-08	AO	Added the text to html builder
 # 2021-10-31	WH	Spelling corrections
 # 2021-10-30	WH	Added checks to gameIDValidate to allow no-sid access to results page
 # 2021-10-30	WH	Handler for null or invalid gameID in validation routine
@@ -29,10 +30,13 @@
 #---------------------------------------------------------------------#
 #=========================================================#
 #^ Imports required modules ^#
+from io import TextIOBase
+from os import link
 import time
 from flask import Markup, request, redirect
 from string import Template
 import random
+
 import database
 import json
 from functools import wraps
@@ -284,6 +288,40 @@ class parsers:
             exec(e) #Executes the string expression
         
         return self.vCash, self.vBank, self.pCash, self.pBank
+
+    def convertTxtToHtml(file):
+        title = file.readline().strip()#works
+        body = file.readlines()
+        htmltext = ""
+        htmltext = htmltext + '<div class="header">' + title + "</div>"
+        htmltext = htmltext + "<div class=notes_container>"
+        for line in body:
+            # check if it starts with a ~ # or -
+            if line[0] == "^": # checks if header
+                htmltext = htmltext + "<br>"
+                htmltext = htmltext + "<h3>" + line[1:] + "</h3>" # [1:] is used to slice the first letter off
+
+            elif line[0] == "~": # description
+                htmltext = htmltext + "<p>" + line[1:] + "</p>"
+
+            elif line[0] == "-": # Bullet point
+                htmltext = htmltext + "<li>" + line[1:] + "</li>"
+
+            if "#" in line: # github issue
+                hash = line.find("#")
+                linkstr = line[hash+1:]
+                for character in linkstr:
+                    if character.isdigit() != True:
+                        notint = linkstr.find(character)
+                        break
+                issueref = linkstr[:notint]
+
+
+                htmltext = htmltext.replace("#"+issueref , f"<a href=https://github.com/A-Level-Personal-Code-Collab/PirateGame/issues/{issueref}>#{issueref}</a>")
+
+        htmltext = htmltext + "</div>" 
+        
+        return Markup(htmltext)
     
     #---------------#
     #Get the error message from a given code
@@ -292,7 +330,8 @@ class parsers:
             "GAMEINVALID" : "The game page you requested is unavailable. <br> This may be because the game does not exist or is already in progress.",
             "NOSID" : "Your user has not been assigned an SID. Join a game or create one to get a SID cookie.",
             "GAMEONGOING" : "You have attempted to visit the results page however the game has not yet finished",
-            "INVALIDSID" : "The SID value provided by your client is not permitted to access this game information. This may be because no SID was provided"
+            "INVALIDSID" : "The SID value provided by your client is not permitted to access this game information. This may be because no SID was provided",
+            "VERSIONINVALID" : "This version's patch notes dont exist you muppet!"
         }
         try:
             self.message = ERRORS[code.upper()] + f"<br><b>ERROR CODE : {code.upper()}</b>" #Append code to message
