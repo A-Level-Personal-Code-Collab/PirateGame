@@ -309,12 +309,16 @@ class parsers:
 
             if "#" in line: # github issue
                 hash = line.find("#")
+                notint=0
                 linkstr = line[hash+1:]
                 for character in linkstr:
                     if character.isdigit() != True:
                         notint = linkstr.find(character)
                         break
-                issueref = linkstr[:notint]
+                if not notint == 0:    
+                    issueref = linkstr[:notint]
+                else:
+                    issueref = linkstr
 
 
                 htmltext = htmltext.replace("#"+issueref , f"<a href=https://github.com/A-Level-Personal-Code-Collab/PirateGame/issues/{issueref}>#{issueref}</a>")
