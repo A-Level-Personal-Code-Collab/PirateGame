@@ -268,12 +268,12 @@ def patch_notes():
 def versioninfo(version):
     print(version)
     try:
-        f=open(f"static/patchnotes/{version}.txt","r") # THis doesnt work
+        f=open(f"static/patchnotes/{version}.txt","r") 
         displayhtml = gameplay.parsers.convertTxtToHtml(f)
-        return render_template("accessory/patch_notes_base.html", body=displayhtml)
+        return render_template("accessory/patch_notes_base.html", body=displayhtml, title=version)
     except:
         return redirect("/error?code=VERSIONINVALID")
-        
+
 
 
 #---------------#
