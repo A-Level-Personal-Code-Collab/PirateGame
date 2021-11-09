@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Nov 07 2021
+ * Last Modified: Tue Nov 09 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-09	WH	Added handling for display delay on things after the spinner. e.g. Money items (Issue #151)
  * 2021-10-30	WH	Fixed  incorrect retaliation removal
  * 2021-10-29	WH	Added function to restrict height of log box to the height of the grid
  * 2021-10-01	WH	Added client side builder for target picker dropdown
@@ -150,24 +151,33 @@
 
  /*---------------*/
  //Updates values in cash box
- function update_cash(cashTotal)
+ function update_cash(data)
  {
-     if (cashTotal != recordedCash) {cashBox.innerHTML = cashBox.innerHTML + `<li class="moneyEntry">${cashTotal}</li>`}
-     recordedCash = cashTotal
+     const cashTotal = data["value"]
+     const timeout = data["delay"]
+     setTimeout(() => {if (cashTotal != recordedCash) {cashBox.innerHTML = cashBox.innerHTML + `<li class="moneyEntry">${cashTotal}</li>`}
+     recordedCash = cashTotal}, timeout);
  }
 
  /*---------------*/
  //Updates values in bank
- function update_bank(bankTotal)
+ function update_bank(data)
  {
+    const bankTotal = data["value"]
+    const timeout = data["delay"]
+    setTimeout(() => {
     if (bankTotal != recordedBank) {bankBox.innerHTML = bankBox.innerHTML + `<li class="moneyEntry">${bankTotal}</li>`}
-     recordedBank = bankTotal
+     recordedBank = bankTotal},timeout);
  }
 
  /*---------------*/
  //Updates the game log panel
- function log_update(text)
+ function log_update(data)
  {
+     console.log(data);
+     var text = data["entry"]
+     var delay = data["delay"]
+     console.log(text)
      text = text.replace(`!<${MY_SID}>`,"YOU") //Replaces your name with 'YOU'
 
      //Handles replacement of SID's with nicknames
@@ -176,13 +186,14 @@
         text = text.replace(`!<${sid}>`,nick)
      }
 
-     logBox.innerHTML += text + "<br>"; //Appends entry to LOG
+     setTimeout(() => {logBox.innerHTML += text + "<br>";},delay); //Appends entry to LOG
  }
 
  /*---------------*/
  //Update the box that displays available reactions
  function update_retaliations(retal_new)
  {
+     var delay = retal_new["delay"]
      if (retal_new != null) {retaliations.push(retal_new);}
      //Creates html images on page to show what actions the user has available
      var imageList = ""
@@ -190,7 +201,7 @@
          imageList = imageList + `<img src="${a['image']}" class="retaliationItems" alt="${a["type"]}" id="${a["type"]}">`
      })
 
-     retaliationsStorage.innerHTML = imageList; //Display images on page
+     setTimeout(() => {retaliationsStorage.innerHTML = imageList;}, delay); //Display images on page
  }
 
  /*---------------*/
@@ -335,9 +346,10 @@
  function item_available(data)
  {
      declareAction = data["type"];
+     var delay = data["delay"]
      var popupMessage = data["ftVerb"]
      document.getElementById("h3_targetPickerAction").innerHTML = popupMessage
-     declareButton.disabled = false;
+     setTimeout(() => {declareButton.disabled = false;}, delay);
  }
 
  //=========================================================//

@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Nov 07 2021
+# Last Modified: Tue Nov 09 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-09	WH	Added log message for personal items (Bomb and banks)
 # 2021-11-07	WH	Fixed mirror function so that, when killing someone you don't get their money
 # 2021-11-06	WH	Moved action declarations from main model
 #---------------------------------------------------------------------#
@@ -134,7 +135,7 @@ class itmBomb(actionItem):
     ACTION_EMOJI = "💣"
     ACTION_IDENTIFIER = "itmBomb"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}"
-    LOG_MESSAGE = ""
+    LOG_MESSAGE = "{emoji} !<{victim}> blew up {emoji}"
     INVALID_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 
@@ -145,7 +146,7 @@ class itmBank(actionItem):
     ACTION_EMOJI = "🏦"
     ACTION_IDENTIFIER = "itmBank"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}+{vCash}"
-    LOG_MESSAGE = ""
+    LOG_MESSAGE = "{emoji} !<{victim}> put their money safely away {emoji}"
     INVALID_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 

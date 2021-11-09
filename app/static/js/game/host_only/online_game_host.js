@@ -5,7 +5,7 @@
  * Description: Game-play CSS for the host's controls
  * Author: Will Hall
  * -----
- * Last Modified: Sat Nov 06 2021
+ * Last Modified: Tue Nov 09 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -14,6 +14,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-09	WH	Added handling for next round button show delay (Issue #151)
  * 2021-09-26	WH	Changes next round button text on final round
  * 2021-09-25	WH	Added next round disabling system
  * 2021-08-28	WH	Added event listener to Next-Round button in order to move to next round
@@ -46,9 +47,10 @@
     if (remainingSquares == 2) {nextRound_btn.value = "Get Results ➪"}
  }
 
- function round_complete()
+ function round_complete(data)
  {
-     nextRound_btn.disabled = false;
+
+     setTimeout(() => {nextRound_btn.disabled = false;}, data["delay"]);
  }
 
  //=========================================================//

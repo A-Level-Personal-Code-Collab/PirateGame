@@ -6,12 +6,14 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Nov 07 2021
+# Last Modified: Tue Nov 09 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-09	WH	Send the delay information to the client along with applicable events (Issue #151)
+# 2021-11-09	WH	Implemented constant for the length of time the spinner animation takes
 # 2021-11-06	WH	Moved all socketio lines from old flask_main.py
 # 2021-11-06	WH	Created file and added test code for new socketio server
 #---------------------------------------------------------------------#
@@ -53,7 +55,7 @@ def join(sid,data):
         #Update the user list on all user's screen
         online_users = gameplay.generators().getActiveUsersDictionary(gameID)
         sio.emit("users_update", online_users,room=gameID)
-        sio.emit("log_update", gameplay.loggers().userConnect(user.user_nickname),room=gameID) #Show log entry if a user leaves
+        sio.emit("log_update", {"entry": gameplay.loggers().userConnect(user.user_nickname), "delay": 0},room=gameID) #Show log entry if a user leaves
     except AttributeError or ValueError as e:
         sio.emit("ERR", f"User ID ({userSID}) that was submitted was not found in our DB. ERROR: {e}", room=sid)
 
@@ -71,14 +73,14 @@ def disconnect(sid):
             if userLine.user_pending_declaration:
                 gameLine = database.get_game(gameID)
                 if gameplay.functions().actionComplete(gameLine): #Completed action and runs event if this completed a round
-                    sio.emit("round_complete",room=gameID)
+                    sio.emit("round_complete", {"delay": 0}, room=gameID)
 
             userLine.user_pending_declaration = False
             #Update the user list on all user's screen
             database.gameDB.commit()
             online_users = gameplay.generators().getActiveUsersDictionary(gameID)
             sio.emit("users_update", online_users,room=gameID)
-            sio.emit("log_update", gameplay.loggers().userDisconnect(userLine.user_nickname),room=gameID)
+            sio.emit("log_update", {"entry": gameplay.loggers().userDisconnect(userLine.user_nickname), "delay": 0},room=gameID)
             
 
 #---------------#
@@ -118,6 +120,7 @@ def start(sid,data):
 # When the host presses button to move on to next round
 @sio.event
 def next_round(sid):
+    ANIMATION_LENGTH = 3000#ms - Time the animation takes to complete
     gameID = database.get_user(sid).user_game_id #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     gameObject = database.get_game(gameID) #Load game information from database
@@ -145,8 +148,7 @@ def next_round(sid):
                 denomination = item[1:] #Get the denomination value by removing the 'M' from the ID
                 note = money(int(denomination)) #Get instance of data class
                 player.user_cash = note.cash_update(player.user_cash) #Update player's cash value in database
-                sio.emit("cash_update", player.user_cash, room=player.socketio_id) #Send cash update event
-
+                sio.emit("cash_update", {"value": player.user_cash,"delay":ANIMATION_LENGTH}, room=player.socketio_id) #Send cash update event
             #---------------#
             #Iterate through all action classes and process them
             for action in actionItem.__subclasses__():
@@ -155,12 +157,14 @@ def next_round(sid):
                     if not action.TARGETTED: #For actions that do not have target selectors, apply them immediately
                         actionExpression, null = instance.get_expressions() #Get the expression, discarding the second half as it doesn't have a second player involved
                         player.user_cash, player.user_bank , null, null = gameplay.parsers().parse_money(actionExpression,player) #Parse expression
-                        sio.emit("cash_update", player.user_cash, room=player.socketio_id) #Run cash updates
-                        sio.emit("bank_update", player.user_bank, room=player.socketio_id)
+                        sio.emit('log_update', {"entry": instance.get_log(player.user_id,None), "delay": ANIMATION_LENGTH}, room=player.socketio_id)
+                        sio.emit("cash_update", {"value": player.user_cash,"delay":ANIMATION_LENGTH}, room=player.socketio_id) #Run cash updates
+                        sio.emit("bank_update", {"value": player.user_bank,"delay":ANIMATION_LENGTH}, room=player.socketio_id)
                     elif gameplay.validators().isOnline(player.user_id): #Only handle actionable events if they are online
                         actionsRequired += 1
                         player.user_pending_declaration = True
                         event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
+                        data["delay"] = ANIMATION_LENGTH
                         sio.emit(event, data,room=player.socketio_id)
                     break #Break loop after detecting correct item to save resources
             
@@ -171,11 +175,12 @@ def next_round(sid):
                 if instance.identify(item):
                     player.available_retaliations = f"{player.available_retaliations},{item}"
                     event, data = instance.get_itemNotify() #Notify client that they have a retaliation option
+                    data["delay"] = ANIMATION_LENGTH
                     sio.emit(event, data,room=player.socketio_id)
 
         #---------------#
         if actionsRequired == 0:
-            sio.emit("round_complete",room=gameIDString)
+            sio.emit("round_complete", {"delay":ANIMATION_LENGTH}, room=gameIDString)
         else:
             gameObject.round_remaining_actions = actionsRequired
 
@@ -213,17 +218,17 @@ def action_declare(sid,data):
                     for user in [target,perpetrator]:
                         user.user_pending_expression = ""
                         #Updates the cash boxes of both the perpetrator and victim
-                        sio.emit("cash_update", user.user_cash, room=user.socketio_id)
-                        sio.emit("bank_update", user.user_bank, room=user.socketio_id)
+                        sio.emit("cash_update", {"value": user.user_cash,"delay":0}, room=user.socketio_id)
+                        sio.emit("bank_update", {"value": user.user_bank,"delay":0}, room=user.socketio_id)
 
                     if gameplay.functions().actionComplete(database.get_game(gameID)): #Completed action and runs event if this completed a round
-                        sio.emit("round_complete",room=gameIDString)
+                        sio.emit("round_complete", {"delay":0},room=gameIDString)
                 break # Break to save resources
 
         database.gameDB.commit()
 
         #Updates the log
-        sio.emit('log_update', logEntry, room=gameIDString)
+        sio.emit('log_update', {"entry": logEntry, "delay": 0}, room=gameIDString)
     
     fTenseMessage = eval(f"{actionIdentifier}().get_popupVerb()") #Uses the dataclass system to get the propper grammer for the popup message
     sio.emit('action_declare', {"target" : targetSID, "action": actionIdentifier, "perpetrator": perpetrator.user_id, "ftVerb": fTenseMessage, "invalidRetals": invalidRetals}, room=gameIDString) #Re-broadcast event to enforce popup
@@ -252,7 +257,7 @@ def retaliation_declare(sid,data):
                     availableRetals.remove(retal_type)
                     victim.available_retaliations = ",".join(availableRetals)
                     moneyHandlingExpression = instance.expression_manipulate(moneyHandlingExpression) #Change the money handling expression based on what is dictated in the retaliation's data class
-                    sio.emit("log_update", instance.get_log(victim.user_id,perpetrator.user_id),room=gameIDString) #Add retaliation log entry
+                    sio.emit("log_update", {"entry": instance.get_log(victim.user_id,perpetrator.user_id), "delay":0},room=gameIDString) #Add retaliation log entry
                     sio.emit("retaliation_declare", instance.get_pushback_dat(),room=gameIDString)
                     break #Break to save resources
 
@@ -266,11 +271,11 @@ def retaliation_declare(sid,data):
         user.user_pending_expression = ""
 
         #Updates the cash boxes of both the perpetrator and victim
-        sio.emit("cash_update", user.user_cash, room=user.socketio_id)
-        sio.emit("bank_update", user.user_bank, room=user.socketio_id)
+        sio.emit("cash_update", {"value": user.user_cash, "delay": 0}, room=user.socketio_id)
+        sio.emit("bank_update", {"value": user.user_bank, "delay": 0}, room=user.socketio_id)
 
     if gameplay.functions().actionComplete(aktvGame): #Completed action and runs event if this completed a round
-        sio.emit("round_complete",room=gameIDString)
+        sio.emit("round_complete",{"delay": 0}, room=gameIDString)
 
     database.gameDB.commit()
 
