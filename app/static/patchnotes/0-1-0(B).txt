@@ -13,6 +13,11 @@ Version 0.1.0(B)
 ^Online Game
 - Delayed display of spinner output (e.g. Cash update) now handled by client rather than server side delay (#151)
 - Fixed bug where mirroring a kill would swap your cash with the other player's
+- Increased available time to retaliate from 3s to 5s (#155)
+- Personal actions like bomb and bank are shown in your private log
+- Current bank and money value displayed instead of cumulative value list (#153)
+- New font for 'Your Cash', 'Your Bank' and 'Game Log' titles (now matches the declare button)
+- 'Your Cash' and 'Your Bank' now displayed on top of game log not next to it
 
 ^Back End
 - Database location moved from sqlite in memory database to mariadb disk database for access across multiple scopes and machines (#143)

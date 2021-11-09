@@ -6,12 +6,14 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sun Oct 31 2021
+ * Last Modified: Tue Nov 09 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-09	WH	Added CSS to put money in same box as log
+ * 2021-11-09	WH	Added css for new money as it is no longer list
  * 2021-10-27	WH	Removed fixed size from popup
  * 2021-09-29	WH	Implemented mirror and shield animations
  * 2021-09-26	WH	Added square picker animation for the selection routine
@@ -113,33 +115,58 @@
      display: inline-flex;
      width: 96%;
  }
+
+ /* Relating to the display of money values */
+ .moneyContainer
+ {
+     display: flex;
+ }
+
  #div_cashBox
  {
-    min-width: 90px;
+     border-right: 2px dashed lightgray;
  }
 
- .moneyList
+ #div_cashBox,#div_bankBox
  {
-     list-style: none;
+    min-width: 160px;
+    width: 50%;
+    font-size: 30px;
+    font-family: 'Rock Salt', cursive;
  }
 
- li.moneyEntry
+ div.moneyValue
  {
      display: inline-flex;
-     padding: 2px 5px;
-     margin: 5px;
+     padding: 4px 4px;
+     padding-right: 10px;
+     margin: 4px;
+     margin-bottom: 2vh;
      background-color: rgba(196, 196, 196, 0.637);
-     font-size: 16px;
+     font-size: 32px;
      font-weight: bold;
      width: fit-content;
-     border-radius: 3px;
+     border-radius: 6px;
+     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
  }
 
- .moneyEntry::before
+ .moneyValue::before
  {
-     padding-left: 5px;
-     padding-right: 3px;
+     padding-left: 10px;
+     padding-right: 10px;
     content: "\1F4B7";
+ }
+
+ /* Relating the actual log and entries */
+ #gameLog
+ {
+    font-size: 30px;
+    font-family: 'Rock Salt', cursive;
+ }
+ #p_logText
+ {
+     font-size: 20px;
+     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
  }
 
  /*---------------*/

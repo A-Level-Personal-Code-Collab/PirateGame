@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-09	WH	Handle money values no longer being cumulative
+ * 2021-11-09	WH	Increase available retaliation time
  * 2021-11-09	WH	Added handling for display delay on things after the spinner. e.g. Money items (Issue #151)
  * 2021-10-30	WH	Fixed  incorrect retaliation removal
  * 2021-10-29	WH	Added function to restrict height of log box to the height of the grid
@@ -41,8 +43,8 @@
  */
  //=========================================================//
  //^ Gets elements from page ^//
- const cashBox = document.getElementById("list_cashText")
- const bankBox = document.getElementById("list_bankText")
+ const cashBox = document.getElementById("div_cashText")
+ const bankBox = document.getElementById("div_bankText")
  const logBox = document.getElementById("p_logText")
  const declareButton = document.getElementById("ipt_declare")
  const chooseButton = document.getElementById("ipt_chooseTarget")
@@ -155,7 +157,7 @@
  {
      const cashTotal = data["value"]
      const timeout = data["delay"]
-     setTimeout(() => {if (cashTotal != recordedCash) {cashBox.innerHTML = cashBox.innerHTML + `<li class="moneyEntry">${cashTotal}</li>`}
+     setTimeout(() => {if (cashTotal != recordedCash) {cashBox.innerHTML = cashTotal};
      recordedCash = cashTotal}, timeout);
  }
 
@@ -166,7 +168,7 @@
     const bankTotal = data["value"]
     const timeout = data["delay"]
     setTimeout(() => {
-    if (bankTotal != recordedBank) {bankBox.innerHTML = bankBox.innerHTML + `<li class="moneyEntry">${bankTotal}</li>`}
+    if (bankTotal != recordedBank) {bankBox.innerHTML = bankTotal};
      recordedBank = bankTotal},timeout);
  }
 
@@ -292,7 +294,7 @@
              }else {targetText.innerHTML = usersDictionary[target];} //Show who the target is
              
              loadingDots.style.display = "none"; //Hide loading dots
-             setTimeout(function () {waitingForActionPopup.style.display="none"; animationPopup.style.display = "none";}, 3000) //Close the popup after 3s
+             setTimeout(function () {waitingForActionPopup.style.display="none"; animationPopup.style.display = "none";}, 5000) //Close the popup after 3s
 
          } else //Show loading circles
          {
