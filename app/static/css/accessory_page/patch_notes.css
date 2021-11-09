@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Oct 31 2021
- * Modified By: Will Hall
+ * Last Modified: Mon Nov 08 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -18,14 +18,18 @@
     background-color: #474e5d;
     padding: 3vh;
     color: white;
+    font-size: 200%;
 }
 
 .notes_container {
     text-align: center;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin-top: 1vh;
-    margin-left: 2vh;
-    margin-right: 2vh;
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 70%;
+    padding: 3vh;
+    padding-top: 1vh;
 }
 
 h2 {
