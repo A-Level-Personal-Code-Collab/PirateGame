@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Tue Nov 09 2021
+# Last Modified: Wed Nov 10 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -30,7 +30,8 @@ from game_items import *
 usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 
-sio = socketio.Server(cors_allowed_origins='https://localhost:8000')
+WEBSERVER_ADDRESS = "http://localhost:8000/"
+sio = socketio.Server(cors_allowed_origins=WEBSERVER_ADDRESS)
 app = socketio.WSGIApp(sio)
 
 

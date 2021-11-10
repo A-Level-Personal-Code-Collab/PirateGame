@@ -4,7 +4,7 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Nov 07 2021
+ * Last Modified: Wed Nov 10 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -22,13 +22,14 @@
  * 2021-08-28	WH	Join event now sends userID to server also
  * 2021-08-09	WH	Added fetch function to pull data from the active users
  */
+ const SOCKETIO_ADDRESS = "http://localhost:8001/"
  const listDiv = document.getElementById("div_listContainer");
  const btn_BeginGame = document.getElementById("start_button");
  const mcontrol_btn = document.getElementById("ipt_musicControl")
  const musicPlayer = new Audio(`${window.location.origin}/static/audio/lobby_backing.ogg`)
  const MIN_USERS = 3;
 
- var socket = io.connect("http://localhost:8001", {transports: ["websocket"]}); //Connects to server's socket server
+ var socket = io.connect(SOCKETIO_ADDRESS, {transports: ["websocket"]}); //Connects to server's socket server
  var musicState = true;
  var intentionalForward = false; //Sets whether the forwarding is intended
  var ActiveUsers = {};
