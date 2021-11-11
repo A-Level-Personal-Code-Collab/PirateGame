@@ -8,8 +8,6 @@ services:
         ports:
             - "8000:8000"
         command: /usr/local/bin/gunicorn -w 1 -k gevent --graceful-timeout 3600000 --timeout 999999999 --bind 0.0.0.0:8000 flask_main:app
-        volumes:
-            - pirategame_webserver:/application
 
     database:
         image: mariadb:latest
@@ -32,9 +30,6 @@ services:
         ports:
             - "8001:5000"
         command: python3 /application/gameserver.py
-        volumes:
-            - pirategame_gameserver:/application
+        
 volumes:
     pirategame_db: {}
-    pirategame_webserver: {}
-    pirategame_gameserver: {}
