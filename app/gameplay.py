@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Nov 08 2021
+# Last Modified: Thu Nov 11 2021
 # Modified By: Adam O'Neill
 # -----
 # HISTORY:
@@ -374,28 +374,6 @@ class functions:
         if gameLine.round_remaining_actions == 0:
             return True
 
-#=========================================================#
-#^ Information Fabricators ^#
-class information:
-    #---------------#
-    #Get information about the number of currently active games
-    def calcActiveGames(self):
-        self.numActiveGames = 2
-        return self.numActiveGames
-
-    def getTotalGames(self):
-        self.totalgamesfile = open("totalGames.txt","r")
-        return self.totalgamesfile.read()
-
-    def incrementTotalGames(self):
-        totalgamesfile = open("totalGames.txt","r")
-        totalgamescount = totalgamesfile.read()
-        totalgamescount = int(totalgamescount) 
-        totalgamescount += 1
-        totalgamesfile.close()
-        totalgamesfile = open("totalGames.txt","w")
-        totalgamesfile.write(str(totalgamescount))
-        
 
 #=========================================================#
 #^ Loggers ^#

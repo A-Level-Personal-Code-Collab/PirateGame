@@ -7,7 +7,7 @@
 # Copyright (c) 2021 Lime Parallelogram
 # -----
 # Last Modified: Thu Nov 11 2021
-# Modified By: Will Hall
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -24,8 +24,10 @@ import socketio
 import sqlalchemy
 from sqlalchemy.engine.create import create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import session
 from sqlalchemy.orm.session import sessionmaker
 import time
+from sqlalchemy import func
 
 #=========================================================#
 #^ Setup database connection engine ^#
@@ -137,3 +139,26 @@ def check_tables():
     modelBase.metadata.create_all(bind=gameDB_engine)
     gameDB.commit()
     print("Successfully recreated all tables")
+
+#=========================================================#
+#^ Database query/ manipulation for the home page ^#
+
+
+class statistics:
+
+    def calcActiveGames():
+        numActiveGames = gameDB.query(activeGames.game_id).count()
+        return numActiveGames
+     
+    def getTotalGames():
+        totalgamesfile = open("totalGames.txt","r")
+        return totalgamesfile.read()
+
+    def incrementTotalGames():
+        totalgamesfile = open("totalGames.txt","r")
+        totalgamescount = totalgamesfile.read()
+        totalgamescount = int(totalgamescount) 
+        totalgamescount += 1
+        totalgamesfile.close()
+        totalgamesfile = open("totalGames.txt","w")
+        totalgamesfile.write(str(totalgamescount))

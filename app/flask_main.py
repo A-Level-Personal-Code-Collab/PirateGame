@@ -7,7 +7,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Nov 08 2021
+# Last Modified: Thu Nov 11 2021
 # Modified By: Adam O'Neill
 # -----
 # HISTORY:
@@ -69,6 +69,7 @@ import json
 import time
 
 from sqlalchemy.sql.functions import user
+#from app.database import activeGames
 
 import gameplay
 import database
@@ -93,9 +94,9 @@ GAMEVERSION = "0.1.0(B)"
 
 @app.route("/")
 def index():
-    TotalGames = gameplay.information().getTotalGames()
-    gamesTBL = gameplay.information().calcActiveGames()
-    return render_template("index.html", currentgamesTBL=gamesTBL, totalGames=TotalGames, version=GAMEVERSION)
+    TotalGames = database.statistics.getTotalGames()
+    CalcActiveGames = database.statistics.calcActiveGames()
+    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, version=GAMEVERSION)
 
 #---------------#
 # Error pages
@@ -202,7 +203,7 @@ def new_game():
             database.gameDB.add(newUser)
             database.gameDB.commit()
 
-            gameplay.information().incrementTotalGames()
+            database.statistics.incrementTotalGames()
 
             # Redirects to sheet builder page
             response = redirect(f"/playing_online/sheet_builder?gid={gameID}")
