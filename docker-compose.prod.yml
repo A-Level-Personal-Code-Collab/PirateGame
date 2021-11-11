@@ -4,11 +4,10 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-            target: production
         hostname: pirategame_websvr1
         ports:
             - "8000:8000"
-        command: /usr/local/bin/gunicorn -w 4 -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker --graceful-timeout 3600000 --timeout 999999999 --bind 0.0.0.0:8000 flask_main:app
+        command: /usr/local/bin/gunicorn -w 1 -k gevent --graceful-timeout 3600000 --timeout 999999999 --bind 0.0.0.0:8000 flask_main:app
         volumes:
             - pirategame_webserver:/application
 
@@ -29,7 +28,6 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-            target: production
         hostname: pirategame_gamesvr1
         ports:
             - "8001:5000"
