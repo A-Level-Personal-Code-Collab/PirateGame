@@ -70,6 +70,15 @@ class activeUsers(modelBase):
     available_retaliations = sqlalchemy.Column(sqlalchemy.JSON)
     deletion_time = sqlalchemy.Column(sqlalchemy.Integer, default=-1)
 
+
+#---------------#
+#The Database which stores the statistics of the game
+class statistics(modelBase):
+    __tablename__ = 'statistics'
+    contents_info = sqlalchemy.Column(sqlalchemy.String(100), primary_key=True)
+    actual_value = sqlalchemy.Column(sqlalchemy.Integer)
+
+
 #=========================================================#
 #^ Database action decorator ^#
 def db_action(func):

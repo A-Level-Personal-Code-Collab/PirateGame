@@ -82,6 +82,7 @@ app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 
 usersTBL = database.activeUsers
 gamesTBL = database.activeGames
+statsTBL = database.statistics
 
 #---------------#
 GAMEVERSION = "0.1.0(B)"
