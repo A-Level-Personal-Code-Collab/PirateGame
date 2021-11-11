@@ -1,6 +1,9 @@
 #!/bin/bash
 # A dedicated script to run before deploying a version of the pirate game.
 
+#Get secrets from filesystem
+DATABASE_SECRET=$(cat /secrets/database)
+
 #Replace all socketio addresses
 grep -RiIl 'http://localhost:8001/' | xargs sed -i 's,"http://localhost:8001/","http://play.pirategame.live/websockets/",g'
 
@@ -8,7 +11,7 @@ grep -RiIl 'http://localhost:8001/' | xargs sed -i 's,"http://localhost:8001/","
 grep -RiIl 'http://localhost:8000/' | xargs sed -i 's,"http://localhost:8000/","http://play.pirategame.live/",g'
 
 #Replace all database password data
-grep -RiIl 'local-only' | xargs sed -i 's,local-only,$(cat /secrets/database),g'
+grep -RiIl 'local-only' | xargs sed -i "s,local-only,$DATABASE_SECRET,g"
 
 #Build dockers
 docker-compose -f docker-compose.prod.yml up -d --build
