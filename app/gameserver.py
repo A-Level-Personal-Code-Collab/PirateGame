@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Nov 10 2021
+# Last Modified: Thu Nov 11 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-11	WH	Added automatic database check
 # 2021-11-09	WH	Send the delay information to the client along with applicable events (Issue #151)
 # 2021-11-09	WH	Implemented constant for the length of time the spinner animation takes
 # 2021-11-06	WH	Moved all socketio lines from old flask_main.py
@@ -281,4 +282,5 @@ def retaliation_declare(sid,data):
     database.gameDB.commit()
 
 if __name__ == "__main__":
+    database.check_tables()
     eventlet.wsgi.server(eventlet.listen(("", 5000)), app)

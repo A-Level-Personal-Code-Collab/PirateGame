@@ -23,6 +23,7 @@ Version 0.1.0(B)
 - Database location moved from sqlite in memory database to mariadb disk database for access across multiple scopes and machines (#143)
 - Socketio functionality now handled by separate gameplay server. This runs as its own docker independently of the webserver with some shared resources (#142)
 - Added default deletion time for games and users of 6 hours after creation to prevent accumulation (#146)
+- Added functionality to automatically create required database tables when game server is started
 
 ^Lobby
 - Loaded new background - Image credit Jack Hegarty (#158)

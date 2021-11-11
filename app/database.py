@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Nov 08 2021
+# Last Modified: Thu Nov 11 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-11	WH	Added function to automatically create databases if they don't exist
 # 2021-11-08	WH	Added functionality to execute this file in order to reset all tables in the database
 # 2021-11-07	WH	Added function to clean old users and games from database
 # 2021-11-06	WH	Added database models and connected to new mysql server
@@ -132,10 +133,7 @@ def get_deletion_time():
 
     return currentTime+DEFAULT_DELETION_DELAY
 
-if __name__ == "__main__":
-    localhost_engine = create_engine("mariadb+pymysql://pirategame_python:local-only@localhost/pirategame")
-    creatorSession = sessionmaker(bind=localhost_engine)()
-    modelBase.metadata.drop_all(bind=localhost_engine)
-    modelBase.metadata.create_all(bind=localhost_engine)
-    creatorSession.commit()
+def check_tables():
+    modelBase.metadata.create_all(bind=gameDB_engine)
+    gameDB.commit()
     print("Successfully recreated all tables")
