@@ -31,8 +31,7 @@ from game_items import *
 usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 
-WEBSERVER_ADDRESS = "http://localhost:8000/"
-sio = socketio.Server(cors_allowed_origins=WEBSERVER_ADDRESS)
+sio = socketio.Server(cors_allowed_origins="*")
 app = socketio.WSGIApp(sio)
 
 

@@ -5,10 +5,7 @@
 DATABASE_SECRET=$(cat /secrets/database)
 
 #Replace all socketio addresses
-grep -RiIl 'http://localhost:8001/' | xargs sed -i 's,"http://localhost:8001/","http://play.pirategame.live/websockets/",g'
-
-#Replace all website
-grep -RiIl 'http://localhost:8000/' | xargs sed -i 's,"http://localhost:8000/","http://play.pirategame.live/",g'
+grep -RiIl 'http://localhost:8001' | xargs sed -i 's,"http://localhost:8001","https://gameserver.pirategame.live",g'
 
 #Replace all database password data
 grep -RiIl 'local-only' | xargs sed -i "s,local-only,$DATABASE_SECRET,g"
