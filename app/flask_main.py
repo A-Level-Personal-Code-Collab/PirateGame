@@ -13,6 +13,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-12	WH	Added functionality to inject version information to all pages
 # 2021-11-08	AO	Added the patch notes routes and tests whether they are a valid root or not
 # 2021-11-07	WH	Runs deletion routine for users and games whenever a new game is created
 # 2021-11-06	WH	Sheet builder and new game subdomain of playing_online
@@ -84,20 +85,23 @@ usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 statsTBL = database.statistics
 
-#---------------#
-GAMEVERSION = "0.1.0(B)"
 
 #=========================================================#
 #^ URL routes ^#
 #---------------#
+#Automatically injects server version information to all pages that are rendered
+@app.context_processor
+def inject_version():
+    return dict(version=gameplay.GAME_VERSION)
+
+#---------------#
 # The index page
-
-
 @app.route("/")
 def index():
     TotalGames = database.statistics.getTotalGames()
     CalcActiveGames = database.statistics.calcActiveGames()
-    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, version=GAMEVERSION)
+    version_url = "/patch_notes/" + gameplay.GAME_VERSION.replace(".","-") #Parse the game version into the patch notes url
+    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, version_url=version_url, overview=gameplay.parsers().parseVersionOverview())
 
 #---------------#
 # Error pages

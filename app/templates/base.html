@@ -6,12 +6,13 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sat Nov 06 2021
+Last Modified: Fri Nov 12 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-11-12	WH	Version number received from server context processor
 2021-08-28	WH	Added font definitions
 -->
 
@@ -59,7 +60,7 @@ Date      	By	Comments
 <footer>
     {% block footer%}
     {% endblock %}
-    <p class="version">version 0.0.0B</p> <!-- Current release-->
+    <p class="version">Version {{ version }}</p> <!-- Current release-->
 </footer>
 </html>
 

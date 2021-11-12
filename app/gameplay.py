@@ -12,6 +12,7 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-12	WH	Added functionality to extract patch notes overview from files
 # 2021-11-08	AO	Added the text to html builder
 # 2021-10-31	WH	Spelling corrections
 # 2021-10-30	WH	Added checks to gameIDValidate to allow no-sid access to results page
@@ -43,6 +44,10 @@ from functools import wraps
 
 usersTBL = database.activeUsers
 gamesTBL = database.activeGames
+
+#---------------#
+GAME_VERSION = "0.1.0(B)"
+
 #=========================================================#
 #^ Game generaion systems ^#
 class generators:
@@ -289,6 +294,8 @@ class parsers:
         
         return self.vCash, self.vBank, self.pCash, self.pBank
 
+    #---------------#
+    #Converts patch notes text files to HTML pages
     def convertTxtToHtml(file):
         title = file.readline().strip()#works
         body = file.readlines()
@@ -326,6 +333,19 @@ class parsers:
         htmltext = htmltext + "</div>" 
         
         return Markup(htmltext)
+    
+    #---------------#
+    #Extract the overview information from the patch notes file
+    def parseVersionOverview(self):
+        PATCH_NOTES_PATH = "static/patchnotes/"
+        self.gamefile = PATCH_NOTES_PATH + GAME_VERSION.replace(".","-") + ".txt"
+        with open(self.gamefile, 'r') as file:
+            self.filedat = file.read()
+        
+        self.overviewStart = self.filedat.find("^Overview") + 11
+        self.overviewEnd = self.filedat[self.overviewStart:].find("^") - 1
+
+        return self.filedat[self.overviewStart:self.overviewEnd+self.overviewStart]
     
     #---------------#
     #Get the error message from a given code
