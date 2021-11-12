@@ -7,8 +7,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Nov 11 2021
-# Modified By: Adam O'Neill
+# Last Modified: Fri Nov 12 2021
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -189,6 +189,7 @@ def new_game():
             #-#
             # Generate random IDs
             gameID = gameplay.generators().generate_gameID()
+            gameIDString = str(gameID).zfill(8)
             userSID = gameplay.generators().generate_SID()
 
             #-#
@@ -207,7 +208,7 @@ def new_game():
             database.statistics.incrementTotalGames()
 
             # Redirects to sheet builder page
-            response = redirect(f"/playing_online/sheet_builder?gid={gameID}")
+            response = redirect(f"/playing_online/sheet_builder?gid={gameIDString}")
             response.set_cookie("SID", str(userSID))  # Save SID for later use
 
             return response

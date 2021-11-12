@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Nov 11 2021
-# Modified By: Adam O'Neill
+# Last Modified: Fri Nov 12 2021
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -335,7 +335,7 @@ class parsers:
             "NOSID" : "Your user has not been assigned an SID. Join a game or create one to get a SID cookie.",
             "GAMEONGOING" : "You have attempted to visit the results page however the game has not yet finished",
             "INVALIDSID" : "The SID value provided by your client is not permitted to access this game information. This may be because no SID was provided",
-            "VERSIONINVALID" : "This version's patch notes dont exist you muppet!"
+            "VERSIONINVALID" : "This version's patch notes don't exist you muppet!"
         }
         try:
             self.message = ERRORS[code.upper()] + f"<br><b>ERROR CODE : {code.upper()}</b>" #Append code to message
