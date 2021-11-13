@@ -38,5 +38,9 @@ Version 0.1.0(B)
 - Fixed issue where gameIDs starting with 0s would not display leading 0s even though they are significant (#150)
 
 ^About page
--Added credits for Jack Hegarty and Charlie Kay
--Added mobile support
+- Added credits for Jack Hegarty and Charlie Kay
+- Added mobile support
+- Rewrote HTML to use a simpler positioning scheme including flexbox
+- Added social media follow buttons including Twitter and GitHub
+- Added background images to team members information cards
+- Updated wording and language in game information

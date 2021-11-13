@@ -7,11 +7,12 @@
  * Copyright (c) 2021 Adam O'Neill
  * -----
  * Last Modified: Sat Nov 13 2021
- * Modified By: Ollie Burroughs
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-13	WH	Added background image for Will's card
  * 2021-11-13	OB	Added mobile support and flex
  */
 
@@ -50,11 +51,16 @@
 }
 
 #music_card{
-    background-image: url("/static/img/musicBG.png");
+    background-image: url("/static/img/background/charlie_about.png");
     background-size: cover;
 }
 
-.how_container{
+#will_card{
+    background-image: url("/static/img/background/will_about.png");
+    background-position: center center;
+}
+
+.about_container{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 8px;
     margin: 2vh;
@@ -65,9 +71,9 @@
 /* How it was created section */
 
 .left_image {
-    position: relative;
-    float: center;
+    float: left;
     padding-right: 2.5vh;
+    width: 20vw;
 }
 
 .br {

@@ -7,11 +7,14 @@ Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
 Last Modified: Sat Nov 13 2021
-Modified By: Ollie Burroughs
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-11-13	WH	Removed email addresses and added Twitter and GitHub follow buttons
+2021-11-13	WH	Updated text paragraph language
+2021-11-13	WH	Fixed about text Technical Details Passage
 2021-11-13	OB	changed formatting for flex and neatened it up
 -->
 {% extends "base.html" %}
@@ -20,6 +23,9 @@ Date      	By	Comments
 
 {% block head %}
     <link rel="stylesheet" href="../static/css/accessory_page/about.css">
+    <!-- Script to make GitHub buttons work -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 {% endblock %}
 
 {% block body %}
@@ -29,70 +35,76 @@ Date      	By	Comments
 </div>
 
 <div class="about_body">
-    <div class="how_container" id="sob_story_container"> 
+    <div class="about_container"> 
         <h2>A message from us...</h2>
         <br>
-            <p> <!-- need to add info where to donate -->>This project was initially started during the summer of 2021 when Will approached Adam
-                in the hopes of creating a project. This project snowballed until it became the Pirate
-                Game which you see before you. Later, Ollie joined the team which brings us to the team today
-                (as seen below). This website is hosted on a server and doesn't just exist by itself it costs
-                us money! Not only this but the URL we have is a recurring fee as well. It would be greatly appreciated
-                if any contributions could be made to keep this project alive! <br>Many thanks from the team!
+        <p class="about-text"> <!-- need to add info where to donate -->
+            Myself (Will) and Adam began to consider the academic and practical benefits of doing a joint programming project so, after some deliberation
+            regarding the exact nature of the project, we settled to try and recreate one of our favorite classroom games in an engauging digital format. 
+            Since then, the project has snowballed to become what you see presented before you. Amidst the development, we welcomed Ollie into the team
+            to bring the sum total of developers to 3. We must also dole our thanks to Charlie Kay (music) and Jack Hegarty (logo & art) whose creative abilities
+            are orders of magnitude better what we three could have composed.
+            <span class="br"></span>
+            An unfortunate lesson to swallow was that the hosting required for the server does not come free but costs a recurring fee likewise does the URL.
+            As you may have inferred, we're only just in our A-Level year and thus if you do enjoy the game that we been able to produce, we would be indebted
+            for your generous support. Please though, feel no obligation as we do what we do out of pure passion and pleasure.<span class="br"></span>
+            Our upmost thanks for so much as taking the time to view our website!
         </p>
     </div>
     <!-- How we made the page -->
-    <div class="how_container" id="how_container">
-        <h2>How the pirate game was created...</h2>
+    <div class="about_container">
+        <h2>Project Details</h2>
         <br>
         <img src="../static/img/logos/logo.png" alt="Logo" class="left_image">
         <br><!-- Span br used to change the height between each section instead of <br> -->
-        <p>This project all started in the summer of 2021 as stated before. It has become an ongoing project for the foreseeable future. The code is primarily made up of JavaScript, Python
-            CSS and Html. <span class="br"></span>Python acts as the server side for the website, this means all the databases
-             of concurrent games are stored on the sever and the roots for the website (URL/roots). <span class="br"></span>The
-            HTML tells web browsers how to display a web page's words and images. This means all the images
-            and words you see right now are written in HTML - even this text! We have tried to make this website as adaptable as
-            possible by using the size measurements as VH where possible meaning the layout should adapt
-            for the size of the view port <span class="br"></span> Html would look incredibly boring if it weren't for the
-             wonders of CSS. CSS is responsible for describing  the presentation of the web page. This 
-            includes, colours, layout and fonts. <span class="br"></span> These are standard elements
-            to a web page which you see day to day. Throughout our journey, we have taught ourselves
-            how to you these languages on top of the most important part - Python Flask. <span class="br"></span>
-            Python flask is used to control the flow of data between client and server through web sockets. 
-            In addition, sqlalchemy has been used to create the databases holding all the information
-            for the games to function!
-        </p>
+        <p class="about_text">Started as a passion project, the pirate game has its origins in the Summer of 2021 but has quickly
+            become an ongoing project for the three of us. The project was originally developed as a way to improve our python and
+            programming proficiency but also as a way to experience collaboration in programming - a key skill for future employment in the field.
+            In fact, the project has not only acquainted us with GitHub as a collaboration tool, improved our repertoire of python syntaxes, introduced
+            us to the web-space languages of HTML, CSS and JavaScript but also taught us about hosting sites and administering projects with Docker.
+            <span class="br"></span> Through a coordination of many different languages, you are able to use your own device to send a request across the 
+            wonderful internet which is handled and processed by our python code. The python code will package its response up to you and your computer
+            will dutifully receive it and display what it receives. Once you have the response the work of the program is not done as we've had to write
+            CSS style sheets that describe the colour, layout and design of the pages. Some complex operations like handling the selection of squares
+            of dragging items into position also require your browser to do some heavy lifting; functionality that is provided by the page's JavaScript.<span class="br"></span>
+            All of these different functionalities have had to be addressed in our programming and this is without even touching upon the database handling and
+            docker environments. As you can imagine, its been many hundreds of hours of work but we couldn't have wished it any other way as we've been rewarded
+            with the such a rich banquet of learning and enjoyment.</p>
     </div>
 </div>
 <div class="Team">
     <h2 style="text-align: center;">The Team</h2>
     <div class="Devs">
-        <div class="about_card">
+        <div class="about_card" id="adam_card">
             <!--<img src="../static/img/tmp-asset.png" alt="Adam">-->
             <h2>Adam O'Neill</h2><br>
-            <p class="subjects"><b>Subjects:</b> Maths, Physics, Computer Science</p><br>
-            <h4>Get in touch...</h3>
+            <p class="subjects"><b>A-Level Subjects:</b> Computer Science, Mathematics, Physics</p><br>
+            <h4>Socials</h3>
             <!--Contact info-->
-            <p>adam@pirategame.live</p>
-            <a href="https://github.com/Theocat321">Adam's GitHub</a>
+            <a href="https://twitter.com/AdamONeill_0?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @AdamONeill_0</a>
+            <br>
+            <a class="github-button" href="https://github.com/Theocat321" data-color-scheme="no-preference: dark_dimmed; light: dark; dark: dark;" aria-label="Follow @Theocat321 on GitHub">GitHub @Theocat321</a>
         </div>
 
-        <div class="about_card">
+        <div class="about_card" id="will_card">
             <!--<img src="../static/img/tmp-asset.png" alt="Will">-->
             <h2>Will Hall</h2><br>
-            <p class="subjects"><b>Subjects:</b> Computer Science, Maths, Further Maths, Physics </p><br>
-            <h4>Get in touch...</h3>
+            <p class="subjects"><b>A-Level Subjects:</b> Computer Science, Mathematics, Physics, Further Mathematics</p><br>
+            <h4>Socials</h3>
             <!--Contact info-->
-            <p>will@pirategame.live</p>
-            <a href="https://github.com/Lime-Parallelogram">Will's GitHub</a>
+            <a href="https://twitter.com/limeparallel1?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">@LimeParallel1</a>
+            <br>
+            <a class="github-button" href="https://github.com/Lime-Parallelogram" data-color-scheme="no-preference: dark_dimmed; light: dark; dark: dark;" aria-label="Follow @Lime-Parallelogram on GitHub">GitHub @Lime-Parallelogram</a>
         </div>
-        <div class="about_card">
+        <div class="about_card" id="ollie_card">
             <!--<img src="../static/img/tmp-asset.png" alt="Ollie"> -->
             <h2>Ollie Burroughs</h2><br>
-            <p class="subjects"><b>Subjects:</b> Maths, Further Maths, Physics, Computer Science</p><br>
-            <h4>Get in touch...</h3>
+            <p class="subjects"><b>A-Level Subjects:</b> Computer Science, Mathematics, Physics, Further Mathematics</p><br>
+            <h4>Socials</h3>
             <!--Contact info-->
-            <p>ollie@pirategame.live</p>
-            <a href="https://github.com/schmetris">Ollie's GitHub</a>
+            <a href="https://twitter.com/schmetris?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @schmetris</a>
+            <br>
+            <a class="github-button" href="https://github.com/schmetris" data-color-scheme="no-preference: dark_dimmed; light: dark; dark: dark;" aria-label="Follow @schmetris on GitHub">GitHub @schmetris</a>
         </div>
     </div>
     <h2 style="text-align: center;">Credits</h2>
@@ -100,18 +112,16 @@ Date      	By	Comments
             <div class="about_card" id ="music_card">
                 <!--<img src="../static/img/tmp-asset.png" alt="Charlie">-->
                 <h2>Music by Charlie Kay</h2><br>
-                <p class="subjects"><b>Subjects:</b> Maths, Further Maths, Music, Chemistry</p>
+                <p class="subjects"><b>A-Level Subjects:</b> Music, Mathematics, Chemistry, Further Mathematics</p>
             </div>
 
             <div class="about_card" id= "artwork_card" >
                 <!--<img src="../static/img/tmp-asset.png" alt="Jack">-->
                     <h2>Artwork by Jack Hegarty</h2><br>
-                    <p class="subjects"><b>Subjects:</b> Graphics, English, History </p><br>
-                    <h4>Get in touch...</h3>
+                    <p class="subjects"><b>A-Level Subjects:</b> Graphics, English, History </p><br>
+                    <h4>Socials</h3>
                     <!--Contact info-->
-                    <a href="https://instagram.com/Authorbiologist">Jack's Instagram</a>
-                    <br>
-                    <a href="https://twitter.com/authorbiologist">Jack's Twitter</a>
+                    <a href="https://twitter.com/authorbiologist?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @authorbiologist</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
             </div>
     </div>
 </div>
