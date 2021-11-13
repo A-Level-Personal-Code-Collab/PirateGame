@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Oct 30 2021
- * Modified By: Will Hall
+ * Last Modified: Sat Nov 13 2021
+ * Modified By: Adam O'Neill
  * Details: added ease to header hover
  * HISTORY:
  * Date      	By	Comments
@@ -33,37 +33,19 @@ a:link{
     background-color: #ffd900;
     width: 100%;
     padding: 20px 10px; /* size of the header on the page */ 
+    height: 10vh;
+    position: fixed;
+    top: 0;
 }
+
 .Warning
 {
     background-color: #B94A3E;
     color: white;
 }
 
-.Header a {
-    float:left;
-    color: black;
-    text-align: center;
-    font-size: 18px;
-    padding: 12px;
-    line-height: 20px;
-    border-radius: 4px;
-    font-family: sans-serif; /* Works for the whole header */ 
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
 
-.sticky { /* given to the header once scroll is reacher */
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    opacity: 97%;
-    z-index: 1;
-}
-
-
-
+/* ----------------------- Link settings ----------------------- */ 
 
 .Header a:hover{
     background-color: gray;
@@ -80,11 +62,25 @@ a:link{
     float: right;
 }
 
+.Header a {
+    float:left;
+    color: black;
+    text-align: center;
+    font-size: 18px;
+    padding: 12px;
+    line-height: 20px;
+    border-radius: 4px;
+    font-family: sans-serif; /* Works for the whole header */ 
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
 /* ----------------------- Body settings ----------------------- */ 
 
 body {
     text-align: center;
     font-family: sans-serif, Arial;
+    padding-top: 10vh;
 }
 
 h1{
