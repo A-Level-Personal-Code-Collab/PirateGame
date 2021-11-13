@@ -7,12 +7,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 12 2021
+# Last Modified: Sat Nov 13 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-13	WH	Fixed parsing issue for results page 
 # 2021-11-12	WH	Added functionality to inject version information to all pages
 # 2021-11-08	AO	Added the patch notes routes and tests whether they are a valid root or not
 # 2021-11-07	WH	Runs deletion routine for users and games whenever a new game is created
@@ -359,7 +360,7 @@ def results():
     gameID = request.args.get("gid")
 
     if gameplay.validators().isFinished(gameID):
-        userscores = json.loads(database.get_game(gameID).results_json)
+        userscores = database.get_game(gameID).results_json
 
         sorted_scores = dict(sorted(userscores.items(), key=lambda x: x[1], reverse=True))
         final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td></td><td> Player </td> <td> Final Cash </td> </tr> "

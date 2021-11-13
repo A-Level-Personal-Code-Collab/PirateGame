@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Nov 11 2021
-# Modified By: Adam O'Neill
+# Last Modified: Sat Nov 13 2021
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -111,6 +111,8 @@ def get_game(gameID):
 
 @db_action
 def get_user(userID):
+    if userID == None:
+        return None
     try:
         user = gameDB.query(activeUsers).get(int(userID))
     except ValueError:

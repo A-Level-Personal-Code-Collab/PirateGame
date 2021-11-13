@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 12 2021
+# Last Modified: Sat Nov 13 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -209,11 +209,8 @@ class validators:
             self.matchingGame = database.get_game(gameID)
             if self.matchingGame != None: #Check game exists
                 if self.matchingGame.is_open or validators().isFinished(gameID): #Check if game is open or finished - in either case anyone is allowed in
-                    if usersTBL != None: #Check user info is provided
-                        gamePlayers = database.get_players(gameID) #Check game isn't full
-                        if len(gamePlayers) < MAX_USERS:
-                            return True
-                    else:
+                    gamePlayers = database.get_players(gameID) #Check game isn't full
+                    if len(gamePlayers) < MAX_USERS:
                         return True
                 else: # If game isn't open
                     userLine = database.get_user(userID)
@@ -259,13 +256,9 @@ class validators:
                 try:
                     userSID = request.cookies.get("SID") #Loads from client cookies
                     gameID = request.args.get("gid") #Loads from URL bar
-                    userLine = database.get_user(userSID)
                     if validators().gameIDValidate(gameID,userSID):
-                        if userLine == None: #If the gameIDValidator has allowed a non type sid then allow it
-                            return func(*args, **kwargs)
-                        elif userLine.user_game_id == int(gameID):
-                            return func(*args, **kwargs)
-                    
+                        return func(*args, **kwargs)
+                        
                     return redirect("/error?code=GAMEINVALID")
                 except TypeError:
                     return redirect("/error?code=GAMEINVALID")
