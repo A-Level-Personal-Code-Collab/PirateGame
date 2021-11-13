@@ -148,6 +148,10 @@ def get_deletion_time():
 def check_tables():
     modelBase.metadata.create_all(bind=gameDB_engine)
     gameDB.commit()
+    if gameDB.query(statisticsDB).filter(statisticsDB.contents_info=="TotalGames").first() == None:
+        totalGames = statisticsDB(id=1, contents_info="TotalGames",actual_value=0)
+        gameDB.add(totalGames)
+        gameDB.commit()
     print("Successfully recreated all tables")
 
 #=========================================================#
@@ -165,5 +169,5 @@ class statistics:
         return totalgamesfile
 
     def incrementTotalGames():
-        gameDB.query(statisticsDB).filter(statisticsDB.id == 1).first().actual_value += 1
+        gameDB.query(statisticsDB).filter(statisticsDB.contents_info == "TotalGames").first().actual_value += 1
         gameDB.commit()
