@@ -2,6 +2,10 @@ Version 0.1.0(B)
 ^Overview
 ~ You've spied yourself our first incremental update! This time, the majority of work has gone into making key changes below deck to keep the server shipshape. You'll also spot a few design changes including to the way cash is displayed in the online game and to the lobby background
 
+^Static pages
+- Fixed deforming logo on home page (#149)
+- Home page now renders correctly on mobile to make a good impression
+
 ^Patch notes pages
 - Patch notes pages built on demand by the server for ease of writing (#141)
 - Update Home page (index page) notes to contain the latest (#159)

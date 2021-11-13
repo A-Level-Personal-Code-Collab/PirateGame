@@ -6,34 +6,28 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Oct 31 2021
+ * Last Modified: Sat Nov 13 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-13	WH	Added some responsive CSS for mobile on the homepage
+ * 2021-11-13	WH	Fixed squashing celebration image
  * 2021-10-30	WH	Added css for social media buttons and similar
  * 2021-10-30	WH	Added dynamic resize of news area
  * 2021-10-30	WH	Changed width of banner image to use auto margins rather than oversized width
  */
 
 .banner{
+    display: flex;
     background-color: #474e5d;
     padding: 5%;
 }
 
-.banner_text{
-    position: absolute;
-    left:2.5%;
-    margin-left: 10%;
-    
-}
-
-.banner_image{
-    position: relative;
-    left: 30%;
-    width: min-content;
-    margin: auto;
+.banner_image
+{
+    margin-left: auto;
 }
 
 .banner_text h1{
@@ -81,7 +75,25 @@
     opacity: 1;
 }
 
-/* news section */
+/*Responsive Design for mobile */
+@media screen and (max-width: 600px)
+{
+    .banner /* Move to columns for responsive reasons */
+    {
+        flex-direction: column;
+    }
+    .banner_image /* Place logo first on mobile */
+    {
+       order: 1;
+       margin: auto;
+    }
+    .banner_text
+    {
+        order: 2;
+    }
+}
+/*//=========================================================//*/
+/*^ News & Socials ^*/
 
 .vl{
     border-left: 2px solid rgba(0, 0, 0, 0.452);
@@ -91,7 +103,13 @@
     margin-left: -3px;
 }
 
+#news_section
+{
+    display: flex;
+}
+
 .news_container {
+    flex: 1 1 0;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 1vh;
     height: fit-content;
@@ -100,15 +118,11 @@
 }
 
 #patch_notes{
-    float: left;
     height: 80%;
-    width: 46%;
 }
 
 #other_news {
     text-align: center;
-    width: 40%;
-    margin-left: 52%;
 }
 
 /* Table for games info */
@@ -118,12 +132,15 @@ table {
     display: inline-table;
 }
 
+@media screen and (max-width: 600px){
+    #news_section {
+        flex-direction: column;
+    }
+}
+
 /*//=========================================================//*/
 /*^ Socials ^*/
-.socials_box
-{
-    width: 45vw;
-}
+
 .social_logo
 {
     height: 4vh;
@@ -146,6 +163,7 @@ table {
 #img_releaseCelebration
 {
     width: 18vw;
+    height: 10vw;
 }
 
 .release_summery
