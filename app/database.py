@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Nov 11 2021
+# Last Modified: Sat Nov 13 2021
 # Modified By: Adam O'Neill
 # -----
 # HISTORY:
@@ -73,9 +73,10 @@ class activeUsers(modelBase):
 
 #---------------#
 #The Database which stores the statistics of the game
-class statistics(modelBase):
+class statisticsDB(modelBase):
     __tablename__ = 'statistics'
-    contents_info = sqlalchemy.Column(sqlalchemy.String(100), primary_key=True)
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+    contents_info = sqlalchemy.Column(sqlalchemy.String(100))
     actual_value = sqlalchemy.Column(sqlalchemy.Integer)
 
 
@@ -160,14 +161,9 @@ class statistics:
         return numActiveGames
      
     def getTotalGames():
-        totalgamesfile = open("totalGames.txt","r")
-        return totalgamesfile.read()
+        totalgamesfile = gameDB.query(statisticsDB).filter(statisticsDB.id == 1).first().actual_value
+        return totalgamesfile
 
     def incrementTotalGames():
-        totalgamesfile = open("totalGames.txt","r")
-        totalgamescount = totalgamesfile.read()
-        totalgamescount = int(totalgamescount) 
-        totalgamescount += 1
-        totalgamesfile.close()
-        totalgamesfile = open("totalGames.txt","w")
-        totalgamesfile.write(str(totalgamescount))
+        gameDB.query(statisticsDB).filter(statisticsDB.id == 1).first().actual_value += 1
+        gameDB.commit()

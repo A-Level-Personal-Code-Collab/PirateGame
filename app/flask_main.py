@@ -7,8 +7,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 12 2021
-# Modified By: Will Hall
+# Last Modified: Sat Nov 13 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -83,7 +83,7 @@ app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 
 usersTBL = database.activeUsers
 gamesTBL = database.activeGames
-statsTBL = database.statistics
+statsTBL = database.statisticsDB
 
 
 #=========================================================#
