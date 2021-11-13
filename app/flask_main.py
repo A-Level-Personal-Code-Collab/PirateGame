@@ -84,7 +84,7 @@ app.config['SECRET_KEY'] = '0nOxRU2ipDewLH1d'
 
 usersTBL = database.activeUsers
 gamesTBL = database.activeGames
-statsTBL = database.statistics
+statsTBL = database.statisticsDB
 
 
 #=========================================================#
