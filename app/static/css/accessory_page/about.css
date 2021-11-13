@@ -6,85 +6,71 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Oct 10 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Sat Nov 13 2021
+ * Modified By: Ollie Burroughs
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-13	OB	Added mobile support and flex
  */
 
 /* About page */
 
-.about_section{
+@media screen and (max-width: 600px)
+{
+    .Devs, .Credits{
+        flex-direction: column;
+    }
+}
+.page_header{
     padding: 50px;
     text-align: center;
     background-color: #474e5d;
     color: white;
 }
 
-.about_column{
-    float: left;
-    width: 33.3%;
-    margin-bottom: 16px;
-    padding: 0 8px;
+.Devs, .Credits{
+    display: flex;
 }
 
 .about_card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 8px;
-    line-height: 2.2vh;
+    line-height: 3.2vh;
     height: 50vh;
+    padding:2vw;
+    flex:1;
+    min-height: 200px;
 }
 
-.about_container{
-    padding: 0 16px;
+#artwork_card{
+    background-image:  url("../../img/LobbyBackground.jpeg");
+    background-size: cover;
 }
 
-.about_container::after, .about_row::after{
-    content: "";
-    clear: both;
-    display: table;
-}
-
-.row {
-    display: block;
+#music_card{
+    background-image: url("/static/img/musicBG.png");
+    background-size: cover;
 }
 
 .how_container{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 8px;
     margin: 2vh;
-    height: 60vh;
+    height: fit-content;
+    padding: 3vw;
 }
 
 /* How it was created section */
 
 .left_image {
     position: relative;
-    float: left;
+    float: center;
     padding-right: 2.5vh;
-}
-
-.text_body {
-    text-align: left;
-    margin-left: 5vh;
-    line-height: 3vh;
 }
 
 .br {
     display: block;
     margin-bottom: 1.5vh;
-}
-
-/* Sob story text */ 
-
-#sob_story_text{
-    line-height: 3vh;
-    margin-left: 4vh;
-    margin-right: 4vh;
-}
-
-#sob_story_container {
-    height: 28vh;
 }

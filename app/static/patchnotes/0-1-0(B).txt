@@ -36,3 +36,7 @@ Version 0.1.0(B)
 - Loaded new background - Image credit Jack Hegarty (#158)
 - Improved responsive display of lobby background
 - Fixed issue where gameIDs starting with 0s would not display leading 0s even though they are significant (#150)
+
+^About page
+-Added credits for Jack Hegarty and Charlie Kay
+-Added mobile support

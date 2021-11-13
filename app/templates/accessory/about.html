@@ -6,12 +6,13 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Nov 01 2021
-Modified By: Adam O'Neill
+Last Modified: Sat Nov 13 2021
+Modified By: Ollie Burroughs
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-11-13	OB	changed formatting for flex and neatened it up
 -->
 {% extends "base.html" %}
 
@@ -22,99 +23,96 @@ Date      	By	Comments
 {% endblock %}
 
 {% block body %}
-<div class="about_section">
+<div class="page_header">
     <h1>About Us</h1>
     <p>Welcome to the about page of the 21st Century pirate game project</p>
 </div>
-<div class="row">
+
+<div class="about_body">
     <div class="how_container" id="sob_story_container"> 
         <h2>A message from us...</h2>
         <br>
-        <div id="sob_story_text"> <!-- need to add info where to donate -->
-            <p>This project was initially  started during the summer of 2021 when Will approached Adam
+            <p> <!-- need to add info where to donate -->>This project was initially started during the summer of 2021 when Will approached Adam
                 in the hopes of creating a project. This project snowballed until it became the Pirate
                 Game which you see before you. Later, Ollie joined the team which brings us to the team today
                 (as seen below). This website is hosted on a server and doesn't just exist by itself it costs
                 us money! Not only this but the URL we have is a recurring fee as well. It would be greatly appreciated
                 if any contributions could be made to keep this project alive! <br>Many thanks from the team!
-            </p>
-        </div>
+        </p>
+    </div>
+    <!-- How we made the page -->
+    <div class="how_container" id="how_container">
+        <h2>How the pirate game was created...</h2>
+        <br>
+        <img src="../static/img/logos/logo.png" alt="Logo" class="left_image">
+        <br><!-- Span br used to change the height between each section instead of <br> -->
+        <p>This project all started in the summer of 2021 as stated before. It has become an ongoing project for the foreseeable future. The code is primarily made up of JavaScript, Python
+            CSS and Html. <span class="br"></span>Python acts as the server side for the website, this means all the databases
+             of concurrent games are stored on the sever and the roots for the website (URL/roots). <span class="br"></span>The
+            HTML tells web browsers how to display a web page's words and images. This means all the images
+            and words you see right now are written in HTML - even this text! We have tried to make this website as adaptable as
+            possible by using the size measurements as VH where possible meaning the layout should adapt
+            for the size of the view port <span class="br"></span> Html would look incredibly boring if it weren't for the
+             wonders of CSS. CSS is responsible for describing  the presentation of the web page. This 
+            includes, colours, layout and fonts. <span class="br"></span> These are standard elements
+            to a web page which you see day to day. Throughout our journey, we have taught ourselves
+            how to you these languages on top of the most important part - Python Flask. <span class="br"></span>
+            Python flask is used to control the flow of data between client and server through web sockets. 
+            In addition, sqlalchemy has been used to create the databases holding all the information
+            for the games to function!
+        </p>
     </div>
 </div>
-<!-- How we made the page -->
-<div class="row">
-    <div class="how_container">
-        <h2>How pirate game was created...</h2>
-        <br>
-        <div class="left_image">
-            <img src="../static/img/logos/logo.png" alt="Logo">
-        </div>
-        <br>
-        <div class="text_body"> <!-- Span br used to change the height between each section instead of <br> -->
-            <p>This project all started in the summer of 2021 as stated before. It has become an ongoing
-                project for the foreseeable future. The code is primarily made up of JavaScript, Python
-                CSS and Html. <span class="br"></span>Python acts as the server side for the website, this means all the databases
-                of concurrent games are stored on the sever and the roots for the website (URL/roots). <span class="br"></span>The
-                HTML tells web browsers how to display a web page's words and images. This means all the images
-                and words you see right now are written in HTML - even this text! We have tried to make this website as adaptable as
-                possible by using the size measurements as VH where possible meaning the layout should adapt
-                for the size of the view port <span class="br"></span> Html would look incredibly boring if it weren't for the
-                wonders of CSS. CSS is responsible for describing  the presentation of the web page. This 
-                includes, colours, layout and fonts. <span class="br"></span> These are standard elements
-                to a web page which you see day to day. Throughout our journey, we have taught ourselves
-                how to you these languages on top of the most important part - Python Flask. <span class="br"></span>
-                Python flask is sued to control the flow of data between client and server through web sockets. 
-                In addition, sqlalchemy has been used to create the databases holding all the information
-                for the games to function!
-            </p>
-        </div>
-    </div>
-    <!-- More rows can be added by adding more how_containers -->
-</div>
-<h2 style="text-align: center;">The Team</h2>
-<div class="about_row">
-    <div class="about_column">
+<div class="Team">
+    <h2 style="text-align: center;">The Team</h2>
+    <div class="Devs">
         <div class="about_card">
             <!--<img src="../static/img/tmp-asset.png" alt="Adam">-->
-            <div class="about_container"> <!-- Need to fill in the information -->
-                <h2>Adam O'Neill</h2><br>
-                <p class="subjects"><b>Subjects:</b> Maths, Physics, Computer Science</p><br>
-                <h4>Get in touch...</h3>
-                <!--Contact info-->
-                <p>Adam@pirategame.live</p>
-                <a href="https://github.com/Theocat321">Adam's GitHub</a>
-            </div>
+            <h2>Adam O'Neill</h2><br>
+            <p class="subjects"><b>Subjects:</b> Maths, Physics, Computer Science</p><br>
+            <h4>Get in touch...</h3>
+            <!--Contact info-->
+            <p>adam@pirategame.live</p>
+            <a href="https://github.com/Theocat321">Adam's GitHub</a>
         </div>
-    </div>
 
-    <div class="about_column">
         <div class="about_card">
             <!--<img src="../static/img/tmp-asset.png" alt="Will">-->
-            <div class="about_container"> <!-- Need to fill in the information -->
-                <h2>Will Hall</h2><br>
-                <p class="subjects"><b>Subjects:</b> Computer Science, Maths, Further Maths, Physics </p><br>
-                <h4>Get in touch...</h3>
-                <!--Contact info-->
-                <p>Will@pirategame.live</p>
-                <a href="https://github.com/Lime-Parallelogram">Will's GitHub</a>
-            </div>
+            <h2>Will Hall</h2><br>
+            <p class="subjects"><b>Subjects:</b> Computer Science, Maths, Further Maths, Physics </p><br>
+            <h4>Get in touch...</h3>
+            <!--Contact info-->
+            <p>will@pirategame.live</p>
+            <a href="https://github.com/Lime-Parallelogram">Will's GitHub</a>
         </div>
-    </div>
-
-    <div class="about_column">
         <div class="about_card">
             <!--<img src="../static/img/tmp-asset.png" alt="Ollie"> -->
-            <div class="about_container"> <!-- Need to fill in the information -->
-                <h2>Ollie Burroughs</h2><br>
-                <p class="subjects"><b>Subjects:</b> Maths, Further Maths, Physics, Computer Science</p><br>
-                <h4>Get in touch...</h3>
-                <!--Contact info-->
-                <p>Ollie@pirategame.live</p>
-                <a href="https://github.com/schmetris">Ollie's GitHub</a>
-            </div>
+            <h2>Ollie Burroughs</h2><br>
+            <p class="subjects"><b>Subjects:</b> Maths, Further Maths, Physics, Computer Science</p><br>
+            <h4>Get in touch...</h3>
+            <!--Contact info-->
+            <p>ollie@pirategame.live</p>
+            <a href="https://github.com/schmetris">Ollie's GitHub</a>
         </div>
     </div>
+    <h2 style="text-align: center;">Credits</h2>
+    <div class="Credits">
+            <div class="about_card" id ="music_card">
+                <!--<img src="../static/img/tmp-asset.png" alt="Charlie">-->
+                <h2>Music by Charlie Kay</h2><br>
+                <p class="subjects"><b>Subjects:</b> Maths, Further Maths, Music, Chemistry</p>
+            </div>
+
+            <div class="about_card" id= "artwork_card" >
+                <!--<img src="../static/img/tmp-asset.png" alt="Jack">-->
+                    <h2>Artwork by Jack Hegarty</h2><br>
+                    <p class="subjects"><b>Subjects:</b> Graphics, English, History </p><br>
+                    <h4>Get in touch...</h3>
+                    <!--Contact info-->
+                    <a href="https://instagram.com/Authorbiologist">Jack's Instagram</a>
+                    <br>
+                    <a href="https://twitter.com/authorbiologist">Jack's Twitter</a>
+            </div>
+    </div>
 </div>
-
-
 {% endblock %}
