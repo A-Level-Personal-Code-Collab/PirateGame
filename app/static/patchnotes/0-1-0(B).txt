@@ -24,7 +24,8 @@ Version 0.1.0(B)
 - Current bank and money value displayed instead of cumulative value list (#153)
 - New font for 'Your Cash', 'Your Bank' and 'Game Log' titles (now matches the declare button)
 - 'Your Cash' and 'Your Bank' now displayed on top of game log not next to it
-- Removed host left the game popup as it was causing problems 
+- Removed host left the game popup as it was causing problems
+- Fixed problem where retaliations would not be removed from sleeve after use
 
 ^Back End
 - Database location moved from sqlite in memory database to mariadb disk database for access across multiple scopes and machines (#143)

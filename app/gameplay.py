@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Nov 13 2021
+# Last Modified: Mon Nov 15 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-15	WH	Results now stored in database as JSON object
 # 2021-11-12	WH	Added functionality to extract patch notes overview from files
 # 2021-11-08	AO	Added the text to html builder
 # 2021-10-31	WH	Spelling corrections
@@ -371,7 +372,7 @@ class events:
         for User in self.allUsers:
             userscore[User.user_nickname] = User.user_cash + User.user_bank
 
-        self.gameOBJ.results_json = json.dumps(userscore)
+        self.gameOBJ.results_json = userscore
         self.gameOBJ.deletion_time = int(time.time()) + DELETION_DELAY
         database.delete_players(gameID) #Delete all users relating to that game from the database
 

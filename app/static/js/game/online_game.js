@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-11-15	WH	Fixed retaliation not removing bug
  * 2021-11-09	WH	Handle money values no longer being cumulative
  * 2021-11-09	WH	Increase available retaliation time
  * 2021-11-09	WH	Added handling for display delay on things after the spinner. e.g. Money items (Issue #151)
@@ -196,8 +197,8 @@
  //Update the box that displays available reactions
  function update_retaliations(retal_new)
  {
-     var delay = retal_new["delay"]
-     if (retal_new != null) {retaliations.push(retal_new);}
+     if (retal_new != null) {var delay = retal_new["delay"]; retaliations.push(retal_new);}
+     else {var delay = 0;}
      //Creates html images on page to show what actions the user has available
      var imageList = ""
      retaliations.forEach((a) => {

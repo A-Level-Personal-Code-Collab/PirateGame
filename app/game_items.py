@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Tue Nov 09 2021
+# Last Modified: Mon Nov 15 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -146,7 +146,7 @@ class itmBank(actionItem):
     ACTION_EMOJI = "🏦"
     ACTION_IDENTIFIER = "itmBank"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}+{vCash}"
-    LOG_MESSAGE = "{emoji} !<{victim}> put their money safely away {emoji}"
+    LOG_MESSAGE = "{emoji} !<{victim}> put your money safely away {emoji}"
     INVALID_RETALIATIONS = ["itmShield","itmMirror"]
     TARGETTED = False
 
