@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Nov 10 2021
+ * Last Modified: Mon Nov 15 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -43,7 +43,7 @@
  */
  //=========================================================//
  //^ Gets elements from page ^//
- const SOCKETIO_ADDRESS = "http://localhost:8001/"
+ const SOCKETIO_ADDRESS = "http://localhost:8001"
  const cashBox = document.getElementById("div_cashText")
  const bankBox = document.getElementById("div_bankText")
  const logBox = document.getElementById("p_logText")

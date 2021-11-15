@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Thu Nov 11 2021
+# Last Modified: Mon Nov 15 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-15	WH	Commented out host left popup for release
 # 2021-11-11	WH	Added automatic database check
 # 2021-11-09	WH	Send the delay information to the client along with applicable events (Issue #151)
 # 2021-11-09	WH	Implemented constant for the length of time the spinner animation takes
@@ -67,21 +68,21 @@ def disconnect(sid):
     userLine = database.get_user(sid)
     if userLine != None:
         gameID = str(userLine.user_game_id).zfill(8)
-        if gameplay.validators().isHost(userLine.user_id,gameID):
-            sio.emit("ERR", "The host of this game has left. If they do not return them the game cannot continue.",room=gameID)
-        else:
-            userLine.socketio_id = None
-            if userLine.user_pending_declaration:
-                gameLine = database.get_game(gameID)
-                if gameplay.functions().actionComplete(gameLine): #Completed action and runs event if this completed a round
-                    sio.emit("round_complete", {"delay": 0}, room=gameID)
+        #//if gameplay.validators().isHost(userLine.user_id,gameID):
+            #//sio.emit("ERR", "The host of this game has left. If they do not return them the game cannot continue.",room=gameID)
+        #//else:
+        userLine.socketio_id = None
+        if userLine.user_pending_declaration:
+            gameLine = database.get_game(gameID)
+            if gameplay.functions().actionComplete(gameLine): #Completed action and runs event if this completed a round
+                sio.emit("round_complete", {"delay": 0}, room=gameID)
 
-            userLine.user_pending_declaration = False
-            #Update the user list on all user's screen
-            database.gameDB.commit()
-            online_users = gameplay.generators().getActiveUsersDictionary(gameID)
-            sio.emit("users_update", online_users,room=gameID)
-            sio.emit("log_update", {"entry": gameplay.loggers().userDisconnect(userLine.user_nickname), "delay": 0},room=gameID)
+        userLine.user_pending_declaration = False
+        #Update the user list on all user's screen
+        database.gameDB.commit()
+        online_users = gameplay.generators().getActiveUsersDictionary(gameID)
+        sio.emit("users_update", online_users,room=gameID)
+        sio.emit("log_update", {"entry": gameplay.loggers().userDisconnect(userLine.user_nickname), "delay": 0},room=gameID)
             
 
 #---------------#
