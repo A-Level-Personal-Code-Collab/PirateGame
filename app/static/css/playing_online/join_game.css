@@ -17,13 +17,13 @@
 
 @media screen and (max-width: 600px)
 {
-    .row
+    .card_container
     {
         flex-direction: column-reverse;
     }
-    .column
+    .card
     {
-        width: 100%;
+        flex-basis: 100%;
     }
 }
 
@@ -39,23 +39,21 @@
     color: white;
 }  
 
-.column{
-    display:flex;
-    width: 50%;
-    margin-bottom: 1.9vh;
-    padding:  0.6vh 1vh;
-}
-.row
+.card_container
 {
     display: flex;
     position: relative;
     min-height: 40vh;
+    height:100%;
 }
 
 .card{
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 2vh;
-    height: 100%;
+    padding:  0.6vh 1vh;
+    flex-basis:100%;
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -85,14 +83,14 @@
     transition: all 0.5s ;
     color: rgb(145, 145, 145);
     cursor: pointer;
-    margin: 0;
+    margin: 1vh;
     font-size: 3.1vh;
     padding: 2.5vh;
-    width: 100%;
+    width: 90%;
+    align-self: flex-end;
 }
 
 #submit_button #new_game_button{
-    position: relative;
     display: inline-block;
 }
 
@@ -103,8 +101,7 @@
 }
 
 #new_game_button{
-    position: relative;
-    top: 10vh; 
+    margin-top: auto;
 }
 
 .game_button span{ /* span is used so the arrow is a separate entity from the text */
