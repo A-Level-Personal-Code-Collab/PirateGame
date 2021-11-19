@@ -7,12 +7,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Nov 13 2021
+# Last Modified: Fri Nov 19 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-19	WH	Added session getter decorator to all requests that use the database and then accept the session and pass it on to any database functions 
 # 2021-11-13	WH	Fixed parsing issue for results page 
 # 2021-11-12	WH	Added functionality to inject version information to all pages
 # 2021-11-08	AO	Added the patch notes routes and tests whether they are a valid root or not
@@ -86,7 +87,6 @@ usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 statsTBL = database.statisticsDB
 
-
 #=========================================================#
 #^ URL routes ^#
 #---------------#
@@ -98,9 +98,10 @@ def inject_version():
 #---------------#
 # The index page
 @app.route("/")
-def index():
-    TotalGames = database.statistics.getTotalGames()
-    CalcActiveGames = database.statistics.calcActiveGames()
+@database.get_session
+def index(session):
+    TotalGames = database.statistics.getTotalGames(session)
+    CalcActiveGames = database.statistics.calcActiveGames(session)
     version_url = "/patch_notes/" + gameplay.GAME_VERSION.replace(".","-") #Parse the game version into the patch notes url
     return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, version_url=version_url, overview=gameplay.parsers().parseVersionOverview())
 
@@ -118,7 +119,8 @@ def error():
 
 
 @app.route("/playing_online", methods=["GET", "POST"])
-def play_game():
+@database.get_session
+def play_game(session):
     # Below variables should be set to match the error class in the event of an error
     nicknameError = ""
     IDError = ""
@@ -135,30 +137,30 @@ def play_game():
 
         # Check if the user has answered that they wish to use a new SID (in which case delete all reference to old SID)
         if submitButton == "Playing here instead":
-            queryData = database.gameDB.query(usersTBL).filter(usersTBL.user_id==userSID)
+            queryData = session.query(usersTBL).filter(usersTBL.user_id==userSID)
             userObject = queryData.first()
             if userObject.is_host == True:  # Delete their old game if that were the host
-                database.gameDB.query(gamesTBL).filter(gamesTBL.game_id==userObject.user_game_id).delete()
+                session.query(gamesTBL).filter(gamesTBL.game_id==userObject.user_game_id).delete()
             queryData.delete()
 
         # Check if the SID stored in the user's cookies is still present in the active database
         elif userSID != None:
-            if database.get_user(userSID) != None:
+            if database.get_user(session, userSID) != None:
                 popupHTML = render_template("popups/user_still_active_popup.html")
                 return render_template("playing_online/join_game.html", nicknameErrClass=nicknameError, gameIDErrClass=IDError, nickname=nickname, gameID=gameID, CSSPopup=Markup(popupHTML))
 
         #---------------#
-        if gameplay.validators().gameIDValidate(gameID):
+        if gameplay.validators().gameIDValidate(session,gameID):
             if gameplay.validators().nicknameValidate(nickname):
                 # Saves user details to database
-                userSID = gameplay.generators().generate_SID()
+                userSID = gameplay.generators().generate_SID(session)
 
                 deletionTime = database.get_deletion_time() # Get the deletion time
 
                 # Build new database entry using base class
                 newUserActivate = usersTBL(user_id=userSID, user_nickname=nickname, user_game_id=gameID, is_host=False, deletion_time=deletionTime)
-                database.gameDB.add(newUserActivate)
-                database.gameDB.commit()
+                session.add(newUserActivate)
+                session.commit()
 
                 #-#
                 # Move on to sheet builder page
@@ -178,7 +180,8 @@ def play_game():
 
 #---------------#
 @app.route('/playing_online/new_game', methods=["GET", "POST"])
-def new_game():
+@database.get_session
+def new_game(session):
     if request.method == "POST":
         # Colleting Item data from POST
         gameData = request.form.get("game_data")
@@ -189,13 +192,13 @@ def new_game():
 
         if gameplay.validators().nicknameValidate(nickname):
             # Check database for old games and users pending deletion
-            database.clean_active()
+            database.clean_active(session)
             
             #-#
             # Generate random IDs
-            gameID = gameplay.generators().generate_gameID()
+            gameID = gameplay.generators().generate_gameID(session)
             gameIDString = str(gameID).zfill(8)
-            userSID = gameplay.generators().generate_SID()
+            userSID = gameplay.generators().generate_SID(session)
 
             #-#
             #Get the default deletion times for apps
@@ -206,11 +209,11 @@ def new_game():
             newGame = gamesTBL(game_id=gameID, host_id=userSID,grid_settings=sliderData, game_items=itemData, deletion_time=deletionTime)
             newUser = usersTBL(user_id=userSID, user_game_id=gameID,user_nickname=nickname, is_host=True, deletion_time=deletionTime)
 
-            database.gameDB.add(newGame)
-            database.gameDB.add(newUser)
-            database.gameDB.commit()
+            session.add(newGame)
+            session.add(newUser)
+            session.commit()
 
-            database.statistics.incrementTotalGames()
+            database.statistics.incrementTotalGames(session)
 
             # Redirects to sheet builder page
             response = redirect(f"/playing_online/sheet_builder?gid={gameIDString}")
@@ -222,19 +225,20 @@ def new_game():
 
 #---------------#
 @app.route("/playing_online/sheet_builder", methods=["GET", "POST"])
-@gameplay.validators.pageControlValidate()
-def game_sheet():
+@database.get_session
+@gameplay.validators.pageControlValidate
+def game_sheet(session):
     # Load values from client provided info
     userSID = request.cookies.get("SID")  # Loads from client cookies
     gameID = request.args.get("gid")  # Loads from URL bar
 
     # If a user's sheet is already full, move them on
-    if database.gameDB.query(usersTBL).filter(usersTBL.user_grid != None, usersTBL.user_id == userSID).first() != None:
+    if session.query(usersTBL).filter(usersTBL.user_grid != None, usersTBL.user_id == userSID).first() != None:
         return redirect(f"/playing_online/lobby?gid={gameID}")
 
     #-#
     # Queries and retries required data from database
-    gameData = database.get_game(gameID)
+    gameData = database.get_game(session,gameID)
 
     # Gets raw strings
     itemsString = gameData.game_items
@@ -249,8 +253,8 @@ def game_sheet():
         retrievedGrid = request.form.get("grid")
         # Checks that number of items in grid matches its size
         if gridJSON["GRID_X"] * gridJSON["GRID_Y"] == len(retrievedGrid.split(",")):
-            database.get_user(userSID).user_grid = retrievedGrid
-            database.gameDB.commit()
+            database.get_user(session,userSID).user_grid = retrievedGrid
+            session.commit()
             return redirect(f"/playing_online/lobby?gid={gameID}")
 
     gridHTML = gameplay.generators().html.buildEditableGrid(gridJSON["GRID_X"], gridJSON["GRID_Y"])  # Builds grid using values from loaded JSON
@@ -274,7 +278,6 @@ def patch_notes():
 
 @app.route("/patch_notes/<version>")
 def versioninfo(version):
-    print(version)
     try:
         f=open(f"static/patchnotes/{version}.txt","r") 
         displayhtml = gameplay.parsers.convertTxtToHtml(f)
@@ -286,22 +289,23 @@ def versioninfo(version):
 
 #---------------#
 @app.route("/playing_online/lobby")
-@gameplay.validators.pageControlValidate()
-def lobby():
+@database.get_session
+@gameplay.validators.pageControlValidate
+def lobby(session):
     # Redirect away if the user does not have correct cookies
     if request.cookies.get("SID") == None:
         return redirect("/error?code=NOSID")
 
     try:
         gameID = request.args.get("gid")
-        gameLine = database.get_game(gameID)
+        gameLine = database.get_game(session,gameID)
         if gameLine.is_open == False:
             return redirect(f"/playing_online/game?gid={gameID}")
         host_id = gameLine.host_id
-        hostNick = database.get_user(host_id).user_nickname
+        hostNick = database.get_user(session,host_id).user_nickname
         host_content = ""
         # Renders host-only controls if the user is the host
-        if gameplay.validators().isHost(request.cookies.get("SID"), request.args.get("gid")):
+        if gameplay.validators().isHost(session,request.cookies.get("SID"), request.args.get("gid")):
             host_content = Markup(render_template(
                 "playing_online/host_only/host_only_lobby.html"))
 
@@ -311,21 +315,22 @@ def lobby():
 
 #---------------#
 @app.route("/playing_online/game")
-@gameplay.validators.pageControlValidate()
-def game():
+@database.get_session
+@gameplay.validators.pageControlValidate
+def game(session):
     gameID = request.args.get("gid")
     userID = request.cookies.get("SID")
 
     try:
-        if gameplay.validators().isFinished(gameID):
+        if gameplay.validators().isFinished(session,gameID):
             return redirect(f"/playing_online/results?gid={gameID}")
 
-        gameLine = database.get_game(gameID)
+        gameLine = database.get_game(session,gameID)
         hostID = gameLine.host_id
-        hostNick = database.get_user(hostID).user_nickname
+        hostNick = database.get_user(session,hostID).user_nickname
 
         # Gets grid information from relevant database
-        gridSerial = database.get_user(userID).user_grid
+        gridSerial = database.get_user(session,userID).user_grid
         gridSettingsJSON = json.loads(gameLine.grid_settings)
         gridX = int(gridSettingsJSON["GRID_X"])
         IMAGE_URLS = {  # Defines the locations of the images associated with the following items
@@ -345,7 +350,7 @@ def game():
         usersGrid = gameplay.generators().html.drawGameplayGrid(gridX, gridSerial, IMAGE_URLS)  # Gets the HTML for the grid to draw
 
         #-#
-        if gameplay.validators().isHost(userID, gameID):
+        if gameplay.validators().isHost(session,userID, gameID):
             return render_template("playing_online/host_only/playing_online_host.html", grid=usersGrid, hostNick=hostNick, mySID=userID)
         else:
             return render_template("playing_online/online_game.html", grid=usersGrid, hostNick=hostNick, mySID=userID)
@@ -354,13 +359,14 @@ def game():
 
 #---------------#
 @app.route("/playing_online/results")
-@gameplay.validators.pageControlValidate()
-def results():
+@database.get_session
+@gameplay.validators.pageControlValidate
+def results(session):
     # fetches user data
     gameID = request.args.get("gid")
 
-    if gameplay.validators().isFinished(gameID):
-        userscores = database.get_game(gameID).results_json
+    if gameplay.validators().isFinished(session,gameID):
+        userscores = database.get_game(session,gameID).results_json
 
         sorted_scores = dict(sorted(userscores.items(), key=lambda x: x[1], reverse=True))
         final_scores_table = "<table class=\"sidebarscores\"> <tr class=\"ResultsTableHeader\"> <td></td><td> Player </td> <td> Final Cash </td> </tr> "

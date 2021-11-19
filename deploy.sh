@@ -11,7 +11,7 @@ grep -RiIl 'http://localhost:8001' | xargs sed -i 's,"http://localhost:8001","ht
 grep -RiIl 'local-only' | xargs sed -i "s,local-only,$DATABASE_SECRET,g"
 
 #Build dockers
-docker-compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.yml -p pirategame up -d --build
 
 #Copy static content
 mkdir /var/www

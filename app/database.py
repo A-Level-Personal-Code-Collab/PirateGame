@@ -6,12 +6,15 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sat Nov 13 2021
+# Last Modified: Fri Nov 19 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-19	WH	Created session getter decorator for other files
+# 2021-11-19	WH	Allowed all functions to accept a session as a parameter and use this to perform functions
+# 2021-11-19	WH	Removed global session
 # 2021-11-11	WH	Added function to automatically create databases if they don't exist
 # 2021-11-08	WH	Added functionality to execute this file in order to reset all tables in the database
 # 2021-11-07	WH	Added function to clean old users and games from database
@@ -19,8 +22,7 @@
 #---------------------------------------------------------------------#
 #=========================================================#
 #^ Imports libraries ^#
-from collections import defaultdict
-import socketio
+from functools import wraps
 import sqlalchemy
 from sqlalchemy.engine.create import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -32,7 +34,7 @@ from sqlalchemy import func
 #=========================================================#
 #^ Setup database connection engine ^#
 gameDB_engine = create_engine("mariadb+pymysql://pirategame_python:local-only@pirategame_dbsvr1/pirategame")
-gameDB = sessionmaker(bind=gameDB_engine)()
+#gameDB = sessionmaker(bind=gameDB_engine)()
 modelBase = declarative_base()
 
 #=========================================================#
@@ -83,61 +85,70 @@ class statisticsDB(modelBase):
 #=========================================================#
 #^ Database action decorator ^#
 def db_action(func):
-    def decorator(*args,**kwargs):
-        try:
-            gameDB.commit()
-        except:
-            pass
-        output = func(*args,**kwargs)
+    def decorator(session, *args,**kwargs):
+        output = func(session, *args,**kwargs)
+        return output
+
+    return decorator
+
+#=========================================================#
+#^ Function used in socketio and flask to generate new session on request ^#
+#Creates a new session for each request and then destroys it after the function has executed
+def get_session(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        newSession = sessionmaker(bind=gameDB_engine)()
+        output = func(newSession, *args, **kwargs)
+        newSession.close()
         return output
 
     return decorator
 
 #=========================================================#
 #^ Common database function routines ^#
+
 #---------------#
 #Delete and recreate all tables
 @db_action
 def reset_tables():
     modelBase.metadata.drop_all(bind=gameDB_engine)
     modelBase.metadata.create_all(bind=gameDB_engine)
-    gameDB.commit()
 
 #---------------#
 #Simple getter methods
 @db_action
-def get_game(gameID):
-    game = gameDB.query(activeGames).get(int(gameID))
+def get_game(session, gameID):
+    game = session.query(activeGames).get(int(gameID))
     return game
 
 @db_action
-def get_user(userID):
+def get_user(session,userID):
     if userID == None:
         return None
     try:
-        user = gameDB.query(activeUsers).get(int(userID))
+        user = session.query(activeUsers).get(int(userID))
     except ValueError:
-        user = gameDB.query(activeUsers).filter(activeUsers.socketio_id==userID).first()
+        user = session.query(activeUsers).filter(activeUsers.socketio_id==userID).first()
     return user
 
 @db_action
-def get_players(gameID):
-    all = gameDB.query(activeUsers).filter(activeUsers.user_game_id==int(gameID),activeUsers.socketio_id!=None).all()
+def get_players(session,gameID):
+    all = session.query(activeUsers).filter(activeUsers.user_game_id==int(gameID),activeUsers.socketio_id!=None).all()
     return all
 
 @db_action
-def delete_players(gameID):
-    gameDB.query(activeUsers).filter(activeUsers.user_game_id==int(gameID)).delete()
-    gameDB.commit()
+def delete_players(session,gameID):
+    session.query(activeUsers).filter(activeUsers.user_game_id==int(gameID)).delete()
+    session.commit()
 
 #---------------#
 #Delete old users and games from the database
 @db_action
-def clean_active():
+def clean_active(session):
     currentTime = int(time.time())
-    gameDB.query(activeGames).filter(activeGames.deletion_time<currentTime).delete()
-    gameDB.query(activeUsers).filter(activeUsers.deletion_time<currentTime).delete()
-    gameDB.commit()
+    session.query(activeGames).filter(activeGames.deletion_time<currentTime).delete()
+    session.query(activeUsers).filter(activeUsers.deletion_time<currentTime).delete()
+    session.commit()
 
 #---------------#
 #Get the time that a new record well be
@@ -149,11 +160,12 @@ def get_deletion_time():
 
 def check_tables():
     modelBase.metadata.create_all(bind=gameDB_engine)
-    gameDB.commit()
-    if gameDB.query(statisticsDB).filter(statisticsDB.contents_info=="TotalGames").first() == None:
+    session = sessionmaker(bind=gameDB_engine)()
+    if session.query(statisticsDB).filter(statisticsDB.contents_info=="TotalGames").first() == None:
         totalGames = statisticsDB(id=1, contents_info="TotalGames",actual_value=0)
-        gameDB.add(totalGames)
-        gameDB.commit()
+        session.add(totalGames)
+        session.commit()
+    session.close()
     print("Successfully recreated all tables")
 
 #=========================================================#
@@ -162,14 +174,14 @@ def check_tables():
 
 class statistics:
 
-    def calcActiveGames():
-        numActiveGames = gameDB.query(activeGames.game_id).count()
+    def calcActiveGames(session):
+        numActiveGames = session.query(activeGames.game_id).count()
         return numActiveGames
      
-    def getTotalGames():
-        totalgamesfile = gameDB.query(statisticsDB).filter(statisticsDB.id == 1).first().actual_value
+    def getTotalGames(session):
+        totalgamesfile = session.query(statisticsDB).filter(statisticsDB.id == 1).first().actual_value
         return totalgamesfile
 
-    def incrementTotalGames():
-        gameDB.query(statisticsDB).filter(statisticsDB.contents_info == "TotalGames").first().actual_value += 1
-        gameDB.commit()
+    def incrementTotalGames(session):
+        session.query(statisticsDB).filter(statisticsDB.contents_info == "TotalGames").first().actual_value += 1
+        session.commit()
