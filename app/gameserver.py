@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Nov 15 2021
+# Last Modified: Fri Nov 19 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-19	WH	Added the session getter decorator to all functions to automatically get the database session and pass it in a parameter
 # 2021-11-15	WH	Commented out host left popup for release
 # 2021-11-11	WH	Added automatic database check
 # 2021-11-09	WH	Send the delay information to the client along with applicable events (Issue #151)
@@ -41,21 +42,22 @@ app = socketio.WSGIApp(sio)
 #---------------#
 #When a user joins a game they get added to the game's room
 @sio.event
-def join(sid,data):
+@database.get_session
+def join(session,sid,data):
     gameID = data["gameID"]
     userSID = data["userSID"]
     print(f"New user joined the game {gameID} with a userSID of {userSID}")
 
     try:
         #Stores user's current socketio SID in database 
-        user = database.get_user(userSID)
+        user = database.get_user(session,userSID)
         user.socketio_id = sid
-        database.gameDB.commit()
+        session.commit()
 
         sio.enter_room(sid,gameID)
 
         #Update the user list on all user's screen
-        online_users = gameplay.generators().getActiveUsersDictionary(gameID)
+        online_users = gameplay.generators().getActiveUsersDictionary(session,gameID)
         sio.emit("users_update", online_users,room=gameID)
         sio.emit("log_update", {"entry": gameplay.loggers().userConnect(user.user_nickname), "delay": 0},room=gameID) #Show log entry if a user leaves
     except AttributeError or ValueError as e:
@@ -64,8 +66,9 @@ def join(sid,data):
 #---------------#
 #When a user gets to disconnect from a page
 @sio.event
-def disconnect(sid):
-    userLine = database.get_user(sid)
+@database.get_session
+def disconnect(session,sid):
+    userLine = database.get_user(session,sid)
     if userLine != None:
         gameID = str(userLine.user_game_id).zfill(8)
         #//if gameplay.validators().isHost(userLine.user_id,gameID):
@@ -73,14 +76,14 @@ def disconnect(sid):
         #//else:
         userLine.socketio_id = None
         if userLine.user_pending_declaration:
-            gameLine = database.get_game(gameID)
+            gameLine = database.get_game(session,gameID)
             if gameplay.functions().actionComplete(gameLine): #Completed action and runs event if this completed a round
                 sio.emit("round_complete", {"delay": 0}, room=gameID)
 
         userLine.user_pending_declaration = False
         #Update the user list on all user's screen
-        database.gameDB.commit()
-        online_users = gameplay.generators().getActiveUsersDictionary(gameID)
+        session.commit()
+        online_users = gameplay.generators().getActiveUsersDictionary(session,gameID)
         sio.emit("users_update", online_users,room=gameID)
         sio.emit("log_update", {"entry": gameplay.loggers().userDisconnect(userLine.user_nickname), "delay": 0},room=gameID)
             
@@ -88,15 +91,16 @@ def disconnect(sid):
 #---------------#
 #When the host opts to start the game (from lobby)
 @sio.event
-def start(sid,data):
+@database.get_session
+def start(session,sid,data):
     gameID = data["gameID"]
     userSID = data ["userSID"]
 
-    if gameplay.validators().isHost(userSID,gameID): #Confirms if user is host and re-broadcasts start event
+    if gameplay.validators().isHost(session,userSID,gameID): #Confirms if user is host and re-broadcasts start event
         sio.emit("start",room=gameID)
 
         #Load grid data from database
-        gameData = database.get_game(gameID)
+        gameData = database.get_game(session,gameID)
         gridJSON = json.loads(gameData.grid_settings)
         gridSize = int(gridJSON["GRID_X"])*int(gridJSON["GRID_Y"])
 
@@ -111,7 +115,7 @@ def start(sid,data):
         #Close game
         gameData.is_open = False
         
-        database.gameDB.commit()
+        session.commit()
     
     else:
         sio.emit("ERR", "User ID that was submitted is not the host of this game. Have you attempted to join a second game?", room=sid)
@@ -121,23 +125,24 @@ def start(sid,data):
 #---------------#
 # When the host presses button to move on to next round
 @sio.event
-def next_round(sid):
+@database.get_session
+def next_round(session,sid):
     ANIMATION_LENGTH = 3000#ms - Time the animation takes to complete
-    gameID = database.get_user(sid).user_game_id #Find game ID by querying based on sid
+    gameID = database.get_user(session,sid).user_game_id #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
-    gameObject = database.get_game(gameID) #Load game information from database
+    gameObject = database.get_game(session,gameID) #Load game information from database
     currentRound = gameObject.current_round +1
     allSquares = gameObject.square_order.split(",")
 
     if currentRound > len(allSquares):
-        gameplay.events().gameEnd(gameID)
+        gameplay.events().gameEnd(session,gameID)
         sio.emit("game_complete", room=gameIDString)
 
     else:
         square = allSquares[currentRound-1]
         sio.emit("new_square", square, room=gameIDString) #Send selected square to clients
 
-        all_players = database.get_players(gameID)
+        all_players = database.get_players(session,gameID)
         actionsRequired = 0 #Used to track whether the next round can begin immediately
 
         for player in all_players:
@@ -162,7 +167,7 @@ def next_round(sid):
                         sio.emit('log_update', {"entry": instance.get_log(player.user_id,None), "delay": ANIMATION_LENGTH}, room=player.socketio_id)
                         sio.emit("cash_update", {"value": player.user_cash,"delay":ANIMATION_LENGTH}, room=player.socketio_id) #Run cash updates
                         sio.emit("bank_update", {"value": player.user_bank,"delay":ANIMATION_LENGTH}, room=player.socketio_id)
-                    elif gameplay.validators().isOnline(player.user_id): #Only handle actionable events if they are online
+                    elif gameplay.validators().isOnline(session,player.user_id): #Only handle actionable events if they are online
                         actionsRequired += 1
                         player.user_pending_declaration = True
                         event, data = instance.get_itemNotify() #For actions that are targetted, notify the client that they have one of these
@@ -190,15 +195,16 @@ def next_round(sid):
         #Update values in database to newest
         gameObject.current_round = currentRound
     
-    database.gameDB.commit()
+    session.commit()
 
 #---------------#
 #Handles when somone declares their action item
 @sio.event
-def action_declare(sid,data):
+@database.get_session
+def action_declare(session,sid,data):
     targetSID = data["target"]
     actionIdentifier = data["action"] #The type of action we are dealing with
-    perpetrator = database.get_user(sid) #Get a table row representing the perpetrator's information
+    perpetrator = database.get_user(session,sid) #Get a table row representing the perpetrator's information
     gameID = perpetrator.user_game_id #Find game ID by querying based on sid
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     invalidRetals = ""
@@ -206,7 +212,7 @@ def action_declare(sid,data):
     #---------------#
     #Handling for once a target has been selected
     if targetSID != "": #If the declaration includes the target information
-        target = database.get_user(targetSID) #Gets a database record object of the target
+        target = database.get_user(session,targetSID) #Gets a database record object of the target
 
         for actionType in actionItem.__subclasses__():
             instance = actionType()
@@ -214,7 +220,7 @@ def action_declare(sid,data):
                 target.user_pending_expression, perpetrator.user_pending_expression = instance.get_expressions() #Save the expression information to the database based on what event has taken place
                 invalidRetals = ",".join(instance.INVALID_RETALIATIONS)
                 logEntry = instance.get_log(targetSID,perpetrator.user_id) #Log the action to the logs
-                if not gameplay.validators().isOnline(target.user_id): #Automatically commit action if user is offline
+                if not gameplay.validators().isOnline(session,target.user_id): #Automatically commit action if user is offline
                     moneyHandlingExpression = target.user_pending_expression+":"+perpetrator.user_pending_expression #Create combined expression for money that tells what happens to both parties
                     target.user_cash, target.user_bank, perpetrator.user_cash, perpetrator.user_bank = gameplay.parsers().parse_money(moneyHandlingExpression, target, perpetrator)
                     for user in [target,perpetrator]:
@@ -223,11 +229,11 @@ def action_declare(sid,data):
                         sio.emit("cash_update", {"value": user.user_cash,"delay":0}, room=user.socketio_id)
                         sio.emit("bank_update", {"value": user.user_bank,"delay":0}, room=user.socketio_id)
 
-                    if gameplay.functions().actionComplete(database.get_game(gameID)): #Completed action and runs event if this completed a round
+                    if gameplay.functions().actionComplete(database.get_game(session,gameID)): #Completed action and runs event if this completed a round
                         sio.emit("round_complete", {"delay":0},room=gameIDString)
                 break # Break to save resources
 
-        database.gameDB.commit()
+        session.commit()
 
         #Updates the log
         sio.emit('log_update', {"entry": logEntry, "delay": 0}, room=gameIDString)
@@ -238,15 +244,16 @@ def action_declare(sid,data):
 #---------------#
 #Handles when a client declares their response to an action being done against them
 @sio.event
-def retaliation_declare(sid,data):
-    victim = database.get_user(sid) #Load victim from database
-    perpetrator = database.gameDB.query(usersTBL).filter(usersTBL.user_game_id==victim.user_game_id, usersTBL.user_pending_expression != "", usersTBL.user_id != victim.user_id).first() #Find perpetrator based on the fact that they too will have changes to their pending
+@database.get_session
+def retaliation_declare(session,sid,data):
+    victim = database.get_user(session,sid) #Load victim from database
+    perpetrator = session.query(usersTBL).filter(usersTBL.user_game_id==victim.user_game_id, usersTBL.user_pending_expression != "", usersTBL.user_id != victim.user_id).first() #Find perpetrator based on the fact that they too will have changes to their pending
 
     moneyHandlingExpression= victim.user_pending_expression+":"+perpetrator.user_pending_expression #Create combined expression for money that tells what happens to both parties
     gameID = perpetrator.user_game_id #Find game ID from perpetrator
     gameIDString = str(gameID).zfill(8) #Adds leading zeros to gameID for the purpose of room function
     retal_type = data["type"] #Gets the string dictating the clients response
-    aktvGame = database.get_game(gameID)
+    aktvGame = database.get_game(session,gameID)
 
     #---------------#
     #Loops through available retaliations to check if it matches any of those
@@ -279,7 +286,7 @@ def retaliation_declare(sid,data):
     if gameplay.functions().actionComplete(aktvGame): #Completed action and runs event if this completed a round
         sio.emit("round_complete",{"delay": 0}, room=gameIDString)
 
-    database.gameDB.commit()
+    session.commit()
 
 if __name__ == "__main__":
     database.check_tables()

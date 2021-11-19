@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Nov 15 2021
+# Last Modified: Fri Nov 19 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-11-19	WH	Modified all functions that use the database to accept a session parameter
 # 2021-11-15	WH	Results now stored in database as JSON object
 # 2021-11-12	WH	Added functionality to extract patch notes overview from files
 # 2021-11-08	AO	Added the text to html builder
@@ -47,7 +48,7 @@ usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 
 #---------------#
-GAME_VERSION = "0.1.0(B)"
+GAME_VERSION = "0.1.1(B)"
 
 #=========================================================#
 #^ Game generaion systems ^#
@@ -128,8 +129,8 @@ class generators:
 
     #---------------#
     #Returns the users that are currently part of a game 
-    def getActiveUsersDictionary(self, gameID):
-        self.allUsers = database.get_players(gameID)
+    def getActiveUsersDictionary(self, session, gameID):
+        self.allUsers = database.get_players(session,gameID)
         self.SIDNick = {} #Creates dictionary with key of SID and value of nickname
         for user in self.allUsers:
             self.SIDNick[user.user_id] = user.user_nickname
@@ -146,20 +147,20 @@ class generators:
 
     #---------------#
     #Generate a user sid that is guaranteed to be unique
-    def generate_SID(self):
+    def generate_SID(self,session):
         ID_MAX = 99999999
         self.userSID = random.randint(0,ID_MAX)
-        while database.get_user(self.userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
+        while database.get_user(session,self.userSID) != None: #Check if chosen SID already exists and keep regerating until it doesn't
             self.userSID = random.randint(0,ID_MAX)
         
         return self.userSID
     
     #---------------#
     #Generate random game ID guaranteed to be unique
-    def generate_gameID(self):
+    def generate_gameID(self,session):
         ID_MAX = 99999999
         self.gameID = random.randint(0,ID_MAX)
-        while database.get_game(self.gameID) != None:
+        while database.get_game(session,self.gameID) != None:
             self.gameID = random.randint(0,ID_MAX)
             
         return self.gameID
@@ -204,17 +205,17 @@ class validators:
     
     #---------------#
     #Checks that the provided game ID exists and is open to join
-    def gameIDValidate(self,gameID,userID=None):
+    def gameIDValidate(self,session,gameID,userID=None):
         MAX_USERS = 80
         try:
-            self.matchingGame = database.get_game(gameID)
+            self.matchingGame = database.get_game(session,gameID)
             if self.matchingGame != None: #Check game exists
-                if self.matchingGame.is_open or validators().isFinished(gameID): #Check if game is open or finished - in either case anyone is allowed in
-                    gamePlayers = database.get_players(gameID) #Check game isn't full
+                if self.matchingGame.is_open or validators().isFinished(session,gameID): #Check if game is open or finished - in either case anyone is allowed in
+                    gamePlayers = database.get_players(session,gameID) #Check game isn't full
                     if len(gamePlayers) < MAX_USERS:
                         return True
                 else: # If game isn't open
-                    userLine = database.get_user(userID)
+                    userLine = database.get_user(session,userID)
                     if userLine != None: #Check user info is provided
                         if userLine.user_game_id == int(gameID): #Check the user is connected to a game already
                             return True
@@ -224,8 +225,8 @@ class validators:
     
     #---------------#
     #Checks if a given user SID is the host of a game
-    def isHost(self,SID,gameID):
-        self.qurRes = database.get_game(gameID)
+    def isHost(self,session,SID,gameID):
+        self.qurRes = database.get_game(session,gameID)
         if self.qurRes:
             if self.qurRes.host_id == int(SID):
                 return True
@@ -234,39 +235,37 @@ class validators:
     
     #---------------#
     #Check if a user clarifies as being online or not
-    def isOnline(self,userID):
-        if database.get_user(userID).socketio_id != None:
+    def isOnline(self,session,userID):
+        if database.get_user(session,userID).socketio_id != None:
             return True
         else:
             return False
 
     #---------------#
     #Check if a given game is over and that the results have been saved
-    def isFinished(self, gameID):
-        if database.get_game(gameID).results_json != None:
+    def isFinished(self, session, gameID):
+        if database.get_game(session,gameID).results_json != None:
             return True
         
         return False
 
     #---------------#
     #Decorator to validate that a user is allowed to visit a page
-    def pageControlValidate():
-        def decorator(func):
-            @wraps(func)
-            def function_wrapper(*args, **kwargs):
-                try:
-                    userSID = request.cookies.get("SID") #Loads from client cookies
-                    gameID = request.args.get("gid") #Loads from URL bar
-                    if validators().gameIDValidate(gameID,userSID):
-                        return func(*args, **kwargs)
-                        
-                    return redirect("/error?code=GAMEINVALID")
-                except TypeError:
-                    return redirect("/error?code=GAMEINVALID")
-                except AttributeError:
-                    return redirect("/error?code=INVALIDSID")
-            return function_wrapper
-        return decorator
+    def pageControlValidate(func):
+        @wraps(func)
+        def function_wrapper(session, *args, **kwargs):
+            try:
+                userSID = request.cookies.get("SID") #Loads from client cookies
+                gameID = request.args.get("gid") #Loads from URL bar
+                if validators().gameIDValidate(session,gameID,userSID):
+                    return func(session, *args, **kwargs)
+                    
+                return redirect("/error?code=GAMEINVALID")
+            except TypeError:
+                return redirect("/error?code=GAMEINVALID")
+            except AttributeError:
+                return redirect("/error?code=INVALIDSID")
+        return function_wrapper
 
 #=========================================================#
 #^ Parsing system ^#
@@ -362,10 +361,10 @@ class parsers:
 class events:
     #---------------#
     #Ends the game just before the progression to the results page
-    def gameEnd(self, gameID):
+    def gameEnd(self, session, gameID):
         DELETION_DELAY = 1000 #Time in seconds to wait before an old game is deleted from the database
-        self.allUsers = database.get_players(gameID)
-        self.gameOBJ = database.get_game(gameID)
+        self.allUsers = database.get_players(session, gameID)
+        self.gameOBJ = database.get_game(session, gameID)
 
         #collects users final cash amounts and sorts them in a dictionary
         userscore = {}
@@ -374,9 +373,9 @@ class events:
 
         self.gameOBJ.results_json = userscore
         self.gameOBJ.deletion_time = int(time.time()) + DELETION_DELAY
-        database.delete_players(gameID) #Delete all users relating to that game from the database
+        database.delete_players(session, gameID) #Delete all users relating to that game from the database
 
-        database.gameDB.commit()
+        session.commit()
 
 #=========================================================#
 #^ Gampeplay Functions ^#
