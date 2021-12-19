@@ -13,6 +13,7 @@
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
+
  img{
     height: auto;    
     max-width: 50%;
@@ -26,17 +27,36 @@
 }
 
 .row{
-    margin-right: 15%;
-    margin-left: 15%;
+    margin-right: 10%;
+    margin-left: 10%;
 }
 .container {
     padding: 3vh;
     flex-basis: 100%;
 }
+
 tr {
     margin: 2vh;
 }
 
 td {
     text-align: center;
-} 
+}  
+
+@media screen and (max-width: 800px){
+    .card{
+         margin: 1vh;
+         flex-basis: 90%;
+         font-size: small;
+     }  
+
+    tr{
+         margin: 1vh;
+     }
+
+    .row{
+        margin-right: 5%;
+        margin-left: 5%;
+    }
+ }
+ 
