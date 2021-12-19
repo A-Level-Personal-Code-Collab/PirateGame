@@ -6,34 +6,45 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Nov 06 2021
- * Modified By: Will Hall
+ * Last Modified: Sun Dec 19 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	----------------title-----------------------------------------
  */
- #error_header
- {
-     position: relative;
- }
-#error_img
-{
-    float: right;
-    margin-top: 0;
-    width: 15vw;
-}
-#error_title
-{
-    margin-top: 1vw;
-    margin-left: 1vw;
-    font-size: 40px;
-    font-family: 'Mate SC', serif;
-    color: darkred;
-    font-weight: bolder;
+ @media screen and (max-width: 800px) {
+    #error_header h1{
+        font-size: 3vh;
+    }
+
+    p{
+        font-size: 2vh;
+    }
+
 }
 
-#error_message
-{
-    font-size: 26px;
+ #error_header{
+    display: inline-flex;
+    order:1;
+    margin: 3vh;
+
+}
+
+#error_header h1{
+    margin-right: 3vh;
+}
+
+@media screen and (min-width: 800px) {
+    #error_header h1{
+    max-width: 70%;
+    max-height: 70%;
+    }
+}
+
+#error_header img{
+    height: 20%;
+    max-width: 20%;
+    order: 2;
+    justify-content: right;
 }
