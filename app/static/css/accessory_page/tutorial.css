@@ -6,70 +6,37 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Oct 31 2021
- * Modified By: Will Hall
+ * Last Modified: Sun Dec 19 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
  */
-* {
-    text-align: center;
-    line-height: 1.5em;
-    max-width: 100%;
+ img{
+    height: auto;    
+    max-width: 50%;
 }
 
-.header{
-    color: white;
-    background-color: #474e5d ;
-    padding: 20px;
-}
-
-.card{ /* Creates shadow around the box */
+.card {
+    margin: 4vh;
+    flex-direction: column;
+    flex-basis: 80%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    margin: 30px;
 }
 
 .row{
     margin-right: 15%;
     margin-left: 15%;
 }
-
-.container{
-    padding: 45px 45px;
+.container {
+    padding: 3vh;
+    flex-basis: 100%;
+}
+tr {
+    margin: 2vh;
 }
 
-.container::after, .container::after{
-    content: "";
-    clear: both;
-    display: table;
-}
-/*    The Symbols    */
-
-th ,td{
-    padding: 15px;
-
-}
-
-#symbol_header{
-    text-align: left;
-}
-
-td{
-    text-align: left;
-}
-
-.symbols p{
-    text-align: left;
-    margin-left: 125px;
-}
-
-.symbols span{
-    float: left;
-    font-weight: bold;
-}
-
-.symbols img{
-    width: 50%;
-}
-
+td {
+    text-align: center;
+} 
