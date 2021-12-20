@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Wed Oct 27 2021
+ * Last Modified: Mon Dec 20 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date          By    Comments
  * ----------    ---    ---------------------------------------------------------
+ * 2021-12-20	WH	Added styling for the new site-wide help box
  * 2021-10-27	WH	Improved responsive centring
  * 2021-09-02	 WH	    Added dropdown CSS
  */
@@ -83,4 +84,32 @@
      padding: 10px;
      left: 50%;
      transform: translate(-50%, 0);
+ }
+
+  /*//=========================================================//*/
+ /*^ Help popup ^*/
+ .help-image
+ {
+     height: 20px;
+ }
+
+ #help_box
+ {
+     position: absolute;
+     top: 50%;
+     translate: 0 -50% ;
+     border: solid 1px black;
+     padding: 0;
+     padding-bottom: 5px;
+     box-shadow: 10px 10px 10px rgb(180, 180, 180);
+ }
+
+ #help_box > .popupHeader
+ {
+     border-bottom-left-radius: 0;
+     border-bottom-right-radius: 0;
+ }
+ #help_box > .popupBody
+ {
+     padding: 5px;
  }

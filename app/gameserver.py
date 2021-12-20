@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 19 2021
+# Last Modified: Mon Dec 20 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -238,8 +238,12 @@ def action_declare(session,sid,data):
         #Updates the log
         sio.emit('log_update', {"entry": logEntry, "delay": 0}, room=gameIDString)
     
-    fTenseMessage = eval(f"{actionIdentifier}().get_popupVerb()") #Uses the dataclass system to get the propper grammer for the popup message
-    sio.emit('action_declare', {"target" : targetSID, "action": actionIdentifier, "perpetrator": perpetrator.user_id, "ftVerb": fTenseMessage, "invalidRetals": invalidRetals}, room=gameIDString) #Re-broadcast event to enforce popup
+    emitData = eval(f"{actionIdentifier}().get_declareData()") #Uses the dataclass system to get the propper grammer for the popup message
+    #Add information about target and perpetrator to the base information about the target and perpetrator
+    emitData["target"] =targetSID
+    emitData["perpetrator"] =perpetrator.user_id
+    
+    sio.emit('action_declare', emitData, room=gameIDString) #Re-broadcast event to enforce popup
 
 #---------------#
 #Handles when a client declares their response to an action being done against them

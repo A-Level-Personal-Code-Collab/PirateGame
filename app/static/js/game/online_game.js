@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Nov 15 2021
+ * Last Modified: Mon Dec 20 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-20	WH	New items update the help message popup when they come in
  * 2021-11-15	WH	Fixed retaliation not removing bug
  * 2021-11-09	WH	Handle money values no longer being cumulative
  * 2021-11-09	WH	Increase available retaliation time
@@ -256,6 +257,8 @@
          var perpetrator = data["perpetrator"];
          var action = data["action"];
          var ftVerbMessage = data["ftVerb"]
+         var explanation = data["explanation"]
+         updateHelp(explanation)
          var invalidRetals = data["invalidRetals"].split(",")
          console.log(invalidRetals)
 
@@ -352,6 +355,8 @@
      declareAction = data["type"];
      var delay = data["delay"]
      var popupMessage = data["ftVerb"]
+     var itemExplanation = data["explanation"]
+     updateHelp(itemExplanation)
      document.getElementById("h3_targetPickerAction").innerHTML = popupMessage
      setTimeout(() => {declareButton.disabled = false;}, delay);
  }

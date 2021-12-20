@@ -6,12 +6,13 @@ Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Tue Nov 09 2021
+Last Modified: Mon Dec 20 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-20	WH	Added help button and help box to target picker popup
 2021-11-09	WH	Money values no longer list
 2021-11-09	WH	Money values now in the same outer container as the game log
 2021-09-29	WH	Added animation image template
@@ -86,6 +87,7 @@ Date      	By	Comments
             <div class="popupHeader">
                 Raise your cutlass, there be drama on deck!
             </div>
+            <img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="showHelp()"> <!-- JS functions for help box in help.js-->
             <div class="popupBody">
                <h3 id="h3_perpetrator_text">__perpetrator__</h3> is attempting to <h3 id="h3_action_emphasis_text">💰 steal from 💰</h3><h3 id="h3_target_text"></h3><div id="div_loadingdots"><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div><div class="loadingdot"></div></div> 
                <div id="div_retaliation_controls"></div>
@@ -100,6 +102,7 @@ Date      	By	Comments
             <div class="popupHeader">
                 Take a shot of rum and ready yourself for mutiny
             </div>
+            <img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="showHelp()"> <!-- JS functions for help box in help.js-->
             <div class="popupBody">
                 Choose a target to...
                <h3 id="h3_targetPickerAction">⚔ KILL ⚔</h3>
@@ -110,6 +113,7 @@ Date      	By	Comments
             </div>
         </div>
     </div>
+    {% with helpText="Help text here" %}{% include 'popups/help.html' %}{% endwith %} <!--Insert help box instance-->
     <img style="display:none" id="retal-animation" class="itmShield-animation" src="../static/img/items/set1/shield.png" alt="retaliation">
 {% endblock %}
 

@@ -1,7 +1,0 @@
-Version 0.2.0(B)
-^Overview
-~ yada yada yada
-
-
-^Join Game page
-- Added mobile support
