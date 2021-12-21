@@ -4,8 +4,8 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Fri Nov 12 2021
- * Modified By: Will Hall
+ * Last Modified: Tue Dec 21 2021
+ * Modified By: Adam O'Neill
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -107,11 +107,6 @@
 
      //=========================================================//
     //^ Fits the header text to the parent container ^//
-
-    fitty("#hostNick")
-    fitty("#gameID")
-
-
  }
 
  /*---------------*/

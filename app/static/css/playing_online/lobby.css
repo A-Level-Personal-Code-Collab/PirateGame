@@ -6,8 +6,8 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Nov 13 2021
- * Modified By: Ollie Burroughs
+ * Last Modified: Tue Dec 21 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -37,49 +37,59 @@
  /*//=========================================================//*/
  /*^ Lobby header ^*/
 
-.gameSubheader
+.gameSubheader 
 {
    background-color: #474e5d;
    color: white;
-   height: 8vh;
-   min-height: max-content;
-   margin-bottom: 1vh;
-   position: relative;
-   text-align: center;
-   line-height: 8vh;
-   padding-left: 1vh;
-   padding-right: 1vh;
-   flex: 1;
+   height: 7.5vh;
+   max-height: 7.5vh;
+   display: flex;
+   width: 100vw;
+   gap: 15vw;
+   align-items: center;
+   flex-wrap: nowrap;
+   flex-shrink: 1;
+   flex-grow: 1;
+   flex-flow: row;
+ 
 }
 
-#hostNick {
-    float:left ;
+.gameSubheader {
+    width: 100vw;
 }
 
-#gameID {
-    position: absolute;
-    left: 45%;
+#hostSubSection{
+    width: 30vw;
+    flex-flow: row;
+    overflow: hidden;
+    max-height: 7.5vh;
+    flex-wrap: nowrap;
+    min-width: 25vw;
 }
 
-#hostContent {
-    float: right;
+#hostNickContainer{
+    max-height: 3.5vw;
+    text-align: left;
+    min-width: 30vw
 }
 
-#controlContent
+ #hostNickContainer, #gameIDContainer, #hostSubSection
 {
-    float: right;
+    border: solid black;
+    max-height: auto;
+    font-size: 1vw ;
+    
 }
 
- /*//=========================================================//*/
- /*^ Containers for fitty ^*/
-
-#hostNickContainer {
-    width: 50vh;
+#start_button, #ipt_musicControl{
+    max-width: auto;
+    max-height: auto;
+    font-size: 1vw;
+}
+#start_button{
+    min-width: 70px;
 }
 
-#gameIDContainer {
-    width: 25vh;
-}
 
  /*//=========================================================//*/
  /*^ Buttons ^*/
@@ -89,12 +99,14 @@
     cursor: pointer;
     background-color: #ffd900;
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.535);
-    font-size: 2vh;
-    padding: 1.5vh;
+    padding: 1vw;
     color: rgb(145, 145, 145);
     border-radius: 8px;
     margin-right: 0.5vw;
-    height: 6vh;
+    height: 3.5vw;
+    width: auto;
+    min-width: 45px;
+    min-height: 45px;
   }
 
   .actionButton:hover{
@@ -151,3 +163,7 @@ body
 }
 
 
+@media screen and (max-width: 600px) {
+    #hostSubSection{
+    }
+}
