@@ -4,7 +4,7 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sun Nov 07 2021
+ * Last Modified: Thu Dec 23 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-23	WH	On-Resize method ensures that grid and elements are correct size
+ * 2021-12-23	WH	Begin addition of click and drop infrastructure
  * 2021-11-07	WH	Fixed issue where items could not be added back to the bank (Issue #152)
  * 2021-11-07	WH	References item type based on their id as oppose to a CSS class that they had
  * 2021-11-07	WH	Update counters routine now always recounts from scratch in order to simplify code
@@ -83,6 +85,7 @@
  }
 
  /*--*/
+ var selectedItem = null;
  var draggingCurrent = null; //Stores the items that is currently being moved around
  var intentionalForward = false; //Sets whether the forwarding is intended
 
@@ -154,42 +157,60 @@
   window.addEventListener("beforeunload", function(event) {if (!intentionalForward) {event.returnValue = "Do you really wish to leave this site?"; return "Do you really wish to leave this site?";}});
   
   /*---------------*/
-  /* Fitty */ 
-  fitty("#fitty_container")
+  /* Fitty & Dimension Adjustments */
+  function adjustDimension() {
+    fitty("#fitty_container")
+    var requiredDimension = window.getComputedStyle(containers[1], null).getPropertyValue("width");
+    
+    //Fix the width of the grid squares to their default value
+    document.querySelectorAll(".gridSquare").forEach((element) => {
+      element.style.height  = requiredDimension;
+    })
+
+    //Adjusts size of stack items to match the size of the grid squares
+    document.querySelectorAll(".gridItems").forEach((element) => {
+      element.style.width = requiredDimension;
+      element.style.height  = requiredDimension;
+    })
+  }
+
+  adjustDimension();
+  window.addEventListener("resize", adjustDimension);
 
   /*---------------*/
   /*Add event listeners*/
-  /*Adds events to actual draggable items*/
-  draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', (event) => {dragstartevent(event)})
-    draggable.addEventListener('dragend', (event) => {dragendevent(event)})
-  });
-
-  /*---------------*/
-  /*Add drag over event listeners to each of the grid squares*/
-  bankBox.addEventListener('dragover',function () {dragoverevent(bankBox)});
   containers.forEach(container => {
-    container.addEventListener('dragover', () => {dragoverevent(container)})
+    container.addEventListener('click', placeItem);
   })
 
-  //Event listener for on completion button
-  document.getElementById("btn_grid_done").addEventListener("click", send_grid);
+  draggables.forEach(item => {
+    item.addEventListener('click', selectItem);
+  })
 
-  //Adds double click listener to 200s
-  document.getElementById("M200").addEventListener("dblclick", fill_200s, event)
+  selectedItem = draggables[0];
 
-  /*--*/
-  //Parse JSONs from server (data brought in in gameSheet.html script tag)
-  numItems = JSON.parse(itemsJSONString);
-  var gridJSON = JSON.parse(gridJSONString);
-
-  GRID_X = gridJSON["GRID_X"]
-  GRID_Y = gridJSON["GRID_Y"]
-
-  /*--*/
-  update_counters(null);
  }
  
+ /* -------------------------- Facilitate the placement and dropping of items ------------------------- */
+ function selectItem(event) //Allows the user to select the type of item stack they wish to place
+ {
+  selectedItem.classList.remove("selectedItem")
+  selectedItem = event.target;
+  selectedItem.classList.add("selectedItem");
+ }
+
+ function placeItem(event) //Allows the user to select the target cell for their new item
+ {
+   var container = event.target;
+   if (container.innerHTML == "") {
+    var newItem = selectedItem.cloneNode(true);
+    newItem.classList.remove("selectedItem")
+    container.appendChild(newItem);
+    update_counters();
+    if (is_grid_full()) {popupDiv.style.display = "block"} else {popupDiv.style.display = "none"};
+   }
+ }
+
  //=========================================================//
  //^ Generate a grid matrix ready to send it back to the server //
  function generate_grid()
