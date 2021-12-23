@@ -7,8 +7,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 19 2021
-# Modified By: Will Hall
+# Last Modified: Thu Dec 23 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -259,7 +259,7 @@ def game_sheet(session):
 
     gridHTML = gameplay.generators().html.buildEditableGrid(gridJSON["GRID_X"], gridJSON["GRID_Y"])  # Builds grid using values from loaded JSON
 
-    return render_template("playing_online/sheet_builder.html", grid=gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON)
+    return render_template("playing_online/sheet_builder.html", grid=gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON, gameID = gameID)
 
 #---------------#
 @app.route("/tutorial")
