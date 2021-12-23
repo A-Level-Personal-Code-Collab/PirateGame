@@ -6,8 +6,8 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Wed Dec 22 2021
-Modified By: Ollie Burroughs
+Last Modified: Thu Dec 23 2021
+Modified By: Adam O'Neill
 -----
 HISTORY:
 Date      	By	Comments
@@ -30,127 +30,23 @@ Date      	By	Comments
         <h1>Create New Game</h1>
         <p>Choose your settings for your pirate game...</p>
     </div> 
-    <div class="container">
-        
+    <div class="settings_container">
         <div class="setting_body">
-            <!-- Vanilla/ custom game slider -->
-            <div class="row" id="div_switches">
-                <table id="switches_table"> <!--
-                    <tr>
-                        <td>Custom game mode</td>
-                        <td><span class="info_circle" title="Custom game mode enables other sliders and switches to be used in order to manipulate the game settings">&#9432</span></td></td>
-                        <td>
-                            <label class="gameMode_switch">
-                            <input type="checkbox" id="custom_game_mode_button">
-                            <span class="switch"></span>
-                            </label>
-                        </td>
-                    </tr>-->
-                    <!--<tr>
-                        <td>Offline or Online mode</td>
-                        <td></td>
-                        <td>
-                            <label for="offline_online_switch" class="gameMode_switch">
-                            <input type="checkbox" id="offline_online_switch" name="offline_online_checkbox">
-                            <span class="switch"></span> 
-                            </label>
-                        </td>
-                    </tr> -->
-<!-- Everything below should be disablable--> 
-                    <!-- Secret Mode --------- Add description to secret mode... --><!-- 
-                    <tr>
-                        <td>Secret mode</td>
-                        <td><span class="info_circle" title="Secret mode is when you can't see who performs an action on someone within the log box">&#9432</span></td>
-                        <td>
-                            <label for="secretMode_tick" class="gameMode_switch">
-                            <input type="checkbox" id="secretMode_tick" name="secretMode_checkbox" class="disablable" disabled>
-                            <span class="switch"></span> 
-                            </label>
-                        </td>
-                    </tr> -->
-                    <tr>
-                        <td>Nickname</td>
-                        <td><span class="info_circle" title="Allows letters only. Some nicknames will be rejected due to explicity!">&#9432</span></td>
-                        <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}" maxlength="15"></td>
-                    </tr>
-                </table>
-            </div>
-            
-            <!-- Grid size --> <!--
-            <div class="row" id="div_gridSize_moneySlider">
-                <p>Choose grid size...</p>
-                <br>
-                <div class="slider_container">
-                    <label for="grid_slider">Grid size</label>
-                    <input type="range" min="4" max="10" value="6" class="slider disablable" id="grid_slider" oninput="this.nextElementSibling.value = this.value" disabled>
-                    <output>6</output>
-                </div>
-                <br><br>
-                <p>Quantity of money...</p>
-                <br>
-                <div class="slider_container">
-                    <label for="5000_slider">5000s</label>
-                    <input type="range" min="0" max="10" value="1" class="slider disablable" id="5000_slider" oninput="this.nextElementSibling.value = this.value" disabled>
-                    <output>1</output>
-                    <br><br>
-                    <label for="1000_slider">5000s</label>
-                    <input type="range" min="0" max="10" value="3" class="slider disablable" id="1000_slider" oninput="this.nextElementSibling.value = this.value" disabled>
-                    <output>3</output>
-                    <br><br>
-                    <label for="500_slider">5000s</label>
-                    <input type="range" min="0" max="10" value="5" class="slider disablable" id="500_slider" oninput="this.nextElementSibling.value = this.value" disabled>
-                    <output>5</output>
-                    <br><br>
-                    <label for="200_slider">5000s</label>
-                    <input type="range" min="0" max="25" value="18" class="slider disablable" id="200_slider" oninput="this.nextElementSibling.value = this.value" disabled>
-                    <output>18</output>
-                </div>
-            </div>  --> 
-            <!-- Secret Mode --------- Add description to secret mode... -->
-            <!-- Item sliders --> <!--
-            <div class="row" id="div_itemSliders">
-                <p>Quantity of each item...</p>
-                <div class="slider_container" id="item_sliders">
-                    <table>
-                        <tr>
-                            <th><img src="../static/img/items/set2/steal.png" alt="steal"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="steal_slider" oninput="output_update(this)" disabled>   <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/kill.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="kill_slider" oninput="output_update(this)" disabled>    <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/gift.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="gift_slider" oninput="output_update(this)" disabled>    <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/swap.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="swap_slider" oninput="output_update(this)" disabled>    <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/shield.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="shield_slider" oninput="output_update(this)" disabled>    <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/mirror.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="mirror_slider" oninput="output_update(this)" disabled>    <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/bomb.png"></th>
-                            <th><input type="range" min="1" max="5" value="1" class="slider disablable" id="bomb_slider" oninput="output_update(this)" disabled>    <output>1</output></th>
-                        </tr>
-                        <tr>
-                            <th><img src="../static/img/items/set2/bank.png"></th>
-                            <th><input type="range" min="1" max="5" value="2" class="slider disablable" id="bank_slider" oninput="output_update(this)" disabled>    <output>2</output></th>
-                        </tr>
-                    </table>
-                </div>
-            </div>-->
-            <div id="submit_button"> <!-- Play button div -->
-                <button id="start_game_button" type="submit" disabled class="game_button disallowed">Start Game</button> <!-- use this id in css -->
-            </div>
-
-        </div> <!-- Disabled div -->
+            <table id="settingTable">
+                <tr>
+                    <td>Game ID:</td>
+                    <td><span class="info_circle" title="The Game ID will be generated when you press start game!">&#9432</span></td>
+                    <td><div class="dot-elastic"></div></td>
+                </tr>
+                <tr>
+                    <td>Nickname</td>
+                    <td><span class="info_circle" title="Allows letters only. Some nicknames will be rejected due to explicity!">&#9432</span></td>
+                    <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}" maxlength="15"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="submit_button"> <!-- Play button div -->
+            <button id="start_game_button" type="submit" disabled class="game_button disallowed">Start Game</button> <!-- use this id in css -->
+        </div>
     </div>
 {% endblock%}
