@@ -6,17 +6,13 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-<<<<<<< HEAD
 Last Modified: Thu Dec 23 2021
-Modified By: Adam O'Neill
-=======
-Last Modified: Wed Dec 22 2021
-Modified By: Ollie Burroughs
->>>>>>> c212471d576cfc1e8730990369c54dc2b3fb8689
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-23	WH	Moved away from two item banks at the side of the screen
 2021-11-07	WH	Identifiers of draggable items is now their ID, not a css class
 2021-08-05	WH	Added counters to each item in the item bank in order to show how many of each item remains
 2021-07-20	WH	Added all other items to item back with correct img path names
@@ -40,53 +36,21 @@ Date      	By	Comments
 {% block body %}
 <div id="div_sheetArea">
     <!--Draw grid based on code sent from python-->
+    <div id="div_itemPicker">
+        <div class="itemStack" id="div_killStack"><div draggable="true" class="gridItems" id="itmKill" title='Kill'><img draggable="false" src="../static/img/items/set1/kill.png" class="gridItems" alt="Kill"/></div><span class="stackCounter" id="itmKill_counter">99</span></div>
+        <div class="itemStack" id="div_shieldStack"><div class="gridItems" id="itmShield" title='Shield'><img draggable="false" src="../static/img/items/set1/shield.png" class="gridItems" alt="Shield"/></div><span class="stackCounter" id="itmShield_counter">99</span></div>
+        <div class="itemStack" id="div_stealStack"><div draggable="true" class="gridItems" id="itmSteal" title='Steal'><img draggable="false" src="../static/img/items/set1/steal.png" class="gridItems" alt="Steal"/></div><span class="stackCounter" id="itmSteal_counter">99</span></div>
+        <div class="itemStack" id="div_mirrorStack"><div draggable="true" class="gridItems" id="itmMirror" title='Mirror'><img draggable="false" src="../static/img/items/set1/mirror.png" class="gridItems" alt="Mirror"/></div><span class="stackCounter" id="itmMirror_counter">99</span></div>
+        <div class="itemStack" id="div_bombStack"><div draggable="true" class="gridItems" id="itmBomb" title='Bomb'><img draggable="false" src="../static/img/items/set1/bomb.png" class="gridItems" alt="Bomb"/></div><span class="stackCounter" id="itmBomb_counter">99</span></div>
+        <div class="itemStack" id="div_bankStack"><div draggable="true" class="gridItems" id="itmBank" title='Bank'><img draggable="false" src="../static/img/items/set1/bank.png" class="gridItems" alt="Bank"/></div><span class="stackCounter" id="itmBank_counter">99</span></div>
+        <div class="itemStack" id="div_swapStack"><div draggable="true" class="gridItems" id="itmSwap" title='Swap'><img draggable="false" src="../static/img/items/set1/swap.png" class="gridItems" alt="Swap"/></div><span class="stackCounter" id="itmSwap_counter">99</span></div>
+        <div class="itemStack" id="div_giftStack"><div draggable="true" class="gridItems" id="itmGift" title='Gift'><img draggable="false" src="../static/img/items/set1/gift.png" class="gridItems" alt="Gift"/></div><span class="stackCounter" id="itmGift_counter">99</span></div>
+    </div>
     <div id="div_coordinateGrid">
         {{grid}}
     </div>
-
-    <!-- Div allows banks to be hidden in play -->
-    <div id="div_banks">
-        <!--Item bank for all the icons you will be adding to the grid (hidden in main play)-->
-        <div id="div_itemBank" class="dragReceptical">
-            <h5>Item bank:</h5>
-            <div id="div_specialItems">
-                <div class="itemStack" id="div_shieldStack"><div draggable="true" class="gridItems" id="itmShield" title='Shield'><img draggable="false" src="../static/img/items/set2/shield.png" class="gridItems" alt="Shield"/></div><span class="stackCounter" id="itmShield_counter">99</span></div>
-                <div class="itemStack" id="div_killStack"><div draggable="true" class="gridItems" id="itmKill" title='Kill'><img draggable="false" src="../static/img/items/set2/kill.png" class="gridItems" alt="Kill"/></div><span class="stackCounter" id="itmKill_counter">99</span></div>
-                <div class="itemStack" id="div_stealStack"><div draggable="true" class="gridItems" id="itmSteal" title='Steal'><img draggable="false" src="../static/img/items/set2/steal.png" class="gridItems" alt="Steal"/></div><span class="stackCounter" id="itmSteal_counter">99</span></div>
-                <div class="itemStack" id="div_mirrorStack"><div draggable="true" class="gridItems" id="itmMirror" title='Mirror'><img draggable="false" src="../static/img/items/set2/mirror.png" class="gridItems" alt="Mirror"/></div><span class="stackCounter" id="itmMirror_counter">99</span></div>
-                <div class="itemStack" id="div_bombStack"><div draggable="true" class="gridItems" id="itmBomb" title='Bomb'><img draggable="false" src="../static/img/items/set2/bomb.png" class="gridItems" alt="Bomb"/></div><span class="stackCounter" id="itmBomb_counter">99</span></div>
-                <div class="itemStack" id="div_bankStack"><div draggable="true" class="gridItems" id="itmBank" title='Bank'><img draggable="false" src="../static/img/items/set2/bank.png" class="gridItems" alt="Bank"/></div><span class="stackCounter" id="itmBank_counter">99</span></div>
-                <div class="itemStack" id="div_swapStack"><div draggable="true" class="gridItems" id="itmSwap" title='Swap'><img draggable="false" src="../static/img/items/set2/swap.png" class="gridItems" alt="Swap"/></div><span class="stackCounter" id="itmSwap_counter">99</span></div>
-                <div class="itemStack" id="div_giftStack"><div draggable="true" class="gridItems" id="itmGift" title='Gift'><img draggable="false" src="../static/img/items/set2/gift.png" class="gridItems" alt="Gift"/></div><span class="stackCounter" id="itmGift_counter">99</span></div>
-            </div>
-            <div id="div_moneyItems">
-                <div class="itemStack" id="div_m5000Stack"><div draggable="true" class="gridItems" id="M5000"><img draggable="false" src="../static/img/items/set2/M5000.png" class="gridItems"/></div><span class="stackCounter" id="M5000_counter">99</span></div>
-                <div class="itemStack" id="div_m1000Stack"><div draggable="true" class="gridItems" id="M1000"><img draggable="false" src="../static/img/items/set2/M1000.png" class="gridItems"/></div><span class="stackCounter" id="M1000_counter">99</span></div>
-                <div class="itemStack" id="div_m500Stack"><div draggable="true" class="gridItems" id="M500"><img draggable="false" src="../static/img/items/set2/M500.png" class="gridItems"/></div><span class="stackCounter" id="M500_counter">99</span></div>
-                <div class="itemStack" id="div_m200Stack"><div draggable="true" class="gridItems" id="M200"><img draggable="false" src="../static/img/items/set2/M200.png" class="gridItems"/></div><span class="stackCounter" id="M200_counter">99</span></div>
-            </div>
-        </div>
-    </div>
-    <div id="gameIDContainer"> <!-- Game ID container -->
-        <h1>Game ID: {{gameID}}</h1>
-    </div>
-
-    <!--Pop up to confirm grid complete-->
-    <div style="display: none;" class="popupbox" id="div_gridFullPopUp">
-        <div id="fitty_container">
-            <div class="popupHeader">
-            Arrr You Ready?
-            </div>
-            <div class="popupBody">
-                If you've got your grid loaded,<br> then lets hoist the sails <br> and pillage your opponents to bankruptcy!<br>
-            </div>
-            <div class="popupFooter">
-                <input id="btn_grid_done" class="popupButton" type="button" value="Hoist the sails">
-            </div>
-        </div>
-        
-    </div>
 </div>
+
 {% endblock %}
 
 
