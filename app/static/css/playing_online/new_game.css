@@ -23,7 +23,7 @@
     background-color:#f1f0f0 ;
     height: 75vh;
     border-radius: 4px;
-    text-align: left;
+    text-align: center;
 }
 
 #settingTable{
@@ -56,10 +56,6 @@ td {
   font-size: 4vh;
   padding: 1.5vh;
   margin: 0;
-  position: absolute;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);;
 }
 
 #start_game_button:hover{
@@ -98,7 +94,7 @@ td {
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    margin-left: 10%;
+    margin-left: 12%;
     background-color: rgba(0, 0, 0, 0.474);
     color: rgba(0, 0, 0, 0.474);
     animation: dotElastic 1s infinite linear;
