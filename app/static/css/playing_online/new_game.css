@@ -23,6 +23,17 @@
     background-color:#f1f0f0 ;
     height: 75vh;
     border-radius: 4px;
+    text-align: left;
+}
+
+#settingTable{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10vh;
+}
+
+td {
+  padding: 1vh;
 }
 
 /* ------------------- Header ------------------- */
@@ -44,6 +55,11 @@
   border-radius: 8px;
   font-size: 4vh;
   padding: 1.5vh;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);;
 }
 
 #start_game_button:hover{
@@ -58,6 +74,11 @@
 
 /* ------------------- Input box css ------------------- */
 
+  #ipt_nickname{
+    border-radius: 8px;
+    width: 120px;
+  }
+
   .inputError
   {
       background-color: #C7536A;
@@ -66,5 +87,101 @@
   input[type=text]:not(.inputError)
   {
     background-color: #f1f0f0;
+  }
+  
+
+  /* ------------------- Dots ------------------- */
+
+  
+  .dot-elastic {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin-left: 10%;
+    background-color: rgba(0, 0, 0, 0.474);
+    color: rgba(0, 0, 0, 0.474);
+    animation: dotElastic 1s infinite linear;
+  }
+  
+  .dot-elastic::before, .dot-elastic::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+  }
+  
+  .dot-elastic::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.474);
+    color: rgba(0, 0, 0, 0.474);
+    animation: dotElasticBefore 1s infinite linear;
+  }
+  
+  .dot-elastic::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.474);
+    color: rgba(0, 0, 0, 0.474);
+    animation: dotElasticAfter 1s infinite linear;
+  }
+  
+  @keyframes dotElasticBefore {
+    0% {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(1, 1.5);
+    }
+    50% {
+      transform: scale(1, 0.67);
+    }
+    75% {
+      transform: scale(1, 1);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+  
+  @keyframes dotElastic {
+    0% {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1, 1.5);
+    }
+    75% {
+      transform: scale(1, 1);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+  
+  @keyframes dotElasticAfter {
+    0% {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1, 0.67);
+    }
+    75% {
+      transform: scale(1, 1.5);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
   }
   
