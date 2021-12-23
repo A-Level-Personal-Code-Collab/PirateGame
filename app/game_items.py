@@ -6,8 +6,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Dec 20 2021
-# Modified By: Will Hall
+# Last Modified: Wed Dec 22 2021
+# Modified By: Ollie Burroughs
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -79,13 +79,13 @@ class retaliatoryAction:
         return "retal_available", {"type": self.ACTION_IDENTIFIER, "image": self.IMAGE_LOCATION}
 
     def get_pushback_dat(self):
-        return {"type": self.ACTION_IDENTIFIER, "animation-image": self.IMAGE_LOCATION[:-4]+"-notrans.png", "animation-class": self.ACTION_IDENTIFIER+"-animation"}
+        return {"type": self.ACTION_IDENTIFIER, "animation-image": self.IMAGE_LOCATION, "animation-class": self.ACTION_IDENTIFIER+"-animation"}
 
 #=========================================================#
 #^ Action Data classes  - describes what each action does and how it behaves ^#
 class itmKill(actionItem):
     '''Class for kill item (victim's money is set to 0)'''
-    IMAGE_LOCATION = "../static/img/items/set1/kill.png"
+    IMAGE_LOCATION = "../static/img/items/set2/kill.png"
     ACTION_EMOJI = "⚔"
     ACTION_IDENTIFIER = "itmKill"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
@@ -98,7 +98,7 @@ class itmKill(actionItem):
 #---------------#
 class itmSteal(actionItem):
     '''Class for steal item (victim's money is given to perpetrator)'''
-    IMAGE_LOCATION = "../static/img/items/set1/steal.png"
+    IMAGE_LOCATION = "../static/img/items/set2/steal.png"
     ACTION_EMOJI = "💰"
     ACTION_IDENTIFIER = "itmSteal"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}|self.pCash={pCash}+{vCash}:self.pBank={pBank}"
@@ -111,7 +111,7 @@ class itmSteal(actionItem):
 #---------------#
 class itmGift(actionItem):
     '''Class for gift item (victim receives 1000M from nowhere)'''
-    IMAGE_LOCATION = "../static/img/items/set1/gift.png"
+    IMAGE_LOCATION = "../static/img/items/set2/gift.png"
     ACTION_EMOJI = "🎁"
     ACTION_IDENTIFIER = "itmGift"
     MATHS_EXPRESSION= "self.vCash={vCash}+1000:self.vBank={vBank}|self.pCash={pCash}:self.pBank={pBank}"
@@ -125,7 +125,7 @@ class itmGift(actionItem):
 #---------------#
 class itmSwap(actionItem):
     '''Class for swap item (perpetrator and victim swap cash)'''
-    IMAGE_LOCATION = "../static/img/items/set1/swap.png"
+    IMAGE_LOCATION = "../static/img/items/set2/swap.png"
     ACTION_EMOJI = "🤝"
     ACTION_IDENTIFIER = "itmSwap"
     MATHS_EXPRESSION= "self.vCash={pCash}:self.vBank={vBank}|self.pCash={vCash}:self.pBank={pBank}"
@@ -138,7 +138,7 @@ class itmSwap(actionItem):
 #---------------#
 class itmBomb(actionItem):
     '''Class for bomb item'''
-    IMAGE_LOCATION = "../static/img/items/set1/bomb.png"
+    IMAGE_LOCATION = "../static/img/items/set2/bomb.png"
     ACTION_EMOJI = "💣"
     ACTION_IDENTIFIER = "itmBomb"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}"
@@ -150,7 +150,7 @@ class itmBomb(actionItem):
 #---------------#
 class itmBank(actionItem):
     '''Class for bank item'''
-    IMAGE_LOCATION = "../static/img/items/set1/bank.png"
+    IMAGE_LOCATION = "../static/img/items/set2/bank.png"
     ACTION_EMOJI = "🏦"
     ACTION_IDENTIFIER = "itmBank"
     MATHS_EXPRESSION= "self.vCash=0:self.vBank={vBank}+{vCash}"
@@ -163,7 +163,7 @@ class itmBank(actionItem):
 #^ Defines how retaliation actions behave ^#
 class itmMirror(retaliatoryAction):
     '''Class for mirror modifier item'''
-    IMAGE_LOCATION = "../static/img/items/set1/mirror.png"
+    IMAGE_LOCATION = "../static/img/items/set2/mirror.png"
     ACTION_EMOJI = "🪞"
     ACTION_IDENTIFIER = "itmMirror"
     LOG_MESSAGE = "{emoji} !<{victim}> mirrored that {emoji}"
@@ -183,7 +183,7 @@ class itmMirror(retaliatoryAction):
 #---------------#
 class itmShield(retaliatoryAction):
     '''Class for shield modifier item'''
-    IMAGE_LOCATION = "../static/img/items/set1/shield.png"
+    IMAGE_LOCATION = "../static/img/items/set2/shield.png"
     ACTION_EMOJI = "🛡"
     ACTION_IDENTIFIER = "itmShield"
     LOG_MESSAGE = "{emoji} !<{victim}> blocked that {emoji}"
@@ -196,7 +196,7 @@ class itmShield(retaliatoryAction):
 #^ Money Data Class ^#
 class money:
     '''Class that defines the behavior of money items'''
-    IMAGE_LOCATION = "../static/img/items/set1/M{denom}.png"
+    IMAGE_LOCATION = "../static/img/items/set2/M{denom}.png"
     IDENTIFIER = "M{denom}"
     DENOMINATION = 200
 

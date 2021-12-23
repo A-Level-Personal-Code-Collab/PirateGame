@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Dec 19 2021
+ * Last Modified: Mon Dec 20 2021
  * Modified By: Adam O'Neill
  * Details: added ease to header hover
  * HISTORY:
@@ -30,11 +30,13 @@ a:link{
     background-color: #ffd900;
     width: 100%;
     padding: 20px; /* size of the header on the page */ 
-    height: 30px;
+    height: 37px;
     position: fixed;
     top: 0;
     z-index: 1;
+    left: 0;
 }
+
 
 .Warning
 {
@@ -79,7 +81,7 @@ a:link{
 body {
     text-align: center;
     font-family: sans-serif, Arial;
-    padding-top: 70px;
+    padding-top: 77px;
 }
 
 h1{
