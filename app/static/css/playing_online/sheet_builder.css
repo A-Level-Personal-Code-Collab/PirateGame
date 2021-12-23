@@ -12,6 +12,9 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-23	WH	Added styling for new square control popup and its accompanying buttons
+ * 2021-12-23	WH	Added styling for item bank and relevant scroll bars
+ * 2021-12-23	WH	Added styling for empty stacks
  * 2021-12-23	WH	Perfected grid placement to ensure it is always within the white paper box
  * 2021-12-23	WH	Added formatting for new and improved flex-style item banks
  * 2021-12-23	WH	Removed formatting for drag and drop item banks
@@ -47,7 +50,6 @@
     text-align: center;
     cursor: cell;
     transition: 0.2s;
-    height: 2vh;
 
 }
 
@@ -68,8 +70,11 @@
 
 .gridItems
 {
+    position: relative;
+    display: inline-block;
     cursor: pointer;
-    filter: grayscale(100%);
+    pointer-events: none;
+    width: 95%;
 }
 
 .gridItems img
@@ -78,11 +83,64 @@
     
 }
 
-.selectedItem
+#div_squareControls {
+    height: 5vh;
+    text-align: center;
+    font-weight: 900;
+    font-family: arial;
+    position: absolute;
+    font-family: 'Permanent Marker', cursive;
+    position: absolute;
+    background-color: #c7c6c6;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    pointer-events: all;
+    line-height: 100%;
+    padding: 1vh;
+    display: none;
+    animation: FadeIn 0.5s;
+
+}
+
+#div_squareControls:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #c7c6c6;
+    bottom: -20px;
+    left: 50%;
+    translate: -50% 0;
+}
+
+.squareControlButton
 {
-    filter: grayscale(0%);
-    -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 green);
-    filter:drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 green);
+    border-radius: 50%;
+    background-color: #bb3c3c;
+    aspect-ratio: 1;
+    font-size: 4vh;
+    height: 5vh;
+    line-height: 5vh;
+    transition: 0.3s;
+}
+.squareControlButton:hover
+{
+    scale: 1.1;
+}
+
+@keyframes FadeIn {
+    from {
+        transform: translateY(5vh);
+        opacity: 0;
+    }
+
+    to {
+        transform: none;
+        opacity: 1;
+    }
     
 }
 
@@ -113,11 +171,45 @@
     padding: 6px;
     margin-top: 5px;
     margin-bottom: 5vh;
+    max-width: 90%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ffd900 #474e5d;
+}
+
+/* Scroll bar styling for Chromium based browsers */
+#div_itemPicker::-webkit-scrollbar {
+    width: 12px;
+}
+
+#div_itemPicker::-webkit-scrollbar-track {
+    background: #474e5d;
+}
+
+#div_itemPicker::-webkit-scrollbar-thumb {
+    background-color: #ffd900;
+    border-radius: 20px;
+    border: 3px solid #474e5d;
 }
 
 .itemStack
 {
     position: relative;
+    width: 7.5vh;
+    flex: 0 0 7.5vh;
+}
+
+.emptyStack
+{
+    filter: opacity(0.2) grayscale(1);
+    order: 100;
+}
+
+.selectedStack
+{
+    filter: grayscale(0%);
+    -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-4px -4px 0 green);
+    filter:drop-shadow(1px 1px 0 black) drop-shadow(-4px -4px 0 green);
 }
 
 .stackCounter
@@ -125,7 +217,7 @@
     background-color: #ffd900;
     color: black;
     font-weight: bold;
-    font-size: 01vw;
+    font-size: 16px;
     position: absolute;
     bottom: 1vh;
     right: 1vh;
