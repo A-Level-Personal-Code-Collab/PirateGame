@@ -6,8 +6,8 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Nov 06 2021
- * Modified By: Will Hall
+ * Last Modified: Thu Dec 23 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -16,7 +16,7 @@
  */
 
  /*Page formatting*/
- #div_coordinateGrid, #div_itemBank, #div_moneyStorage, #div_actionsBank
+ #div_coordinateGrid, #div_itemBank, #div_moneyStorage, #div_actionsBank, #gameIDContainer
  {
     float: left;
     margin: 2vh;
