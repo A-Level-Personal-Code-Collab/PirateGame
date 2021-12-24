@@ -2,6 +2,9 @@ Version 0.1.0(B)
 ^Overview
 ~ In the modern age, not allowing your site to be used on mobile is like forcing yourself to walk the plank - a very bad idea. This update brings us safely back aboard the ship and bring you the ability to use your mobile device for the pirate game.
 
+^Site-Wide
+- Removed mobile incompatibility warning
+
 ^Online Game
 - Added help button to target picker popup to explain what an action will do if you are unsure (#72)
 - Implemented new icon theme (credit: Jack Hegarty)
