@@ -6,12 +6,13 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Thu Dec 23 2021
+Last Modified: Fri Dec 24 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-24	WH	Added button to move on to lobby
 2021-12-23	WH	Removed ready to go popup
 2021-12-23	WH	Added movable popup controls
 2021-12-23	WH	Moved away from two item banks at the side of the screen
@@ -26,6 +27,7 @@ Date      	By	Comments
 {% block head %}
 <link rel="stylesheet" href="../static/css/playing_online/sheet_builder.css">
 <link rel="stylesheet" href="../static/css/global/popup.css">
+<link rel="stylesheet" href="../static/css/playing_online/game_global.css">
 <script src="../static/js/game/sheet_builder.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js"></script>
@@ -56,6 +58,8 @@ Date      	By	Comments
     <div id="div_coordinateGrid">
         {{grid}}
     </div>
+
+    <button disabled id="btn_toLobby" onclick="send_grid()" name="submit_button" type="submit" class="gameButton"><span>To Lobby</span></button>
 
     <div id="div_squareControls"><div onclick="deleteItem()" class="squareControlButton">X</div></div>
 </div>

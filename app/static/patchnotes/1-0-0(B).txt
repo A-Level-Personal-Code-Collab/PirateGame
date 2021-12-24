@@ -4,3 +4,13 @@ Version 0.1.0(B)
 
 ^Online Game
 - Added help button to target picker popup to explain what an action will do if you are unsure (#72)
+- Implemented new icon theme (credit: Jack Hegarty)
+
+^Sheet Builder
+- Removed item dragging system on sheet builder
+- Implemented new item placement interface - click to select item then click to select target square (Issue #192)
+- Added background to sheet builder
+- Moved item bank to screen top and combined money and special items
+- Item grid now central to screen with ripped paper style background
+- Completion popup replaced with standardized continue button
+- Exhausted stack and remaining item counters minor styling changes

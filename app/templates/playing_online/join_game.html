@@ -6,8 +6,8 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Wed Nov 17 2021
-Modified By: Ollie Burroughs
+Last Modified: Fri Dec 24 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
@@ -21,6 +21,7 @@ Date      	By	Comments
 {% block head %}
     <link rel="stylesheet" href="../static/css/playing_online/join_game.css">
     <link rel="stylesheet" href="../static/css/global/popup.css">
+    <link rel="stylesheet" href="../static/css/playing_online/game_global.css">
     <script src="../static/js/libraries/verification_routines.js"></script> <!--Load nickname verification routine from file-->
     <script src="../static/js/game/join.js" defer></script>
 {% endblock %}
@@ -36,7 +37,7 @@ Date      	By	Comments
             <br>
             <p>Start a new Pirate Game. Set up your own gid then invite at least 3 friends to play with you!</p>
             <form method="GET" action="/playing_online/new_game" id="new_game_button">
-                <button type="submit" class="game_button" style="vertical-align:middle ;"><span>New Game </span></button>
+                <button type="submit" class="gameButton" style="vertical-align:middle ;"><span>New Game </span></button>
             </form>
         </div>
         <div class="card">
@@ -54,7 +55,7 @@ Date      	By	Comments
                         <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}"></td>
                     </tr>
                 </table>
-                <div id="submit_button"><button disabled id="btn_submit_button" value="Join" name="submit_button" type="submit" class="game_button disallowed" style="vertical-align:middle ;"><span>Submit</span></button></div>
+                <div id="submit_button"><button disabled id="btn_submit_button" value="Join" name="submit_button" type="submit" class="gameButton disallowed" style="vertical-align:middle ;"><span>Submit</span></button></div>
             </form>
             </div>
         </div>

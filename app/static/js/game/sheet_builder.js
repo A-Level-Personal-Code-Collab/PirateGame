@@ -4,7 +4,7 @@
  * Created Date: Friday, July 9th 2021, 9:29:43 pm
  * Author: Will Hall
  * -----
- * Last Modified: Thu Dec 23 2021
+ * Last Modified: Fri Dec 24 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-24	WH	Added handling for progression button to lobby
+ * 2021-12-24	WH	Re-implemented 200s filler
  * 2021-12-23	WH	Added scroll method for item bank
  * 2021-12-23	WH	Added handling for deletion of elements
  * 2021-12-23	WH	Added checks for empty stacks and relevant class modifiers
@@ -43,7 +45,7 @@
  const containers = document.querySelectorAll('.dragReceptacle')
  const itemPicker = document.getElementById("div_itemPicker")
  const squareControls = document.getElementById("div_squareControls");
- const popupDiv = document.getElementById("div_gridFullPopUp")
+ const toLobby = document.getElementById("btn_toLobby")
 
  //=========================================================//
  //^ Constant parameters ^//
@@ -152,6 +154,9 @@
       scrollContainer.scrollLeft += evt.deltaY;
   });
 
+  // Fill remaining squares with 200s
+  document.getElementById("div_m200Stack").addEventListener('dblclick',fill_200s)
+
  }
  
  //^ -------------------------- Facilitate the placement and dropping of items ------------------------- ^//
@@ -247,6 +252,16 @@
    }
    return true;
  }
+
+ function is_grid_ready() {
+   if (is_grid_full())
+   {
+     toLobby.disabled = false;
+   }
+   else {
+     toLobby.disabled = true;
+   }
+ }
  
  //=========================================================//
  //^ Update all item stack counters ^//
@@ -264,6 +279,7 @@
    })
   
    check_empty_stacks();
+   is_grid_ready();
  }
 
  //=========================================================//
@@ -274,14 +290,16 @@
     if (numItems[itemID] == 0)
     {
       itm.classList.add("emptyStack"); //Adds the empty stack class to show items have been exhausted
-      itm.classList.remove("selectedStack");
 
-      //Set the selected item to another, non-empty stack
-      const nextItem = document.querySelector(".itemStack:not(.emptyStack)");
-      if (nextItem != null)
-      {
-        selectedStack = nextItem;
-        selectedStack.classList.add("selectedStack");
+      //If the stack is selected then un-select it and select something else
+      if (itm.classList.contains("selectedStack")) {
+        itm.classList.remove("selectedStack");
+        const nextItem = document.querySelector(".itemStack:not(.emptyStack)");
+        if (nextItem != null)
+        {
+          selectedStack = nextItem;
+          selectedStack.classList.add("selectedStack");
+        }
       }
 
     } else
@@ -301,7 +319,7 @@
  //^ Fill in remaining 200s ^//
  function fill_200s(event)
  {
-   var originalM200 = event.target;
+   var originalM200 = event.target.childNodes[0];
    containers.forEach(square => {
      if (numItems["M200"] > 0) //Checks if there are 200s left
      {
@@ -324,7 +342,6 @@
 
    /*--*/
    update_counters();
-   if (is_grid_full()) {popupDiv.style.display = "block";} else {popupDiv.style.display = "none";} //Checks if grid is full and pops up finnish popup
  }
 
  //=========================================================//
