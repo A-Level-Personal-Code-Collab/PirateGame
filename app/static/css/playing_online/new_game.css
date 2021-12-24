@@ -12,7 +12,12 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-23	AO	Refined the page by animating the dots (https://codepen.io/nzbin/pen/GGrXbp), 
+ added mobile support, button moves to bottom of page and changes size
  */
+body{
+  overflow-y: hidden;
+}
 
 /* ------------------- settings container ------------------- */
 
@@ -21,9 +26,10 @@
     padding: 2vh;
     margin: 1.5vh;
     background-color:#f1f0f0 ;
-    height: 75vh;
+    height: 70vh;
     border-radius: 4px;
     text-align: center;
+    position: relative;
 }
 
 #settingTable{
@@ -181,3 +187,13 @@ td {
     }
   }
   
+  /* ------------------- Mobile ------------------- */
+
+  @media screen and (max-width:700px) {
+      #start_game_button{
+        position: relative;
+        bottom: -40vh;
+        width: 100%;
+      }
+    
+  }
