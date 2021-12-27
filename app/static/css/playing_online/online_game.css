@@ -12,6 +12,9 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	Added custom css for popups on mobile
+ * 2021-12-27	WH	Added mobile single column mode
+ * 2021-12-27	WH	Added responsive two column mode for square-ish screens
  * 2021-12-27	WH	Added tri-column mode for widescreens
  * 2021-12-27	WH	Moved retaliations to new combined applet
  * 2021-12-27	WH	Added new styling for the combined cash and bank applet
@@ -65,7 +68,7 @@
      position: relative;
      border-spacing: 0;
      border-collapse: collapse;
-     max-width: 95%;
+     max-width: 100%;
      width: 70vh;
      max-height: 70vh;
      aspect-ratio: 1/1;
@@ -108,10 +111,12 @@
 
  #div_gameMeta
  {
-     width: 60%;
      display: flex;
+     align-items: center;
      justify-content: space-around;
      flex-direction: row;
+     position: relative;
+     padding: 0 15px;
  }
  
  #div_gameControls
@@ -120,19 +125,98 @@
      flex-direction: column;
  }
 
+ #div_gameInteractive
+ {
+     display: flex;
+     flex-direction: column;
+     align-self: flex-start;
+ }
+
+ /* ------------------------ Responsive design changes ----------------------- */
+ /* For Widescreen screens */
+  @media (min-aspect-ratio: 13/9)
+  {
+    
+    #tbl_playGrid
+    {
+        min-width: 70vh;
+    }
+    
+    #div_gameInteractive
+    {
+        margin-right: 15px;
+        width: 70%;
+    }
+
+    #div_gameMeta
+    {
+        margin-right: 15px;
+        width: 100%;
+    }
+
+    #img_fillerLogo
+    {
+        opacity: 0.2;
+        pointer-events: none;
+        width: 100%;
+        max-width: 40vh;
+        max-height: 40vh;
+        align-self: center;
+        display: block;
+    }
+ 
+  }
+
+ /* For more square-ish screens */
  @media (max-aspect-ratio: 13/9)
  {
+     #img_fillerLogo
+     {
+         display: none;
+     }
+
      #div_gameMeta
      {
          flex-direction: column;
+         max-width: 400px;
      }
+
+     #div_gameLog
+     {
+        max-width: 400px;
+     }
+
+
  }
 
- @media (max-aspect-ratio: 1/1)
+ /* For portrait screens */
+ @media (max-aspect-ratio: 750/960)
  {
      #div_gameDataGroup
      {
          flex-direction: column;
+     }
+     #div_gameDataGroup
+     {
+        align-items: center;
+     }
+
+     #div_gameMeta
+     {
+         margin-top: 15px;
+         max-width: none;
+         width: 95%;
+     }
+
+     #div_gameLog
+     {
+         max-width: none;
+         width: 100vw;
+     }
+
+     .popupbox
+     {
+         width: 90vw;
      }
  }
 
@@ -142,9 +226,7 @@
      justify-content: center;
      background-color: rgb(233, 233, 233);
      border-radius: 10px;
-     max-width: 400px;
      display: flex;
-     margin: 1vh;
  }
 
 #div_cashBox,#div_bankBox
@@ -199,7 +281,8 @@
     font-size: 30px;
     font-family: 'Rock Salt', cursive;
     border: black solid 3px;
-    width: 55%;
+    height: 100%;
+    width: 100%;
  }
  #p_logText
  {
@@ -213,7 +296,7 @@
  /*^ Action popup ^*/
  .popupHousing
  {
-     position: absolute;
+     position: fixed;
      width: 100%;
      height: 100%;
      top: 0;
