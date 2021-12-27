@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Dec 20 2021
+ * Last Modified: Mon Dec 27 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	Modified update_retaliations to show the status on the indicator applet
  * 2021-12-20	WH	New items update the help message popup when they come in
  * 2021-11-15	WH	Fixed retaliation not removing bug
  * 2021-11-09	WH	Handle money values no longer being cumulative
@@ -53,7 +54,7 @@
  const chooseButton = document.getElementById("ipt_chooseTarget")
  const waitingForActionPopup =  document.getElementById("div_waitingPopup")
  const targetPickerPopup = document.getElementById("div_targetPickerPopup")
- const retaliationsStorage = document.getElementById("retaliation_box")
+ const retaliationsIndicators = document.querySelectorAll(".retaliationIndicator")
  const animationPopup = document.getElementById("retal-animation");
 
  //=========================================================//
@@ -110,7 +111,7 @@
 
     /*---------------*/
     //Restrict height of the game information boxes to the height of the grid
-    document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
+    ////document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
 
  }
 
@@ -200,13 +201,23 @@
  {
      if (retal_new != null) {var delay = retal_new["delay"]; retaliations.push(retal_new);}
      else {var delay = 0;}
-     //Creates html images on page to show what actions the user has available
-     var imageList = ""
-     retaliations.forEach((a) => {
-         imageList = imageList + `<img src="${a['image']}" class="retaliationItems" alt="${a["type"]}" id="${a["type"]}">`
-     })
-
-     setTimeout(() => {retaliationsStorage.innerHTML = imageList;}, delay); //Display images on page
+     
+     setTimeout(() => {
+         retaliationsIndicators.forEach((item) => {
+            var retalType = item.getAttribute("data-retalType");
+            var available = false;
+            retaliations.forEach((ret) => {
+                if (ret["type"] == retalType) {available = true;}
+            })
+            if (available)
+            {
+                item.classList.remove("notPresent")
+            }
+            else {
+                item.classList.add("notPresent")
+            }
+         });
+     }, delay); //Updates the retaliations section on the page
  }
 
  /*---------------*/

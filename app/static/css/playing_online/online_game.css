@@ -6,12 +6,15 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Mon Dec 20 2021
+ * Last Modified: Mon Dec 27 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	Added tri-column mode for widescreens
+ * 2021-12-27	WH	Moved retaliations to new combined applet
+ * 2021-12-27	WH	Added new styling for the combined cash and bank applet
  * 2021-12-20	WH	Added styling for the new target picker help icon
  * 2021-11-09	WH	Added CSS to put money in same box as log
  * 2021-11-09	WH	Added css for new money as it is no longer list
@@ -31,8 +34,7 @@
  * 2021-08-24	WH	Added CSS for cash, bank and log boxes (outer container)
  * 2021-08-23	WH	Created file
  */
-  /*//=========================================================//*/
- /*^ Css animation ^*/
+/* ----------------------------- CSS animations ----------------------------- */
  /*Pop in animation from the internet*/
  @-webkit-keyframes square-picker {
     0% { opacity: 0.7; -webkit-transform: scale(1); }
@@ -47,12 +49,9 @@
     100% { opacity: 0.7; transform: scale(1.1); }
 }
 
- /*//=========================================================//*/
- /*^ Grid Settings ^*/
+ /* -------------------- Grid itself and relevant settings ------------------- */
  .gridSquare
  {
-     height: 10vh;
-     width: 10vh;
      border: 3px solid black;
      margin: 0;
      padding: 0.5vh;
@@ -62,14 +61,20 @@
  }
  #tbl_playGrid
  {
+     align-self: flex-start;
+     position: relative;
      border-spacing: 0;
      border-collapse: collapse;
+     max-width: 95%;
+     width: 70vh;
+     max-height: 70vh;
+     aspect-ratio: 1/1;
  }
  .gridItems
  {
      pointer-events: none;
-     width: 8.5vh;
-     height: 8.5vh;
+     width: 100%;
+     height: 100%;
      
  }
 
@@ -90,50 +95,80 @@
  }
 
 
- /*//=========================================================//*/
- /*^Game info boxes^*/
-
- .gameContainer
- {
-     border: black solid 3px;
-     flex-grow: 1;
-     margin-left: 20px;
-     text-align: center;
-     overflow-y:scroll;
-     -ms-overflow-style: none;  /* IE and Edge */
-     scrollbar-width: none;  /* Firefox */
- }
-
- .gameContainer::-webkit-scrollbar
- {
-     display: none;
- }
-
+/* ---------------------- Master data container styling ---------------------- */
  #div_gameDataGroup
  {
-     margin-left: 2%;
-     margin-right: 2%;
-     display: inline-flex;
+     display: flex;
+     position: relative;
+     justify-content: space-around;
+     height: 100%;
      width: 96%;
+     margin: 20px 2%;
  }
 
- /* Relating to the display of money values */
- .moneyContainer
+ #div_gameMeta
+ {
+     width: 60%;
+     display: flex;
+     justify-content: space-around;
+     flex-direction: row;
+ }
+ 
+ #div_gameControls
  {
      display: flex;
+     flex-direction: column;
  }
 
- #div_cashBox
+ @media (max-aspect-ratio: 13/9)
  {
-     border-right: 2px dashed lightgray;
+     #div_gameMeta
+     {
+         flex-direction: column;
+     }
  }
 
- #div_cashBox,#div_bankBox
+ @media (max-aspect-ratio: 1/1)
+ {
+     #div_gameDataGroup
+     {
+         flex-direction: column;
+     }
+ }
+
+ /* ---------------------- Money and retaliations applet --------------------- */
+ #div_myStatusApplet
+ {
+     justify-content: center;
+     background-color: rgb(233, 233, 233);
+     border-radius: 10px;
+     max-width: 400px;
+     display: flex;
+     margin: 1vh;
+ }
+
+#div_cashBox,#div_bankBox
  {
     min-width: 160px;
-    width: 50%;
     font-size: 30px;
     font-family: 'Rock Salt', cursive;
+ }
+
+ #div_retaliationsBox
+ {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+ }
+ .retaliationIndicator
+ {
+     width: 50px;
+ }
+
+ .retaliationIndicator.notPresent
+ {
+     -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black) grayscale(90%) opacity(0.1);
+     filter:drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black) grayscale(90%) opacity(0.1);
  }
 
  div.moneyValue
@@ -158,11 +193,13 @@
     content: "\1F4B7";
  }
 
- /* Relating the actual log and entries */
- #gameLog
+ /* -------------------------------- Game log -------------------------------- */
+ #div_gameLog
  {
     font-size: 30px;
     font-family: 'Rock Salt', cursive;
+    border: black solid 3px;
+    width: 55%;
  }
  #p_logText
  {
@@ -170,111 +207,7 @@
      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
  }
 
- /*---------------*/
- /*The info box showing what the user is currently waiting for*/
- #currentTask
- {
-     color: red;
-     background-color: rgba(211, 211, 211, 0.473);
-     padding: 5px;
-     border-radius: 5px;
-     position: relative;
- }
-
- /*---------------*/
- /*The retaliation bank on page item styling*/
- .retaliationItems /* The image items in the item bank*/
- {
-     width: 7.5vh;
-     height: 7.5vh;
- }
-
- div.retaliationSleeve /* The little pop-put tab that retaliation items go in*/
- {
-     position: absolute;
-     height: 8vh;
-     width: fit-content;
-     min-width: 3vw;
-     max-width: 27vw;
-
-     background-color: #ffd900;
-     bottom: 15vh;
-     left:0;
-     border-top-right-radius: 2vh;
-     border-bottom-right-radius: 2vh;
-     transition: all 1s;
-     overflow: hidden;
-
- }
-
- div.retaliationSleeve:hover{
-     min-width: 27vw;
- }
-
- h5.retaliationSleeve { /* Text on the side of the pop-out tab*/
-     writing-mode: vertical-rl;
-     color: #474e5d;
-     margin: auto;
-     font-size: 1.1vh;
-     height: 100%;
-     margin-right: 0.5vw;
-     float: right;
- }
-
- #retaliation_box /* Interior div where js puts the image objects */
- {
-     float: right;
-     height: 8vh;
-     margin-right: 1vw;
-     overflow: hidden;
-     max-width: 22.5vw;
- }
-
- 
- /*//=========================================================//*/
- /*^ Game action buttons ^*/
- .actionButton 
- {
-    transition: all 0.5s;
-    cursor: pointer;
-    font-size: 20px;
-    vertical-align: middle;
-    height: 4vh;
-    font-size: 2vh;
-    line-height: 4vh;
-    font-family: 'Rock Salt', cursive;
-    padding: 0 1vh;
-    border: none;
-    border-radius: 3px;
- }
-
- .actionButton:disabled
- {
-     filter: blur(1px) grayscale(100%);
-     pointer-events: none;
-     cursor: not-allowed;
-     opacity: (0.6);
- }
-
- .actionButton:hover
- {
-     padding: 0 0.5vh;
- }
-
- #ipt_declare
- {
-     background-color: #DFDACD;
-     color: #161459;
- }
-
-
- /*//=========================================================//*/
- /*^ Host only styles ^*/
- #ipt_NextRoundButton /*The button that will move to the next round*/
- {
-     background-color: #ffd900;
-     color: crimson;
- }
+ /* --------------------------- Game action buttons -------------------------- */
 
  /*//=========================================================//*/
  /*^ Action popup ^*/
@@ -295,29 +228,13 @@
      font-size: 3vh;
  }
 
- .help-icon
- {
-     width: 32px;
-     position: absolute;
-     rotate: 14deg;
-     border-radius: 50%;
-     translate: 0 5px;
-     right: 5%;
-     padding: 4px;
-     border: solid 0.2px rgb(141, 141, 141);
-     cursor: help;
-     transition: 0.1s;
- }
- .help-icon:hover
- {
-     transform: scale(1.3);
- }
-
+ /* Action type text */
  #h3_action_emphasis_text, #h3_targetPickerAction
  {
      font-family: "Frijole", Arial;
  }
 
+ /* Retaliation options on declared action popup */
  #div_retaliation_controls
  {
      line-height: 5vh;
@@ -347,6 +264,25 @@
      pointer-events: none;
      filter: blur(1px) grayscale(100%);
 
+ }
+
+ /* Help icon on popup */
+ .help-icon
+ {
+     width: 32px;
+     position: absolute;
+     rotate: 14deg;
+     border-radius: 50%;
+     translate: 0 5px;
+     right: 5%;
+     padding: 4px;
+     border: solid 0.2px rgb(141, 141, 141);
+     cursor: help;
+     transition: 0.1s;
+ }
+ .help-icon:hover
+ {
+     transform: scale(1.3);
  }
  
  /*//=========================================================//*/

@@ -6,12 +6,14 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Fri Dec 24 2021
+ * Last Modified: Mon Dec 27 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By 	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	   Use pirate font on all buttons
+ * 2021-12-27	WH	   Disallowed button styling now uses :disabled superclass
  * 2021-12-24	WH	   Added styling for cross site game buttons
  * 2021-09-02	WH	   Added CSS for new controls housing DIV
  * 2021-08-28	WH	   Added title styling
@@ -50,13 +52,14 @@
    background-color: #ffd900;
    border-radius: 4px;
    border: none;
-   font-size: 30px;
+   font-size: 20px;
    transition: all 0.5s ;
    color: rgb(145, 145, 145);
    cursor: pointer;
    margin: 1vh;
-   padding: 20px;
+   padding: 10px;
    vertical-align: middle;
+   font-family: 'Rock Salt', cursive;
  }
  
  .gameButton span{ /* span is used so the arrow is a separate entity from the text */
@@ -65,7 +68,7 @@
    position: relative;
 }
 
-.gameButton:not(.disallowed) span:after{ /* adds the arrow to the <span> and hides it */
+.gameButton:not(:disabled) span:after{ /* adds the arrow to the <span> and hides it */
    content: "\00bb"; /* arrow */
    position: absolute;
    opacity: 0;
@@ -73,7 +76,7 @@
    right: -20px; /* movement of arrow*/
 }
 
-.gameButton:hover:not(.disallowed),.gameButton:active:not(.disallowed) span{ /* Makes space for the arrow*/
+.gameButton:hover:not(:disabled),.gameButton:active:not(:disabled) span{ /* Makes space for the arrow*/
    background-color: #fce250;
    padding-left: 35px;
 }
@@ -84,7 +87,7 @@
 
  .gameButton:disabled
  {
-     background-color: rgb(163, 163, 163);
+     background-color: rgb(211, 211, 211);
      cursor: not-allowed;
      pointer-events: none;
  }

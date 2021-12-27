@@ -6,12 +6,13 @@ Description: The HTML Template that will be rendered to the host
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sat Nov 06 2021
+Last Modified: Mon Dec 27 2021
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-27	WH	Changed button classes
 2021-08-28	WH	Added next-round button and linked JS file
 -->
 {% extends "playing_online/online_game.html" %}
@@ -21,6 +22,6 @@ Date      	By	Comments
 {% endblock %}
 
 {% block hostHeader %}
-<input type="button" value="Spin The Spinner >>" class="actionButton" id="ipt_NextRoundButton">
+<input type="button" value="Spin The Spinner >>" class="gameButton" id="ipt_NextRoundButton">
 
 {% endblock %}
