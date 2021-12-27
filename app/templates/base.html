@@ -6,7 +6,7 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Fri Dec 24 2021
+Last Modified: Mon Dec 27 2021
 Modified By: Will Hall
 -----
 HISTORY:
@@ -39,6 +39,8 @@ Date      	By	Comments
     {% endblock %}
     <title>{% block title %}{% endblock %}</title>
     <!-- Links to the other sheets-->
+</head>
+<body>
     <div class="Header" id="mainHeader">
         <a href="/">Home</a>
         <div class = "Header-right">
@@ -48,8 +50,6 @@ Date      	By	Comments
         </div>
     </div>
     <div class="Warning">This version of The PirateGame is a beta release and is not fully polished yet</div>
-</head>
-<body>
     {% block body %}  
     {% endblock %}
 </body>

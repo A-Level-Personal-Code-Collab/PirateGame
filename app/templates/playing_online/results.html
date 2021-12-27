@@ -12,6 +12,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+2021-12-27	WH	Added Master outer container
  * 2021-09-19	OB	created file
  */-->
 
@@ -25,25 +26,33 @@
      <script src="../static/js/game/results.js" defer></script>
  {% endblock %}
  {% block body %}
-<div id = "podiumcontainer">
-    <div id = "secondcontainer" class = "columncontainer">
-        <h3 id = "secondtxt" class = "podtext">SECOND</h3>
-        <div id = "secondcol" class = "podcol">
-        <div id = "secondcash" class = "podcash"></div>
+ <div id="div_resultsData">
+    <div id="podiumcontainer">
+        <div id="secondcontainer" class="columncontainer">
+            <h3 id="secondtxt" class="podtext">SECOND</h3>
+            <div id="secondcol" class="podcol">
+                <!--Inside the colum container-->
+                <div id="secondcash" class="podcash">
+            </div>
+            </div>
+        </div>
+        <div id="firstcontainer" class="columncontainer">
+            <h3 id="firsttxt" class="podtext">FIRST</h3>
+            <div id="firstcol" class="podcol">
+                <!--Inside the colum container-->
+                <div id="firstcash" class="podcash">
+            </div>
+            </div>
+        </div>
+        <div id="thirdcontainer" class="columncontainer">
+            <h3 id="thirdtxt" class="podtext">THIRD</h3>
+            <div id="thirdcol" class="podcol">
+                <!--Inside the colum container-->
+                <div id="thirdcash" class="podcash">
+            </div>
+            </div>
         </div>
     </div>
-    <div id = "firstcontainer" class = "columncontainer">
-        <h3 id = "firsttxt" class = "podtext">FIRST</h3>
-        <div id = "firstcol" class = "podcol">
-        <div id = "firstcash" class = "podcash"></div>
-        </div>
-    </div>
-    <div id = "thirdcontainer" class = "columncontainer">
-        <h3 id = "thirdtxt" class = "podtext">THIRD</h3>
-        <div id = "thirdcol" class = "podcol">
-        <div id = "thirdcash" class = "podcash"></div>
-        </div>
-    </div>
+    <div id="div_resultsSidebar">{{results_table}}</div>
 </div>
- <div class = "sidebarresults">{{results_table}}</div>
  {% endblock %}

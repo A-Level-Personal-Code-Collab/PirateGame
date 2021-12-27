@@ -1,36 +1,66 @@
 /*
- * File: c:\Users\ollie\OneDrive\Desktop\Documents\GitHub Repos\PirateGame\static\css\playing_online/results.css
- * Project: c:\Users\ollie\OneDrive\Desktop\Documents\GitHub Repos\PirateGame\static\css
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/static/css/playing_online/results.css
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
  * Created Date: Sunday, September 19th 2021, 8:36:28 pm
  * Description: Results display page
  * Author: Ollie Burroughs
  * Copyright (c) 2021 SchmetCorp.
  * -----
- * Last Modified: Sat Oct 30 2021
+ * Last Modified: Mon Dec 27 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	Switched podium columns to use flex positioning
+ * 2021-12-27	WH	Added custom styling for mobile devices
+ * 2021-12-27	WH	Added styling for whole page flexbox
+ * 2021-12-27	WH	Added grouping comments to improve readability
  */
+
+ /* ------------------------- Master asset containers ------------------------ */ 
+#div_resultsData
+{
+    display: flex;
+}
+
+@media screen and (max-width: 600px) {
+    #div_resultsData
+    {
+        flex-direction: column;
+    }
+}
 
 #podiumcontainer
 {
-    position: absolute;
-    bottom: 0;
     display: flex;
     align-items: flex-end;
-    width: 70vw;
-    top: 85px;
+    width: 70%;
 }
 
+@media screen and (max-width: 600px) {
+    #podiumcontainer
+    {
+        width: 100%;
+        height: 70%;
+    }
+}
+
+/* ------------------------------ Podium colum ------------------------------ */
 .columncontainer
 {
     flex: 1;
+    display: flex;
+    width: 33%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .podcol
 {
+    display: flex;
+    flex-direction: column;
     border-top-left-radius: 2vw;
     border-top-right-radius: 2vw;
 }
@@ -38,45 +68,43 @@
 #thirdcol
 {
     background-color:chocolate;
-    height: 33vh;
+    height: 33%;
 }
 #secondcol
 {
     background-color:darkgrey;
-    height: 50vh;
+    height: 50%;
 }
 
 #firstcol
 {
     background-color: goldenrod;
-    height: 70vh;
+    height: 70%;
 }
 
-.podtext
-{
-    font-family: sans-serif;
-    font-weight: bolder;
-    text-align: center;
-    overflow-wrap: break-word;
-    display: inline-block;
-    padding-right: 10px;
-    margin-bottom: 30px;
-}
-
+/* --------------------------- Podium cash values --------------------------- */
 .podcash
 {
     font-family: sans-serif;
     font-weight: bolder;
     text-align: center;
-    font-size: 50px;
-    display: inline-block;
-    color: darkblue;
-    margin-top: 30px;
+    font-size: 5vw;
+    padding: 5px;
 }
+
 .podcash::before
 {
     padding-right: 5px;
     content: "£";
+}
+
+
+/* ------------------------------ Podium names ------------------------------ */
+.podtext
+{
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 100px;
 }
 
 #firsttxt
@@ -94,21 +122,27 @@
     color:chocolate;
 }
 
-.sidebarresults
+
+/* --------------------------- Runners up sidebar --------------------------- */
+#div_resultsSidebar
 {
     border-top-left-radius: 2%;
     border-bottom-left-radius:2%;
     border-style: inset;
-    border-width: 15px;
+    border-width: 11px;
     border-color: #3b5ba1;
     background-color: #474e5d;
     width: 30%;
-    bottom:0px;
-    top:84px;
-    position:fixed;
-    right: 0;
     overflow-y:scroll;
 }
+
+@media screen and (max-width: 600px) {
+    #div_resultsSidebar
+    {
+        width: calc(100% - 22px);
+    }
+}
+
 .sidebarscores
 {
     font-family: sans-serif;
@@ -118,8 +152,4 @@
     width: 100%;
     font-size: x-large;
     border-spacing: 10px;
-}
-.ResultsTableHeader
-{
-    color:#6692f0;
 }
