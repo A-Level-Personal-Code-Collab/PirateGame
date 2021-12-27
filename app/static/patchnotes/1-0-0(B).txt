@@ -8,6 +8,12 @@ Version 0.1.0(B)
 ^Online Game
 - Added help button to target picker popup to explain what an action will do if you are unsure (#72)
 - Implemented new icon theme (credit: Jack Hegarty)
+- Money values and available retaliations now combined into a stylish new information applet (Issue #187)
+- Icons next to money values now come from icon set rather than emojis
+- Online game title header has text fitted correctly (Issue #180)
+- Online game now uses responsive css to look optimal on all viewports
+- As part of responsive design, a dual- and mono-column mode has been implemented
+- Fixed bug where the last 2s of action popup could not be used to declare a retaliation
 
 ^Sheet Builder
 - Removed item dragging system on sheet builder
@@ -17,3 +23,7 @@ Version 0.1.0(B)
 - Item grid now central to screen with ripped paper style background
 - Completion popup replaced with standardized continue button
 - Exhausted stack and remaining item counters minor styling changes
+
+^Results Page
+- Switched to using flexbox on more elements
+- Mobile devices will see podium positioned on top of the runners up table

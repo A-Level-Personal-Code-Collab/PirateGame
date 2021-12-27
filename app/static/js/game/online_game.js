@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	Fixed early commit bug
+ * 2021-12-27	WH	Fitty the game title bar
  * 2021-12-27	WH	Modified update_retaliations to show the status on the indicator applet
  * 2021-12-20	WH	New items update the help message popup when they come in
  * 2021-11-15	WH	Fixed retaliation not removing bug
@@ -111,6 +113,7 @@
 
     /*---------------*/
     //Restrict height of the game information boxes to the height of the grid
+    fitty(".gameHeaderTitle", {maxSize: 50})
     ////document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
 
  }
@@ -305,7 +308,7 @@
                     }
                  })
 
-                 setTimeout(() => {retaliation_declare("none")}, 3000);
+                 setTimeout(() => {retaliation_declare("none")}, 5000);
                  
              }else {targetText.innerHTML = usersDictionary[target];} //Show who the target is
              

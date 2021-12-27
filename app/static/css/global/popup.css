@@ -96,7 +96,7 @@
 
  #help_box
  {
-     position: absolute;
+     position: fixed;
      top: 50%;
      translate: 0 -50% ;
      border: solid 1px black;
