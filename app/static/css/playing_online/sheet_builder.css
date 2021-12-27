@@ -7,11 +7,12 @@
  * Copyright (c) 2021 Lime Parallelogram
  * -----
  * Last Modified: Fri Dec 24 2021
- * Modified By: Will Hall
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-24	AO	Added Game ID to hover above the screen just above the join game button, has a slight background to make it more visable
  * 2021-12-24	WH	Fixed white borders on landscape screens
  * 2021-12-24	WH	Added styling for game button
  * 2021-12-23	WH	Added styling for new square control popup and its accompanying buttons
@@ -261,4 +262,17 @@
 {
     visibility: hidden;
     translate: 0 300px;
+}
+
+
+/* ------------------------------- Game ID div ------------------------------ */
+
+#gameID{
+    background-color: #474e5d46;
+    border-radius: 8px;
+    padding: 2px;
+    color: white;
+    position: absolute;
+    bottom: 10vh;
+    
 }
