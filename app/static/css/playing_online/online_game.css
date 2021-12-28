@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Mon Dec 27 2021
+ * Last Modified: Tue Dec 28 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-28	WH	On mobile devices, action buttons appear from the bottom of the screen
  * 2021-12-27	WH	.moneyValue icons now come from icon set
  * 2021-12-27	WH	Added custom css for popups on mobile
  * 2021-12-27	WH	Added mobile single column mode
@@ -224,6 +225,23 @@
      {
          width: 90vw;
      }
+     
+     /* Action buttons pop in from bottom on mobile*/
+     .gameButton
+    {
+        visibility: visible;
+        position: fixed;
+        bottom: 2vh;
+        width: 400px;
+        max-width: 90%;
+    }
+
+    .gameButton:disabled
+    {
+        visibility: hidden;
+        translate: 0 300px;
+    }
+
  }
 
  /* ---------------------- Money and retaliations applet --------------------- */
