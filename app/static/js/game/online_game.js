@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Dec 27 2021
+ * Last Modified: Wed Dec 29 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -115,6 +115,9 @@
     //Restrict height of the game information boxes to the height of the grid
     fitty(".gameHeaderTitle", {maxSize: 50})
     ////document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
+
+    //Use for testing seeking attention animation
+    ////document.querySelector(".gridItems").classList.add("seekingAttention");
 
  }
 

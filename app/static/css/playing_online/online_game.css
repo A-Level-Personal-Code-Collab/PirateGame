@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Dec 28 2021
+ * Last Modified: Wed Dec 29 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-29	WH	Created seeking attention animation (not used)
  * 2021-12-28	WH	On mobile devices, action buttons appear from the bottom of the screen
  * 2021-12-27	WH	.moneyValue icons now come from icon set
  * 2021-12-27	WH	Added custom css for popups on mobile
@@ -54,7 +55,56 @@
     100% { opacity: 0.7; transform: scale(1.1); }
 }
 
+/* Shaking animation for the items that you need to declare */
+@keyframes seeking-attention {
+    5% {
+        transform: translateY(15px) scale(1.6);
+    }
+    10% {
+        transform: rotate(15deg) translateX(10px) scale(2.4);
+    }
+    15% {
+        transform: rotate(-18deg) translateX(-18px) scale(2.6);
+    }
+    20%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+    25%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+
+    30% {
+        transform: translateY(25px) scale(1.6);
+    }
+    35% {
+        transform: rotate(-55deg) translateX(-30px) scale(2.6);
+    }
+    40% {
+        transform: rotate(8deg) translateX(8px) scale(2.4);
+    }
+    45%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+
+}
+
  /* -------------------- Grid itself and relevant settings ------------------- */
+ .seekingAttention
+ {
+     pointer-events: all;
+     cursor: pointer;
+    transform: scale(1.8);
+    animation: seeking-attention 3s linear infinite forwards;
+ }
+
+ .seekingAttention:hover
+ {
+     filter: opacity(0.4);
+ }
+
  .gridSquare
  {
      border: 3px solid black;
