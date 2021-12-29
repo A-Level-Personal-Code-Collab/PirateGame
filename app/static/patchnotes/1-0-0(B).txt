@@ -14,6 +14,7 @@ Version 0.1.0(B)
 - Online game now uses responsive css to look optimal on all viewports
 - As part of responsive design, a dual- and mono-column mode has been implemented
 - Fixed bug where the last 2s of action popup could not be used to declare a retaliation
+- Log updates are now added to top of the log box not bottom (Issue #200)
 
 ^Sheet Builder
 - Removed item dragging system on sheet builder

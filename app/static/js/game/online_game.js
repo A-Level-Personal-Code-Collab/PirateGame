@@ -13,6 +13,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-29	WH	Log items are now added to top of the log box instead of bottom
  * 2021-12-27	WH	Fixed early commit bug
  * 2021-12-27	WH	Fitty the game title bar
  * 2021-12-27	WH	Modified update_retaliations to show the status on the indicator applet
@@ -198,7 +199,7 @@
         text = text.replace(`!<${sid}>`,nick)
      }
 
-     setTimeout(() => {logBox.innerHTML += text + "<br>";},delay); //Appends entry to LOG
+     setTimeout(() => {logBox.innerHTML = text + "<br>" + logBox.innerHTML;},delay); //Appends entry to LOG
  }
 
  /*---------------*/
