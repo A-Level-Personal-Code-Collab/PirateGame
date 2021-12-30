@@ -6,8 +6,8 @@
  * Author: Ollie Burroughs
  * Copyright (c) 2021 SchmetCorp.
  * -----
- * Last Modified: Mon Dec 27 2021
- * Modified By: Will Hall
+ * Last Modified: Thu Dec 30 2021
+ * Modified By: Ollie Burroughs
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -36,6 +36,11 @@
     display: flex;
     align-items: flex-end;
     width: 70%;
+    background-image: url("/static/img/background/results.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: center;
+    overflow: hidden;
 }
 
 @media screen and (max-width: 600px) {
@@ -126,8 +131,6 @@
 /* --------------------------- Runners up sidebar --------------------------- */
 #div_resultsSidebar
 {
-    border-top-left-radius: 2%;
-    border-bottom-left-radius:2%;
     border-style: inset;
     border-width: 11px;
     border-color: #3b5ba1;
