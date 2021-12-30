@@ -10,6 +10,7 @@ Version 0.1.0(B)
 - Added loading animation to show that gameID will be generated automatically
 - Start button now takes same style as elsewhere and animates off screen on mobile devices
 - Added help button for the benefit of mobile users who cannot use tooltips
+- Improved nickname validator to reduce false positives
 
 ^Online Game
 - Added help button to target picker popup to explain what an action will do if you are unsure (#72)
