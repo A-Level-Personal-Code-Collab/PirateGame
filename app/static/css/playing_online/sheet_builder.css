@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Fri Dec 24 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Thu Dec 30 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Fixed help icon on mobile
  * 2021-12-24	AO	Added Game ID to hover above the screen just above the join game button, has a slight background to make it more visable
  * 2021-12-24	WH	Fixed white borders on landscape screens
  * 2021-12-24	WH	Added styling for game button
@@ -275,4 +276,18 @@
     position: absolute;
     bottom: 10vh;
     
+}
+
+.help-icon
+{
+    position: absolute;
+    top: 100px;
+    background-color: rgb(228, 228, 228);
+}
+
+@media screen and (max-aspect-ratio: 1/1) {
+.help-icon
+{
+    top: calc(100px + 10vh);
+}
 }
