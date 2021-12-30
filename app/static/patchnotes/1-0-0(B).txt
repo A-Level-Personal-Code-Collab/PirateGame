@@ -32,6 +32,9 @@ Version 0.1.0(B)
 - Exhausted stack and remaining item counters minor styling changes
 - Added help popup to explain what users are trying to do and to provide tips (Issue #198)
 
+^Lobby
+- Improved responsive styling so host nickname is hidden on screen's with limited width
+
 ^Results Page
 - Switched to using flexbox on more elements
 - Mobile device users will see podium positioned on top of the runners up table

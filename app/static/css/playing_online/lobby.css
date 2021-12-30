@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Dec 21 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Thu Dec 30 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Mobile users will see the host's name hidden to save horizontal space
  * 2021-09-25	WH	Added disabled style for start button
  * 2021-08-24	WH	Moved lobby header styling to playing_online/game_global.css so the same styles can be applied in the game screen also
  * 2021-08-10	WH	Added list item formatting and list animation
@@ -36,7 +37,6 @@
 
  /*//=========================================================//*/
  /*^ Lobby header ^*/
-
 .gameSubheader 
 {
    background-color: #474e5d;
@@ -47,44 +47,38 @@
    width: 100vw;
    gap: 15vw;
    align-items: center;
+   justify-content: space-between;
    flex-wrap: nowrap;
    flex-shrink: 1;
    flex-grow: 1;
-   flex-flow: row;
- 
-}
-
-.gameSubheader {
-    width: 100vw;
 }
 
 #hostSubSection{
-    width: 30vw;
     flex-flow: row;
     overflow: hidden;
     max-height: 7.5vh;
     flex-wrap: nowrap;
-    min-width: 25vw;
 }
 
 #hostNickContainer{
-    max-height: 3.5vw;
+    margin-left: 1vw;
+    max-height: 7vw;
     text-align: left;
-    min-width: 30vw
+}
+
+#gameIDContainer
+{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
  #hostNickContainer, #gameIDContainer, #hostSubSection
 {
     max-height: auto;
-    font-size: 1vw ;
     
 }
 
-#start_button, #ipt_musicControl{
-    max-width: auto;
-    max-height: auto;
-    font-size: 1vw;
-}
 #start_button{
     min-width: 70px;
 }
@@ -101,7 +95,7 @@
     padding: 1vw;
     color: rgb(145, 145, 145);
     border-radius: 8px;
-    margin-right: 0.5vw;
+    margin-right: 10px;
     height: 3.5vw;
     width: auto;
     min-width: 45px;
@@ -162,7 +156,16 @@ body
 }
 
 
-@media screen and (max-width: 600px) {
-    #hostSubSection{
+@media screen and (max-width: 900px) {
+    #hostNickContainer /*Hide host nickname on mobile */
+    {
+        display: none;
+    }
+
+    #gameIDContainer
+    {
+        position: relative;
+        transform: unset;
+        left: unset;
     }
 }
