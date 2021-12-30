@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Wed Dec 29 2021
+ * Last Modified: Thu Dec 30 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Moved help controls to global
  * 2021-12-29	WH	Created seeking attention animation (not used)
  * 2021-12-28	WH	On mobile devices, action buttons appear from the bottom of the screen
  * 2021-12-27	WH	.moneyValue icons now come from icon set
@@ -434,23 +435,7 @@
  }
 
  /* Help icon on popup */
- .help-icon
- {
-     width: 32px;
-     position: absolute;
-     rotate: 14deg;
-     border-radius: 50%;
-     translate: 0 5px;
-     right: 5%;
-     padding: 4px;
-     border: solid 0.2px rgb(141, 141, 141);
-     cursor: help;
-     transition: 0.1s;
- }
- .help-icon:hover
- {
-     transform: scale(1.3);
- }
+
  
  /*//=========================================================//*/
  /*^ Loading dots animation ^*/

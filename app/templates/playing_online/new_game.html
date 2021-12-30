@@ -6,12 +6,14 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Thu Dec 23 2021
-Modified By: Adam O'Neill
+Last Modified: Thu Dec 30 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-30	WH	Added help button for the benefit of mobile users who cannot hover over the info tooltip
+2021-12-30	WH	Button settings taken from game global
 2021-12-23	AO	Removed all commented out sliders, added gameID loading row
 -->
 
@@ -21,6 +23,7 @@ Date      	By	Comments
 
 {% block head %}
     <link rel="stylesheet" href="../static/css/playing_online/new_game.css">
+    <link rel="stylesheet" href="../static/css/playing_online/game_global.css">
     <script src="../static/js/game/new_game.js" defer></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js" defer></script> <!-- Fitty script -->
     <script src="../static/js/libraries/verification_routines.js"></script> <!--Load nickname verification routine from file-->
@@ -29,9 +32,10 @@ Date      	By	Comments
 {% block body %}
     <div class="header">
         <h1>Create New Game</h1>
-        <p>Choose your settings for your pirate game...</p>
+        <p>Choose your own nickname then click <b>Create Game</b> to get your game ID...</p>
     </div> 
     <div class="settings_container">
+        <img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick='updateHelp("Create a new game for you and your friends to play.<br><br>Some nicknames may be rejected if they contain inappropriate words or phrases. Only standard english letters and spaces are permitted."); showHelp();'>
         <div class="setting_body">
             <table id="settingTable">
                 <tr>
@@ -45,9 +49,9 @@ Date      	By	Comments
                     <td><input value="{{nickname}}" type="text" id="ipt_nickname" name="ipt_nickname" class="{{nicknameErrClass}}" maxlength="15"></td>
                 </tr>
             </table>
+            <button id="start_game_button" type="submit" disabled class="gameButton popInMobile"><span>Create Game</span></button> <!-- use this id in css -->
         </div>
-        <div id="submit_button"> <!-- Play button div -->
-            <button id="start_game_button" type="submit" disabled class="game_button disallowed">Start Game</button> <!-- use this id in css -->
-        </div>
+        
     </div>
+    {% with helpText="Help text here" %}{% include 'popups/help.html' %}{% endwith %} <!--Insert help box instance-->
 {% endblock%}

@@ -6,12 +6,14 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Mon Dec 27 2021
+ * Last Modified: Thu Dec 30 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By 	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	   Moved css for help icon to here
+ * 2021-12-30	WH	   Added standard styling for mobile pop-in buttons
  * 2021-12-27	WH	   Use pirate font on all buttons
  * 2021-12-27	WH	   Disallowed button styling now uses :disabled superclass
  * 2021-12-24	WH	   Added styling for cross site game buttons
@@ -74,7 +76,7 @@
    position: absolute;
    opacity: 0;
    top: 0;
-   right: -20px; /* movement of arrow*/
+   right: -30px; /* movement of arrow*/
 }
 
 .gameButton:hover:not(:disabled),.gameButton:active:not(:disabled) span{ /* Makes space for the arrow*/
@@ -91,4 +93,42 @@
      background-color: rgb(211, 211, 211);
      cursor: not-allowed;
      pointer-events: none;
+ }
+
+ /* Game button mobile */
+ @media screen and (max-width:600px) {
+   .gameButton.popInMobile
+   {
+       visibility: visible;
+       position: fixed;
+       transform: translateX(-50%);
+       bottom: 2vh;
+       width: 90vw;
+       margin: 0;
+   }
+   
+   .gameButton.popInMobile:disabled
+   {
+       visibility: hidden;
+       translate: 0 300px;
+   }
+   
+ }
+
+ /* -------------------------------- Help icon ------------------------------- */
+ .help-icon
+ {
+     width: 32px;
+     position: absolute;
+     border-radius: 50%;
+     translate: 0 5px;
+     right: 15px;
+     padding: 4px;
+     border: solid 0.2px rgb(192, 192, 192);
+     cursor: help;
+     transition: 0.1s;
+ }
+ .help-icon:hover
+ {
+     transform: scale(1.3);
  }

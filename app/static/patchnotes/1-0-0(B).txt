@@ -5,6 +5,12 @@ Version 0.1.0(B)
 ^Site-Wide
 - Removed mobile incompatibility warning
 
+^New Game Page
+- Improved proportions of nickname input box - especially on mobile
+- Added loading animation to show that gameID will be generated automatically
+- Start button now takes same style as elsewhere and animates off screen on mobile devices
+- Added help button for the benefit of mobile users who cannot use tooltips
+
 ^Online Game
 - Added help button to target picker popup to explain what an action will do if you are unsure (#72)
 - Implemented new icon theme (credit: Jack Hegarty)
@@ -24,7 +30,8 @@ Version 0.1.0(B)
 - Item grid now central to screen with ripped paper style background
 - Completion popup replaced with standardized continue button
 - Exhausted stack and remaining item counters minor styling changes
+- Added help popup to explain what users are trying to do and to provide tips (Issue #198)
 
 ^Results Page
 - Switched to using flexbox on more elements
-- Mobile devices will see podium positioned on top of the runners up table
+- Mobile device users will see podium positioned on top of the runners up table

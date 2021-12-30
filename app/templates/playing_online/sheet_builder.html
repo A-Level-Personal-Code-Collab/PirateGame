@@ -6,12 +6,13 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Fri Dec 24 2021
-Modified By: Adam O'Neill
+Last Modified: Thu Dec 30 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-30	WH	Added help popup
 2021-12-24	AO	Added Game ID 
 2021-12-24	WH	Added button to move on to lobby
 2021-12-23	WH	Removed ready to go popup
@@ -68,6 +69,9 @@ Date      	By	Comments
     <div id="div_squareControls"><div onclick="deleteItem()" class="squareControlButton">X</div></div>
 </div>
 
+<img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="updateHelp('Place each item where you want it on your grid - in the end, the spinner selection is random so it matters little where items are placed. Long press or right click to remove an item from your grid. <br><br>Tip: Double click the 200s to auto-fill them.'); showHelp()">
+
+{% with helpText="Help text here" %}{% include 'popups/help.html' %}{% endwith %} <!--Insert help box instance-->
 {% endblock %}
 
 
