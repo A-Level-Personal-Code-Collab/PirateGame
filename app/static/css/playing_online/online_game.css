@@ -12,6 +12,7 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Popup housing to popup css
  * 2021-12-30	WH	Moved help controls to global
  * 2021-12-29	WH	Created seeking attention animation (not used)
  * 2021-12-28	WH	On mobile devices, action buttons appear from the bottom of the screen
@@ -285,6 +286,8 @@
         bottom: 2vh;
         width: 400px;
         max-width: 90%;
+        left: 50vw;
+        transform: translateX(-50%);
     }
 
     .gameButton:disabled
@@ -379,15 +382,6 @@
 
  /*//=========================================================//*/
  /*^ Action popup ^*/
- .popupHousing
- {
-     position: fixed;
-     width: 100%;
-     height: 100%;
-     top: 0;
-     background-color: rgba(128, 128, 128, 0.6);
- }
-
  .actionPopUp
  {
      opacity: 1;

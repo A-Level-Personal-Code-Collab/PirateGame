@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Fri Dec 24 2021
+ * Last Modified: Thu Dec 30 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -119,7 +119,8 @@ th, td{
 /* Game error popup */
 #div_gameopen_popup
 {
+    position: fixed;
     width: 30vw;
-    margin-top: 30vh;
-    left: 35%;
+    top: 50vh;
+    left: 50vw;
 }

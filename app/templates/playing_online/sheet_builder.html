@@ -41,6 +41,7 @@ Date      	By	Comments
 {% endblock %}
 
 {% block body %}
+<img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="updateHelp('Place each item where you want it on your grid - in the end, the spinner selection is random so it matters little where items are placed. Long press or right click to remove an item from your grid. <br><br>Tip: Double click the 200s to auto-fill them.'); showHelp()">
 <div id="div_sheetArea">
     <!--Draw grid based on code sent from python-->
     <div id="div_itemPicker">
@@ -69,7 +70,6 @@ Date      	By	Comments
     <div id="div_squareControls"><div onclick="deleteItem()" class="squareControlButton">X</div></div>
 </div>
 
-<img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="updateHelp('Place each item where you want it on your grid - in the end, the spinner selection is random so it matters little where items are placed. Long press or right click to remove an item from your grid. <br><br>Tip: Double click the 200s to auto-fill them.'); showHelp()">
 
 {% with helpText="Help text here" %}{% include 'popups/help.html' %}{% endwith %} <!--Insert help box instance-->
 {% endblock %}

@@ -5,6 +5,9 @@ Version 0.1.0(B)
 ^Site-Wide
 - Removed mobile incompatibility warning
 
+^Join Game
+- Fixed popup css that warns users that they already have a version open
+
 ^New Game Page
 - Improved proportions of nickname input box - especially on mobile
 - Added loading animation to show that gameID will be generated automatically
