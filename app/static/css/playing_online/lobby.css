@@ -58,6 +58,7 @@
     overflow: hidden;
     max-height: 7.5vh;
     flex-wrap: nowrap;
+    min-width: 150px;
 }
 
 #hostNickContainer{
@@ -75,6 +76,7 @@
 
  #hostNickContainer, #gameIDContainer, #hostSubSection
 {
+    font-size: 180%;
     max-height: auto;
     
 }
@@ -164,6 +166,7 @@ body
 
     #gameIDContainer
     {
+        font-size: 100%;
         position: relative;
         transform: unset;
         left: unset;

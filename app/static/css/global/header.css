@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Mon Dec 20 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Thu Dec 30 2021
+ * Modified By: Will Hall
  * Details: added ease to header hover
  * HISTORY:
  * Date      	By	Comments
@@ -82,10 +82,6 @@ body {
     text-align: center;
     font-family: sans-serif, Arial;
     padding-top: 77px;
-}
-
-h1{
-    font-size: 300%; /* Increases size of the header */
 }
 
 /* ----------------------- USED IN OTHER PAGES ------------------------*/
