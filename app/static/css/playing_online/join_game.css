@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Thu Dec 30 2021
- * Modified By: Will Hall
+ * Last Modified: Fri Dec 31 2021
+ * Modified By: Adam O'Neill
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -120,7 +120,7 @@ th, td{
 #div_gameopen_popup
 {
     position: fixed;
-    width: 30vw;
+    width: 50vw;
     top: 50vh;
     left: 50vw;
 }
