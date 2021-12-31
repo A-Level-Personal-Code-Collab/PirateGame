@@ -1,6 +1,6 @@
 Version 1.0.0(B)
 ^Overview
-~ In the modern age, not allowing your site to be used on mobile is like forcing yourself to walk the plank - a very bad idea. This update brings us safely back aboard the ship and bring you the ability to use your mobile device for the pirate game.
+~ In the modern age, not allowing your site to be used on mobile is like forcing yourself to walk the plank - a very bad idea. This update brings us safely back aboard the ship and brings you the ability to use your mobile device to play the pirate game.
 
 ^Site-Wide
 - Removed mobile incompatibility warning
@@ -42,3 +42,4 @@ Version 1.0.0(B)
 ^Results Page
 - Switched to using flexbox on more elements
 - Mobile device users will see podium positioned on top of the runners up table
+- New background image (Image Credit: Jack Hegarty)
