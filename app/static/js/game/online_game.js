@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Mon Nov 15 2021
+ * Last Modified: Wed Dec 29 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -13,6 +13,11 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-29	WH	Log items are now added to top of the log box instead of bottom
+ * 2021-12-27	WH	Fixed early commit bug
+ * 2021-12-27	WH	Fitty the game title bar
+ * 2021-12-27	WH	Modified update_retaliations to show the status on the indicator applet
+ * 2021-12-20	WH	New items update the help message popup when they come in
  * 2021-11-15	WH	Fixed retaliation not removing bug
  * 2021-11-09	WH	Handle money values no longer being cumulative
  * 2021-11-09	WH	Increase available retaliation time
@@ -52,7 +57,7 @@
  const chooseButton = document.getElementById("ipt_chooseTarget")
  const waitingForActionPopup =  document.getElementById("div_waitingPopup")
  const targetPickerPopup = document.getElementById("div_targetPickerPopup")
- const retaliationsStorage = document.getElementById("retaliation_box")
+ const retaliationsIndicators = document.querySelectorAll(".retaliationIndicator")
  const animationPopup = document.getElementById("retal-animation");
 
  //=========================================================//
@@ -109,7 +114,11 @@
 
     /*---------------*/
     //Restrict height of the game information boxes to the height of the grid
-    document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
+    fitty(".gameHeaderTitle", {maxSize: 50})
+    ////document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
+
+    //Use for testing seeking attention animation
+    ////document.querySelector(".gridItems").classList.add("seekingAttention");
 
  }
 
@@ -190,7 +199,7 @@
         text = text.replace(`!<${sid}>`,nick)
      }
 
-     setTimeout(() => {logBox.innerHTML += text + "<br>";},delay); //Appends entry to LOG
+     setTimeout(() => {logBox.innerHTML = text + "<br>" + logBox.innerHTML;},delay); //Appends entry to LOG
  }
 
  /*---------------*/
@@ -199,13 +208,23 @@
  {
      if (retal_new != null) {var delay = retal_new["delay"]; retaliations.push(retal_new);}
      else {var delay = 0;}
-     //Creates html images on page to show what actions the user has available
-     var imageList = ""
-     retaliations.forEach((a) => {
-         imageList = imageList + `<img src="${a['image']}" class="retaliationItems" alt="${a["type"]}" id="${a["type"]}">`
-     })
-
-     setTimeout(() => {retaliationsStorage.innerHTML = imageList;}, delay); //Display images on page
+     
+     setTimeout(() => {
+         retaliationsIndicators.forEach((item) => {
+            var retalType = item.getAttribute("data-retalType");
+            var available = false;
+            retaliations.forEach((ret) => {
+                if (ret["type"] == retalType) {available = true;}
+            })
+            if (available)
+            {
+                item.classList.remove("notPresent")
+            }
+            else {
+                item.classList.add("notPresent")
+            }
+         });
+     }, delay); //Updates the retaliations section on the page
  }
 
  /*---------------*/
@@ -256,6 +275,8 @@
          var perpetrator = data["perpetrator"];
          var action = data["action"];
          var ftVerbMessage = data["ftVerb"]
+         var explanation = data["explanation"]
+         updateHelp(explanation)
          var invalidRetals = data["invalidRetals"].split(",")
          console.log(invalidRetals)
 
@@ -291,7 +312,7 @@
                     }
                  })
 
-                 setTimeout(() => {retaliation_declare("none")}, 3000);
+                 setTimeout(() => {retaliation_declare("none")}, 5000);
                  
              }else {targetText.innerHTML = usersDictionary[target];} //Show who the target is
              
@@ -352,6 +373,8 @@
      declareAction = data["type"];
      var delay = data["delay"]
      var popupMessage = data["ftVerb"]
+     var itemExplanation = data["explanation"]
+     updateHelp(itemExplanation)
      document.getElementById("h3_targetPickerAction").innerHTML = popupMessage
      setTimeout(() => {declareButton.disabled = false;}, delay);
  }

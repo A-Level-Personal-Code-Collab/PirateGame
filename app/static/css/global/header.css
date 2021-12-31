@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Nov 13 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Thu Dec 30 2021
+ * Modified By: Will Hall
  * Details: added ease to header hover
  * HISTORY:
  * Date      	By	Comments
@@ -15,12 +15,9 @@
  */
 *{
     margin: 0;
-    box-sizing: border-box;
+    
 }
 
-html {
-    box-sizing: border-box;
-}
 
 /* ----------------------- Header ----------------------- */
 
@@ -32,11 +29,14 @@ a:link{
     overflow: hidden;
     background-color: #ffd900;
     width: 100%;
-    padding: 20px 10px; /* size of the header on the page */ 
-    height: 10vh;
+    padding: 20px; /* size of the header on the page */ 
+    height: 37px;
     position: fixed;
     top: 0;
+    z-index: 1;
+    left: 0;
 }
+
 
 .Warning
 {
@@ -60,6 +60,7 @@ a:link{
 
 .Header-right{
     float: right;
+    margin-right: 30px;
 }
 
 .Header a {
@@ -80,11 +81,7 @@ a:link{
 body {
     text-align: center;
     font-family: sans-serif, Arial;
-    padding-top: 10vh;
-}
-
-h1{
-    font-size: 300%; /* Increases size of the header */
+    padding-top: 77px;
 }
 
 /* ----------------------- USED IN OTHER PAGES ------------------------*/

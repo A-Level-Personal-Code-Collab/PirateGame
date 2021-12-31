@@ -6,12 +6,13 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Sat Nov 13 2021
-Modified By: Adam O'Neill
+Last Modified: Thu Dec 30 2021
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2021-12-24	WH	Removed mobile unsupported message
 2021-11-12	WH	Version number received from server context processor
 2021-08-28	WH	Added font definitions
 -->
@@ -33,15 +34,13 @@ Date      	By	Comments
     
     <!-- Link the js script -->
     <script src="../static/js/libraries/fitty.min.js"></script>
-    <script defer>
-        function isMobile() { return ('ontouchstart' in document.documentElement); }
-        if (isMobile()) {alert("We have detected your device has a touch screen. Unfortunately touch devices are not yet supported - we're working on this to fix this in the next release.")}
-    </script>
 
     {% block head %}
     {% endblock %}
     <title>{% block title %}{% endblock %}</title>
     <!-- Links to the other sheets-->
+</head>
+<body>
     <div class="Header" id="mainHeader">
         <a href="/">Home</a>
         <div class = "Header-right">
@@ -51,8 +50,6 @@ Date      	By	Comments
         </div>
     </div>
     <div class="Warning">This version of The PirateGame is a beta release and is not fully polished yet</div>
-</head>
-<body>
     {% block body %}  
     {% endblock %}
 </body>

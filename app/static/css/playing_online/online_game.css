@@ -6,12 +6,24 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Tue Nov 09 2021
+ * Last Modified: Thu Dec 30 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Popup housing to popup css
+ * 2021-12-30	WH	Moved help controls to global
+ * 2021-12-29	WH	Created seeking attention animation (not used)
+ * 2021-12-28	WH	On mobile devices, action buttons appear from the bottom of the screen
+ * 2021-12-27	WH	.moneyValue icons now come from icon set
+ * 2021-12-27	WH	Added custom css for popups on mobile
+ * 2021-12-27	WH	Added mobile single column mode
+ * 2021-12-27	WH	Added responsive two column mode for square-ish screens
+ * 2021-12-27	WH	Added tri-column mode for widescreens
+ * 2021-12-27	WH	Moved retaliations to new combined applet
+ * 2021-12-27	WH	Added new styling for the combined cash and bank applet
+ * 2021-12-20	WH	Added styling for the new target picker help icon
  * 2021-11-09	WH	Added CSS to put money in same box as log
  * 2021-11-09	WH	Added css for new money as it is no longer list
  * 2021-10-27	WH	Removed fixed size from popup
@@ -30,8 +42,7 @@
  * 2021-08-24	WH	Added CSS for cash, bank and log boxes (outer container)
  * 2021-08-23	WH	Created file
  */
-  /*//=========================================================//*/
- /*^ Css animation ^*/
+/* ----------------------------- CSS animations ----------------------------- */
  /*Pop in animation from the internet*/
  @-webkit-keyframes square-picker {
     0% { opacity: 0.7; -webkit-transform: scale(1); }
@@ -46,12 +57,58 @@
     100% { opacity: 0.7; transform: scale(1.1); }
 }
 
- /*//=========================================================//*/
- /*^ Grid Settings ^*/
+/* Shaking animation for the items that you need to declare */
+@keyframes seeking-attention {
+    5% {
+        transform: translateY(15px) scale(1.6);
+    }
+    10% {
+        transform: rotate(15deg) translateX(10px) scale(2.4);
+    }
+    15% {
+        transform: rotate(-18deg) translateX(-18px) scale(2.6);
+    }
+    20%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+    25%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+
+    30% {
+        transform: translateY(25px) scale(1.6);
+    }
+    35% {
+        transform: rotate(-55deg) translateX(-30px) scale(2.6);
+    }
+    40% {
+        transform: rotate(8deg) translateX(8px) scale(2.4);
+    }
+    45%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+
+}
+
+ /* -------------------- Grid itself and relevant settings ------------------- */
+ .seekingAttention
+ {
+     pointer-events: all;
+     cursor: pointer;
+    transform: scale(1.8);
+    animation: seeking-attention 3s linear infinite forwards;
+ }
+
+ .seekingAttention:hover
+ {
+     filter: opacity(0.4);
+ }
+
  .gridSquare
  {
-     height: 10vh;
-     width: 10vh;
      border: 3px solid black;
      margin: 0;
      padding: 0.5vh;
@@ -61,14 +118,20 @@
  }
  #tbl_playGrid
  {
+     align-self: flex-start;
+     position: relative;
      border-spacing: 0;
      border-collapse: collapse;
+     max-width: 100%;
+     width: 70vh;
+     max-height: 70vh;
+     aspect-ratio: 1/1;
  }
  .gridItems
  {
      pointer-events: none;
-     width: 8.5vh;
-     height: 8.5vh;
+     width: 100%;
+     height: 100%;
      
  }
 
@@ -89,50 +152,183 @@
  }
 
 
- /*//=========================================================//*/
- /*^Game info boxes^*/
-
- .gameContainer
- {
-     border: black solid 3px;
-     flex-grow: 1;
-     margin-left: 20px;
-     text-align: center;
-     overflow-y:scroll;
-     -ms-overflow-style: none;  /* IE and Edge */
-     scrollbar-width: none;  /* Firefox */
- }
-
- .gameContainer::-webkit-scrollbar
- {
-     display: none;
- }
-
+/* ---------------------- Master data container styling ---------------------- */
  #div_gameDataGroup
  {
-     margin-left: 2%;
-     margin-right: 2%;
-     display: inline-flex;
+     display: flex;
+     position: relative;
+     justify-content: space-around;
+     height: 100%;
      width: 96%;
+     margin: 20px 2%;
  }
 
- /* Relating to the display of money values */
- .moneyContainer
+ #div_gameMeta
  {
+     display: flex;
+     align-items: center;
+     justify-content: space-around;
+     flex-direction: row;
+     position: relative;
+     padding: 0 15px;
+ }
+ 
+ #div_gameControls
+ {
+     display: flex;
+     flex-direction: column;
+ }
+
+ #div_gameInteractive
+ {
+     display: flex;
+     flex-direction: column;
+     align-self: flex-start;
+ }
+
+ /* ------------------------ Responsive design changes ----------------------- */
+ /* For Widescreen screens */
+  @media (min-aspect-ratio: 13/9)
+  {
+    
+    #tbl_playGrid
+    {
+        min-width: 70vh;
+    }
+    
+    #div_gameInteractive
+    {
+        margin-right: 15px;
+        width: 70%;
+    }
+
+    #div_gameMeta
+    {
+        margin-right: 15px;
+        width: 100%;
+    }
+
+    #img_fillerLogo
+    {
+        opacity: 0.2;
+        pointer-events: none;
+        width: 100%;
+        max-width: 40vh;
+        max-height: 40vh;
+        align-self: center;
+        display: block;
+    }
+ 
+  }
+
+ /* For more square-ish screens */
+ @media (max-aspect-ratio: 13/9)
+ {
+     #img_fillerLogo
+     {
+         display: none;
+     }
+
+     #div_gameMeta
+     {
+         flex-direction: column;
+         max-width: 400px;
+     }
+
+     #div_gameLog
+     {
+        max-width: 400px;
+     }
+
+
+ }
+
+ /* For portrait screens */
+ @media (max-aspect-ratio: 750/960)
+ {
+     #div_gameInteractive
+     {
+         width: 100%;
+     }
+
+     #div_gameDataGroup
+     {
+         flex-direction: column;
+     }
+     #div_gameDataGroup
+     {
+        align-items: center;
+     }
+
+     #div_gameMeta
+     {
+         margin-top: 15px;
+         max-width: none;
+         width: 95%;
+     }
+
+     #div_gameLog
+     {
+         max-width: none;
+         width: 100vw;
+     }
+
+     .popupbox
+     {
+         width: 90vw;
+     }
+     
+     /* Action buttons pop in from bottom on mobile*/
+     .gameButton
+    {
+        visibility: visible;
+        position: fixed;
+        bottom: 2vh;
+        width: 400px;
+        max-width: 90%;
+        left: 50vw;
+        transform: translateX(-50%);
+    }
+
+    .gameButton:disabled
+    {
+        visibility: hidden;
+        translate: 0 300px;
+    }
+
+ }
+
+ /* ---------------------- Money and retaliations applet --------------------- */
+ #div_myStatusApplet
+ {
+     justify-content: center;
+     background-color: rgb(233, 233, 233);
+     border-radius: 10px;
      display: flex;
  }
 
- #div_cashBox
- {
-     border-right: 2px dashed lightgray;
- }
-
- #div_cashBox,#div_bankBox
+#div_cashBox,#div_bankBox
  {
     min-width: 160px;
-    width: 50%;
     font-size: 30px;
     font-family: 'Rock Salt', cursive;
+ }
+
+ #div_retaliationsBox
+ {
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+ }
+ .retaliationIndicator
+ {
+     width: 50px;
+ }
+
+ .retaliationIndicator.notPresent
+ {
+     -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black) grayscale(90%) opacity(0.1);
+     filter:drop-shadow(1px 1px 0 black) drop-shadow(-1px -1px 0 black) grayscale(90%) opacity(0.1);
  }
 
  div.moneyValue
@@ -148,20 +344,33 @@
      width: fit-content;
      border-radius: 6px;
      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+     line-height: 52px;
  }
 
  .moneyValue::before
  {
      padding-left: 10px;
      padding-right: 10px;
-    content: "\1F4B7";
+     background-image: url(/static/img/items/set2/M500.png);
+     background-size: 100% 100%;
+     content: " ";
+     width: 32px;
+     height: 52px;
  }
 
- /* Relating the actual log and entries */
- #gameLog
+ #div_bankBox .moneyValue::before
+ {
+     background-image: url(/static/img/items/set2/bank.png);
+ }
+
+ /* -------------------------------- Game log -------------------------------- */
+ #div_gameLog
  {
     font-size: 30px;
     font-family: 'Rock Salt', cursive;
+    border: black solid 3px;
+    height: 100%;
+    width: 100%;
  }
  #p_logText
  {
@@ -169,123 +378,10 @@
      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
  }
 
- /*---------------*/
- /*The info box showing what the user is currently waiting for*/
- #currentTask
- {
-     color: red;
-     background-color: rgba(211, 211, 211, 0.473);
-     padding: 5px;
-     border-radius: 5px;
-     position: relative;
- }
-
- /*---------------*/
- /*The retaliation bank on page item styling*/
- .retaliationItems /* The image items in the item bank*/
- {
-     width: 7.5vh;
-     height: 7.5vh;
- }
-
- div.retaliationSleeve /* The little pop-put tab that retaliation items go in*/
- {
-     position: absolute;
-     height: 8vh;
-     width: fit-content;
-     min-width: 3vw;
-     max-width: 27vw;
-
-     background-color: #ffd900;
-     bottom: 15vh;
-     left:0;
-     border-top-right-radius: 2vh;
-     border-bottom-right-radius: 2vh;
-     transition: all 1s;
-     overflow: hidden;
-
- }
-
- div.retaliationSleeve:hover{
-     min-width: 27vw;
- }
-
- h5.retaliationSleeve { /* Text on the side of the pop-out tab*/
-     writing-mode: vertical-rl;
-     color: #474e5d;
-     margin: auto;
-     font-size: 1.1vh;
-     height: 100%;
-     margin-right: 0.5vw;
-     float: right;
- }
-
- #retaliation_box /* Interior div where js puts the image objects */
- {
-     float: right;
-     height: 8vh;
-     margin-right: 1vw;
-     overflow: hidden;
-     max-width: 22.5vw;
- }
-
- 
- /*//=========================================================//*/
- /*^ Game action buttons ^*/
- .actionButton 
- {
-    transition: all 0.5s;
-    cursor: pointer;
-    font-size: 20px;
-    vertical-align: middle;
-    height: 4vh;
-    font-size: 2vh;
-    line-height: 4vh;
-    font-family: 'Rock Salt', cursive;
-    padding: 0 1vh;
-    border: none;
-    border-radius: 3px;
- }
-
- .actionButton:disabled
- {
-     filter: blur(1px) grayscale(100%);
-     pointer-events: none;
-     cursor: not-allowed;
-     opacity: (0.6);
- }
-
- .actionButton:hover
- {
-     padding: 0 0.5vh;
- }
-
- #ipt_declare
- {
-     background-color: #DFDACD;
-     color: #161459;
- }
-
-
- /*//=========================================================//*/
- /*^ Host only styles ^*/
- #ipt_NextRoundButton /*The button that will move to the next round*/
- {
-     background-color: #ffd900;
-     color: crimson;
- }
+ /* --------------------------- Game action buttons -------------------------- */
 
  /*//=========================================================//*/
  /*^ Action popup ^*/
- .popupHousing
- {
-     position: absolute;
-     width: 100%;
-     height: 100%;
-     top: 0;
-     background-color: rgba(128, 128, 128, 0.6);
- }
-
  .actionPopUp
  {
      opacity: 1;
@@ -294,11 +390,13 @@
      font-size: 3vh;
  }
 
- #h3_action_emphasis_text
+ /* Action type text */
+ #h3_action_emphasis_text, #h3_targetPickerAction
  {
      font-family: "Frijole", Arial;
  }
 
+ /* Retaliation options on declared action popup */
  #div_retaliation_controls
  {
      line-height: 5vh;
@@ -330,6 +428,9 @@
 
  }
 
+ /* Help icon on popup */
+
+ 
  /*//=========================================================//*/
  /*^ Loading dots animation ^*/
  #div_loadingdots
@@ -382,7 +483,7 @@
  /*^ Retaliation animations ^*/
  #retal-animation
  {
-    position: absolute;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);

@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Sat Nov 13 2021
- * Modified By: Ollie Burroughs
+ * Last Modified: Thu Dec 30 2021
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Mobile users will see the host's name hidden to save horizontal space
  * 2021-09-25	WH	Added disabled style for start button
  * 2021-08-24	WH	Moved lobby header styling to playing_online/game_global.css so the same styles can be applied in the game screen also
  * 2021-08-10	WH	Added list item formatting and list animation
@@ -36,50 +37,54 @@
 
  /*//=========================================================//*/
  /*^ Lobby header ^*/
-
-.gameSubheader
+.gameSubheader 
 {
    background-color: #474e5d;
    color: white;
-   height: 8vh;
-   min-height: max-content;
-   margin-bottom: 1vh;
-   position: relative;
-   text-align: center;
-   line-height: 8vh;
-   padding-left: 1vh;
-   padding-right: 1vh;
-   flex: 1;
+   height: 7.5vh;
+   max-height: 7.5vh;
+   display: flex;
+   width: 100vw;
+   gap: 15vw;
+   align-items: center;
+   justify-content: space-between;
+   flex-wrap: nowrap;
+   flex-shrink: 1;
+   flex-grow: 1;
 }
 
-#hostNick {
-    float:left ;
+#hostSubSection{
+    flex-flow: row;
+    overflow: hidden;
+    max-height: 7.5vh;
+    flex-wrap: nowrap;
+    min-width: 150px;
 }
 
-#gameID {
-    position: absolute;
-    left: 45%;
+#hostNickContainer{
+    margin-left: 1vw;
+    max-height: 7vw;
+    text-align: left;
 }
 
-#hostContent {
-    float: right;
-}
-
-#controlContent
+#gameIDContainer
 {
-    float: right;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
- /*//=========================================================//*/
- /*^ Containers for fitty ^*/
-
-#hostNickContainer {
-    width: 50vh;
+ #hostNickContainer, #gameIDContainer, #hostSubSection
+{
+    font-size: 180%;
+    max-height: auto;
+    
 }
 
-#gameIDContainer {
-    width: 25vh;
+#start_button{
+    min-width: 70px;
 }
+
 
  /*//=========================================================//*/
  /*^ Buttons ^*/
@@ -89,12 +94,14 @@
     cursor: pointer;
     background-color: #ffd900;
     box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.535);
-    font-size: 2vh;
-    padding: 1.5vh;
+    padding: 1vw;
     color: rgb(145, 145, 145);
     border-radius: 8px;
-    margin-right: 0.5vw;
-    height: 6vh;
+    margin-right: 10px;
+    height: 3.5vw;
+    width: auto;
+    min-width: 45px;
+    min-height: 45px;
   }
 
   .actionButton:hover{
@@ -151,3 +158,17 @@ body
 }
 
 
+@media screen and (max-width: 900px) {
+    #hostNickContainer /*Hide host nickname on mobile */
+    {
+        display: none;
+    }
+
+    #gameIDContainer
+    {
+        font-size: 100%;
+        position: relative;
+        transform: unset;
+        left: unset;
+    }
+}

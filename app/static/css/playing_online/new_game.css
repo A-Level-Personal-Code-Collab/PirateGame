@@ -6,51 +6,42 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Nov 06 2021
+ * Last Modified: Thu Dec 30 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-30	WH	Button settings now taken from game_global.css
+ * 2021-12-29	WH	Added help cursor for info circle
+ * 2021-12-23	AO	Refined the page by animating the dots (https://codepen.io/nzbin/pen/GGrXbp), 
+ added mobile support, button moves to bottom of page and changes size
  */
+body{
+  overflow-y: hidden;
+}
 
- *{
-    position: relative;
- }
+/* ------------------- settings container ------------------- */
 
-.container{
+.settings_container{
     box-shadow:   0 4px 8px 0 rgba(0,0,0,0.2);
     padding: 2vh;
     margin: 1.5vh;
     background-color:#f1f0f0 ;
-    height: 75vh;
+    height: 70vh;
     border-radius: 4px;
+    text-align: center;
+    position: relative;
 }
 
-
-
-.row {
-  /*border: 1px solid black;*/  /* Useful to see the borders while testing */
-  width: 25%;
-  height: 55vh;
-  display: inline-table;
+#settingTable{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10vh;
 }
 
-#div_switches{
-  top: 1.9vh;
-}
-
-img {
-    width: 5vh;
-}
-
-.info_circle {
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#item_sliders {
-  left: 25%; /* % is used because it is in a contence */
+td {
+  padding: 1vh;
 }
 
 /* ------------------- Header ------------------- */
@@ -62,86 +53,16 @@ img {
 }
 
 /* ------------------- Start Game Button ------------------- */
-
-#start_game_button {
-  border: none;
-  cursor: pointer;
-  background-color: #ffd900;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  font-size: 4vh;
-  padding: 1.5vh;
-  color: rgb(145, 145, 145);
-  border-radius: 8px;
+.gameButton{ /* page specific button settings */
+  width: 30%;
 }
 
-#start_game_button:hover{
-  background-color: #fade3d;
-}
+/* ------------------- Input box css ------------------- */
 
-#start_game_button:active {
-  background-color: #fade3d;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
-  transform: translateY(0.1vh);
-}
-
-/* ------------------- The switches -------------------*/
-
-/* Hide default HTML checkbox */
-
-.gameMode_switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  #ipt_nickname{
+    border-radius: 8px;
+    width: 120px;
   }
-
-.gameMode_switch{
-    position: relative;
-    display: inline-block;
-    width: 6vh;
-    height: 3vh;
-  }
-
-/* The ball in the switch */
-.switch {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-  }
-  
-  .switch:before {
-    position: absolute;
-    content: "";
-    height: 2vh;
-    width: 2vh;
-    left: 6px;
-    bottom: 5px;
-    background-color: white;
-    transition: .4s;
-  }
-  
-  input:checked + .switch {
-    background-color: #2196F3;
-  }
-
-  input:checked + .switch:before {
-    transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .switch{
-    border-radius: 34px;
-  }
-  
-  .switch:before {
-    border-radius: 50%;
-  }
-
-  /* ------------------- Input box css ------------------- */
 
   .inputError
   {
@@ -152,17 +73,111 @@ img {
   {
     background-color: #f1f0f0;
   }
-  
-  input[type=text] {
-    border: 0.5px dotted black;
-    border-radius: 7px;
-    width: 5vh;
-    flex: 1;
+
+  /* Help icon css */
+  .info_circle
+  {
+    cursor: help;
   }
 
+  .help-icon
+  {
+    top: 0px;
+  }
+  
 
-#start_game_button.disallowed
-{
-    background-color: lightgrey;
-    cursor: not-allowed;
-}
+  /* ------------------- Dots ------------------- */
+
+  
+  .dot-elastic {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin-left: 12%;
+    background-color: rgba(0, 0, 0, 0.474);
+    color: rgba(0, 0, 0, 0.474);
+    animation: dotElastic 1s infinite linear;
+  }
+  
+  .dot-elastic::before, .dot-elastic::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+  }
+  
+  .dot-elastic::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.474);
+    color: rgba(0, 0, 0, 0.474);
+    animation: dotElasticBefore 1s infinite linear;
+  }
+  
+  .dot-elastic::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.474);
+    color: rgba(0, 0, 0, 0.474);
+    animation: dotElasticAfter 1s infinite linear;
+  }
+  
+  @keyframes dotElasticBefore {
+    0% {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(1, 1.5);
+    }
+    50% {
+      transform: scale(1, 0.67);
+    }
+    75% {
+      transform: scale(1, 1);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+  
+  @keyframes dotElastic {
+    0% {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1, 1.5);
+    }
+    75% {
+      transform: scale(1, 1);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+  
+  @keyframes dotElasticAfter {
+    0% {
+      transform: scale(1, 1);
+    }
+    25% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1, 0.67);
+    }
+    75% {
+      transform: scale(1, 1.5);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+  

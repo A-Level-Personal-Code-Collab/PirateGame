@@ -4,7 +4,7 @@
  * Created Date: Sunday, September 19th 2021, 8:35:59 pm
  * Author: Ollie Burroughs
  * -----
- * Last Modified: Sat Nov 06 2021
+ * Last Modified: Mon Dec 27 2021
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 SchmetCorp.
@@ -13,6 +13,8 @@
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-27	WH	Added resize function including compensation for page warning
+ * 2021-12-27	WH	Moved to use class selectors for fitty
  * 2021-10-30	WH	Commented out cash info to make fitty work
  * 2021-09-27	WH	Sorts top 3 user properly
  * 2021-09-26	OB	Updates podium positions with player's name
@@ -44,9 +46,18 @@ function on_load()
 
     /*---------------*/
     //Run resize function to fit winner's names on podium
-    fitty('#firsttxt')
-    fitty('#secondtxt')
-    fitty('#thirdtxt')
+    function resizes() {
+        fitty('.podtext', {minSize: 0})
+        fitty('.podcash')
+
+        //Compensate for warning message at top of screen
+        const WARNING_HEIGHT =  document.querySelector(".Warning").clientHeight;
+        const resultsOuter = document.getElementById("div_resultsData");
+        resultsOuter.style.height = "calc(100vh - 77px - "+WARNING_HEIGHT+"px)";
+    }
+
+    resizes();
+    window.addEventListener("resize",resizes);
 
 }
 

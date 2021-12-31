@@ -6,12 +6,13 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Nov 13 2021
+ * Last Modified: Fri Dec 31 2021
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2021-12-31	WH	Fixed logo spilling out of about page info card
  * 2021-11-13	WH	Added background image for Will's card
  * 2021-11-13	OB	Added mobile support and flex
  */
@@ -70,9 +71,20 @@
 
 /* How it was created section */
 
+#div_aboutContent
+{
+    display: flex;
+}
+
+@media (max-aspect-ratio: 1/1) {
+    #div_aboutContent
+    {
+        flex-direction: column;
+        align-items: center;
+    }
+
+}
 .left_image {
-    float: left;
-    padding-right: 2.5vh;
     width: 20vw;
 }
 

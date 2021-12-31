@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 19 2021
+# Last Modified: Wed Dec 29 2021
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -33,7 +33,7 @@ from sqlalchemy import func
 
 #=========================================================#
 #^ Setup database connection engine ^#
-gameDB_engine = create_engine("mariadb+pymysql://pirategame_python:local-only@pirategame_dbsvr1/pirategame")
+gameDB_engine = create_engine("mariadb+pymysql://pirategame_python:local-only@pirategame_dbsvr1/pirategame",pool_pre_ping=True)
 #gameDB = sessionmaker(bind=gameDB_engine)()
 modelBase = declarative_base()
 

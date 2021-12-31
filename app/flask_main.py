@@ -7,12 +7,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Nov 19 2021
-# Modified By: Will Hall
+# Last Modified: Fri Dec 24 2021
+# Modified By: Adam O'Neill
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2021-12-24	AO	Game ID is passed as a variable to sheet builder
 # 2021-11-19	WH	Added session getter decorator to all requests that use the database and then accept the session and pass it on to any database functions 
 # 2021-11-13	WH	Fixed parsing issue for results page 
 # 2021-11-12	WH	Added functionality to inject version information to all pages
@@ -259,7 +260,7 @@ def game_sheet(session):
 
     gridHTML = gameplay.generators().html.buildEditableGrid(gridJSON["GRID_X"], gridJSON["GRID_Y"])  # Builds grid using values from loaded JSON
 
-    return render_template("playing_online/sheet_builder.html", grid=gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON)
+    return render_template("playing_online/sheet_builder.html", grid=gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON, gameID = gameID)
 
 #---------------#
 @app.route("/tutorial")
