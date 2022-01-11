@@ -1,0 +1,79 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/buttons.scss
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Tuesday, January 11th 2022, 8:39:04 pm
+ * Description: The Sass module that contains all of the styling for css buttons across the site (playing online pages)
+ * Author: Will Hall
+ * Copyright (c) 2022 Lime Parallelogram
+ * -----
+ * Last Modified: Tue Jan 11 2022
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2022-01-11	WH	Initial data from old game_global file
+ */
+@import '../../variables';
+
+.gameButton {
+    text-align: center;
+    background-color: $button-colour;
+    border-radius: 4px;
+    border: none;
+    font-size: 20px;
+    transition: all 0.5s ;
+    color: rgb(145, 145, 145);
+    cursor: pointer;
+    margin: 1vh;
+    padding: 10px;
+    vertical-align: middle;
+    font-family: 'Rock Salt', cursive;
+
+    span{ /* span is used so the arrow is a separate entity from the text */
+        transition: 0.5s;
+        display: inline-block;
+        position: relative;
+    }
+ 
+    &:not(:disabled) span:after{ /* adds the arrow to the <span> and hides it */
+        content: "\00bb"; /* arrow */
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -30px; /* movement of arrow*/
+    }
+    
+    &:hover:not(:disabled),&:active:not(:disabled) span{ /* Makes space for the arrow*/
+        background-color: #fce250;
+        padding-left: 35px;
+    }
+    
+    &:hover span::after{ /* When it is hovered on it shows the arrow and moves it */ 
+        opacity: 1;
+    }
+    
+    
+    /* When the button is in its disabled state */
+    &:disabled
+    {
+        background-color: rgb(211, 211, 211);
+        cursor: not-allowed;
+        pointer-events: none;
+
+        @media #{$mobile-vp}
+        {
+            visibility: hidden;
+            translate: 0 300px;
+        }
+    }
+
+    @media #{$mobile-vp} {
+        visibility: visible;
+        position: fixed;
+        transform: translateX(-50%);
+        bottom: 2vh;
+        width: 90vw;
+        margin: 0;
+    }
+}

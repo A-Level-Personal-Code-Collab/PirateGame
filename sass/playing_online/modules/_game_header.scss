@@ -1,0 +1,44 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/_game_header.scss
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Tuesday, January 11th 2022, 10:18:35 pm
+ * Description: Files relevant to the grey game header on pages
+ * Author: Will Hall
+ * Copyright (c) 2022 Lime Parallelogram
+ * -----
+ * Last Modified: Tue Jan 11 2022
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2022-01-11	WH	Initial data from old game_global file
+ */
+
+.gameSubheader
+{
+   background-color: #474e5d;
+   color: white;
+   height: 8vh;
+   min-height: max-content;
+   margin-bottom: 1vh;
+   position: relative;
+   text-align: center;
+   line-height: 8vh;
+   padding: 0 15px;
+}
+
+.gameHeaderTitle
+{
+   vertical-align: middle;
+   display: inline-block;
+}
+
+#div_headerControls
+{
+   position: absolute;
+   top: -50%;
+   transform: translate(0,50%);
+   display: inline-block;
+   right: 3%;
+}

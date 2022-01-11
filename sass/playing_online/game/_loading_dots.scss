@@ -1,0 +1,62 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/game/_loading_dots.scss
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Tuesday, January 11th 2022, 9:20:04 pm
+ * Description: The animation information for the loading dots on the picker popups
+ * Author: Will Hall
+ * Copyright (c) 2022 Lime Parallelogram
+ * -----
+ * Last Modified: Tue Jan 11 2022
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2022-01-11	WH	Added data from old css file
+ */
+
+#div_loadingdots
+{
+    margin-top: 3%;
+}
+
+.loadingdot
+{
+    height: 4vh;
+    width: 4vh;
+    border-radius: 50%;
+    display: inline-block;
+    animation: scaling 2.5s ease-in-out infinite;
+
+}
+
+@keyframes scaling
+{
+    0%, 100% {
+        transform: scale(0.2);
+        background-color: #F9CE71;
+    }
+    50% {
+        transform: scale(0.7);
+        background-color: #F4AC1A;
+    }
+}
+
+.loadingdot:nth-child(0){
+    animation-delay: 0s;
+}
+.loadingdot:nth-child(1){
+   animation-delay: 0.2s;
+}
+.loadingdot:nth-child(2){
+   animation-delay: 0.4s;
+}
+.loadingdot:nth-child(3){
+   animation-delay: 0.6s;
+}
+.loadingdot:nth-child(4){
+   animation-delay: 0.8s;
+}
+.loadingdot:nth-child(5){
+   animation-delay: 1s;
+}
