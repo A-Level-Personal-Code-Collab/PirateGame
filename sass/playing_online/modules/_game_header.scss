@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2022 Lime Parallelogram
  * -----
- * Last Modified: Tue Jan 11 2022
+ * Last Modified: Sat Jan 22 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -19,13 +19,14 @@
 {
    background-color: #474e5d;
    color: white;
-   height: 8vh;
+   height: 4vh;
+   line-height: 4vh;
    min-height: max-content;
    margin-bottom: 1vh;
    position: relative;
    text-align: center;
-   line-height: 8vh;
    padding: 0 15px;
+   border-bottom: white;
 }
 
 .gameHeaderTitle

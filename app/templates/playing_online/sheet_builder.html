@@ -28,8 +28,6 @@ Date      	By	Comments
 {% block title %}Game Sheet{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="../static/css/sheet_builder.css">
-<link rel="stylesheet" href="../static/css/global/popup.css">
-<link rel="stylesheet" href="../static/css/playing_online/game_global.css">
 <script src="../static/js/game/sheet_builder.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js"></script>
@@ -41,7 +39,7 @@ Date      	By	Comments
 {% endblock %}
 
 {% block body %}
-<div id="gameHeader">
+<div class="gameSubheader">
     <h2>Game ID: {{gameID}}</h2>
 </div>
 <div id="div_sheetArea">
@@ -65,7 +63,7 @@ Date      	By	Comments
         {{grid}}
     </div>
 
-    <button disabled id="btn_toLobby" onclick="send_grid()" name="submit_button" type="submit" class="gameButton"><span>To Lobby</span></button>
+    <button disabled id="btn_toLobby" onclick="send_grid()" name="submit_button" type="submit" class="gameButton mobileAlways"><span>To Lobby</span></button>
 
     <div id="div_squareControls"><div onclick="deleteItem()" class="squareControlButton">X</div></div>
 </div>

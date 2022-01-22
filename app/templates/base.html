@@ -12,6 +12,7 @@ Modified By: Will Hall
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-01-22	WH	Added special safari cheat units
 2021-12-24	WH	Removed mobile unsupported message
 2021-11-12	WH	Version number received from server context processor
 2021-08-28	WH	Added font definitions
@@ -35,10 +36,17 @@ Date      	By	Comments
     <!-- Link the js script -->
     <script src="../static/js/libraries/fitty.min.js"></script>
     <script>
-            // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
-            let vh = window.innerHeight * 0.01;
-            // Then we set the value in the --vh custom property to the root of the document
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
+            function resize()
+            {
+                // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+                let vh = window.innerHeight * 0.01;
+                // Then we set the value in the --vh custom property to the root of the document
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+
+            window.addEventListener("resize", resize);
+            resize();
+            
     </script>
 
     {% block head %}

@@ -1,1 +1,116 @@
-*{-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none}html{background-image:url("/static/img/background/jack/logo_tea_stained.jpg");background-repeat:no-repeat;background-size:100vw auto;background-position-x:center;overflow:hidden}@media (max-aspect-ratio: 3782 / 2713){html{background-size:auto 100vh}}#div_sheetArea{width:100%;height:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center}#div_coordinateGrid{width:80vh;height:80vh;max-width:100vw;max-height:100vw;background-image:url("/static/img/background/paper_scrap.png");background-position:center;background-size:100%;background-repeat:no-repeat;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center}#tbl_CoordinatesGrid{position:relative;width:70%;height:70%;border-spacing:0;border-collapse:collapse;table-layout:fixed}.gridSquare{aspect-ratio:1;border:3px solid black;margin:0;padding:0.5vh;text-align:center;cursor:cell;-webkit-transition:0.2s;transition:0.2s}.gridSquare:hover,.gridSquare:active{background-color:rgba(57,214,57,0.37)}.gridItems{position:relative;display:inline-block;cursor:pointer;pointer-events:none;width:95%}.gridItems img{pointer-events:none}#div_squareControls{height:5vh;text-align:center;font-weight:900;font-family:arial;position:absolute;font-family:'Permanent Marker', cursive;position:absolute;background-color:#c7c6c6;color:white;border-radius:5px;cursor:pointer;pointer-events:all;line-height:100%;padding:1vh;display:none;-webkit-animation:FadeIn 0.5s;animation:FadeIn 0.5s}#div_squareControls:before{content:"";width:0px;height:0px;position:absolute;border-left:20px solid transparent;border-right:20px solid transparent;border-top:20px solid #c7c6c6;bottom:-20px;left:50%;translate:-50% 0}.squareControlButton{border-radius:50%;background-color:#bb3c3c;aspect-ratio:1;font-size:4vh;height:5vh;line-height:5vh;-webkit-transition:0.3s;transition:0.3s}.squareControlButton:hover{scale:1.1}@-webkit-keyframes FadeIn{from{-webkit-transform:translateY(5vh);transform:translateY(5vh);opacity:0}to{-webkit-transform:none;transform:none;opacity:1}}@keyframes FadeIn{from{-webkit-transform:translateY(5vh);transform:translateY(5vh);opacity:0}to{-webkit-transform:none;transform:none;opacity:1}}#div_itemPicker{background-color:#474e5d;display:-webkit-box;display:-ms-flexbox;display:flex;border-radius:10px;padding:6px;margin-top:5px;max-width:90%;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#ffd900 #474e5d}#div_itemPicker::-webkit-scrollbar{width:12px}#div_itemPicker::-webkit-scrollbar-track{background:#474e5d}#div_itemPicker::-webkit-scrollbar-thumb{background-color:#ffd900;border-radius:20px;border:3px solid #474e5d}.itemStack{position:relative;width:7.5vh;-webkit-box-flex:0;-ms-flex:0 0 7.5vh;flex:0 0 7.5vh}.emptyStack{-webkit-filter:opacity(0.2) grayscale(1);filter:opacity(0.2) grayscale(1);-webkit-box-ordinal-group:101;-ms-flex-order:100;order:100}.selectedStack{filter:grayscale(0%);-webkit-filter:drop-shadow(1px 1px 0 black) drop-shadow(-4px -4px 0 green);filter:drop-shadow(1px 1px 0 black) drop-shadow(-4px -4px 0 green)}.stackCounter{pointer-events:none;background-color:#ffd900;color:black;font-weight:bold;font-size:16px;position:absolute;bottom:1vh;right:1vh;padding-left:5px;padding-right:5px;border-radius:3px}#btn_toLobby{visibility:visible;position:absolute;bottom:2vh;width:400px;max-width:90%}#btn_toLobby:disabled{visibility:hidden;translate:0 300px}#gameID{background-color:#474e5d46;border-radius:8px;padding:2px;color:white;position:absolute;bottom:10vh}.help-icon{position:absolute;top:100px;background-color:#e4e4e4}@media screen and (max-aspect-ratio: 1 / 1){.help-icon{top:calc(100px + 10vh)}}
+/* File: /home/will/GitHub Repos/PirateGame/sass/playing_online/sheet_builder/sheet_builder.scss Project: /home/will/GitHub Repos/PirateGame/sass/playing_online/sheet_builder Created Date: Saturday, January 22nd 2022, 4:07:32 pm Description: The main css file for the main sheet builder file Author: Will Hall Copyright (c) 2022 Lime Parallelogram ----- Last Modified: Sat Jan 22 2022 Modified By: Will Hall ----- HISTORY: Date      	By	Comments ----------	---	--------------------------------------------------------- 2022-01-22	WH	Fixed grid being too close too item picker slot 2022-01-22	WH	Fixed grid spilling off of paper 2022-01-22	WH	Added jack's new background */
+/* File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/_game_header.scss Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame Created Date: Tuesday, January 11th 2022, 10:18:35 pm Description: Files relevant to the grey game header on pages Author: Will Hall Copyright (c) 2022 Lime Parallelogram ----- Last Modified: Sat Jan 22 2022 Modified By: Will Hall ----- HISTORY: Date      	By	Comments ----------	---	--------------------------------------------------------- 2022-01-11	WH	Initial data from old game_global file */
+.gameSubheader { background-color: #474e5d; color: white; height: 4vh; line-height: 4vh; min-height: -webkit-max-content; min-height: -moz-max-content; min-height: max-content; margin-bottom: 1vh; position: relative; text-align: center; padding: 0 15px; border-bottom: white; }
+
+.gameHeaderTitle { vertical-align: middle; display: inline-block; }
+
+#div_headerControls { position: absolute; top: -50%; -webkit-transform: translate(0, 50%); transform: translate(0, 50%); display: inline-block; right: 3%; }
+
+/* File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/buttons.scss Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame Created Date: Tuesday, January 11th 2022, 8:39:04 pm Description: The Sass module that contains all of the styling for css buttons across the site (playing online pages) Author: Will Hall Copyright (c) 2022 Lime Parallelogram ----- Last Modified: Sat Jan 22 2022 Modified By: Will Hall ----- HISTORY: Date      	By	Comments ----------	---	--------------------------------------------------------- 2022-01-11	WH	Initial data from old game_global file */
+/* File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/_variables.scss Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame Created Date: Tuesday, January 11th 2022, 9:00:13 pm Description: The single place for setting variables for the sass files Author: Will Hall Copyright (c) 2022 Lime Parallelogram ----- Last Modified: Sat Jan 22 2022 Modified By: Will Hall ----- HISTORY: Date      	By	Comments ----------	---	--------------------------------------------------------- */
+.gameButton { text-align: center; background-color: #ffd900; border-radius: 4px; border: none; font-size: 20px; -webkit-transition: all 0.5s; transition: all 0.5s; color: #919191; cursor: pointer; margin: 1vh; padding: 10px; vertical-align: middle; font-family: 'Rock Salt', cursive; /* When the button is in its disabled state */ }
+
+.gameButton span { /* span is used so the arrow is a separate entity from the text */ -webkit-transition: 0.5s; transition: 0.5s; display: inline-block; position: relative; }
+
+.gameButton:not(:disabled) span:after { /* adds the arrow to the <span> and hides it */ content: "\00bb"; /* arrow */ position: absolute; opacity: 0; top: 0; right: -30px; /* movement of arrow*/ }
+
+.gameButton:hover:not(:disabled), .gameButton:active:not(:disabled) span { /* Makes space for the arrow*/ background-color: #fce250; padding-left: 35px; }
+
+.gameButton:hover span::after { /* When it is hovered on it shows the arrow and moves it */ opacity: 1; }
+
+.gameButton:disabled { background-color: lightgray; cursor: not-allowed; pointer-events: none; }
+
+@media (max-aspect-ratio: 1 / 1) { .gameButton:disabled { visibility: hidden; translate: 0 300px; } }
+
+.gameButton:disabled.mobileAlways { visibility: hidden; translate: 0 300px; }
+
+@media (max-aspect-ratio: 1 / 1) { .gameButton { visibility: visible; position: fixed; bottom: 2vh; width: 90vw; margin: 0; } }
+
+@media (min-aspect-ratio: 1 / 1) and (max-aspect-ratio: 16 / 10), (min-aspect-ratio: 16 / 10) { .gameButton.mobileAlways { visibility: visible; position: fixed; bottom: 2vh; width: 50vw; margin: 0; } }
+
+/* File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/_help.scss Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame Created Date: Saturday, January 22nd 2022, 5:22:49 pm Description: The scss file for the help and information popups Author: Will Hall Copyright (c) 2022 Lime Parallelogram ----- Last Modified: Sat Jan 22 2022 Modified By: Will Hall ----- HISTORY: Date      	By	Comments ----------	---	--------------------------------------------------------- 2022-01-22	WH	Moved all help related scripting to this file */
+/* -------------------------------- Help icon ------------------------------- */
+.help-icon { width: 32px; position: absolute; border-radius: 50%; translate: 0 5px; right: 15px; padding: 4px; border: solid 0.2px silver; cursor: help; -webkit-transition: 0.1s; transition: 0.1s; }
+
+.help-icon:hover { -webkit-transform: scale(1.3); transform: scale(1.3); }
+
+/*//=========================================================//*/
+/*^ Help popup ^*/
+.help-image { height: 20px; }
+
+#help_box { position: fixed; top: 50vh; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); border: solid 1px black; padding: 0; padding-bottom: 5px; -webkit-box-shadow: 10px 10px 10px #b4b4b4; box-shadow: 10px 10px 10px #b4b4b4; }
+
+@media (max-aspect-ratio: 1 / 1) { #help_box { width: 90%; } }
+
+#help_box > .popupHeader { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+
+#help_box > .popupBody { padding: 5px; }
+
+/* ----------------------------- Page formatting ---------------------------- */
+* { /* Ensure nothing in the page can be selected */ -webkit-user-select: none; -moz-user-select: none; -o-user-select: none; -ms-user-select: none; user-select: none; }
+
+html { background-image: url("/static/img/background/jack/logo_tea_stained.jpg"); background-repeat: no-repeat; background-size: 100vw auto; background-position-x: center; overflow: hidden; }
+
+@media (max-aspect-ratio: 3782 / 2713) { /* Ensure that on screens longer are wide that background image rendering is OK */
+  html { background-size: auto 100vh; } }
+
+#div_sheetArea { width: 100%; height: 100%; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; -webkit-box-align: center; -ms-flex-align: center; align-items: center; }
+
+/* --------------------------- Grid itself styling -------------------------- */
+#div_coordinateGrid { /* Aspect ratio cannot be used as it is not supported by all browsers */ width: calc(var(--vh, 1vh) * 80); height: calc(var(--vh, 1vh) * 80); max-width: 100vw; max-height: 100vw; background-image: url("/static/img/background/paper_scrap.png"); background-position: center; background-size: 100%; background-repeat: no-repeat; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; -webkit-box-align: center; -ms-flex-align: center; align-items: center; }
+
+#tbl_CoordinatesGrid { position: relative; width: 70%; height: 70%; border-spacing: 0; border-collapse: collapse; table-layout: fixed; }
+
+.gridSquare { aspect-ratio: 1; border: 3px solid black; margin: 0; padding: 0.5vh; text-align: center; cursor: cell; -webkit-transition: 0.2s; transition: 0.2s; }
+
+.gridSquare:hover, .gridSquare:active { background-color: rgba(57, 214, 57, 0.37); }
+
+/* ------------------------------ Grid elements ----------------------------- */
+.gridItems { position: relative; display: inline-block; cursor: pointer; pointer-events: none; width: 95%; }
+
+.gridItems img { pointer-events: none; }
+
+/* ---- Grid square popup (to delete and mutate the content of a square) ---- */
+#div_squareControls { height: 5vh; text-align: center; font-weight: 900; font-family: arial; position: absolute; font-family: 'Permanent Marker', cursive; position: absolute; background-color: #c7c6c6; color: white; border-radius: 5px; cursor: pointer; pointer-events: all; line-height: 100%; padding: 1vh; display: none; -webkit-animation: FadeIn 0.5s; animation: FadeIn 0.5s; }
+
+#div_squareControls:before { content: ""; width: 0px; height: 0px; position: absolute; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 20px solid #c7c6c6; bottom: -20px; left: 50%; -webkit-transform: translateX(-50%); transform: translateX(-50%); }
+
+.squareControlButton { border-radius: 50%; background-color: #bb3c3c; font-size: 4vh; height: 5vh; width: 5vh; line-height: 5vh; -webkit-transition: 0.3s; transition: 0.3s; }
+
+.squareControlButton:hover { scale: 1.1; }
+
+@-webkit-keyframes FadeIn { from { -webkit-transform: translateY(5vh); transform: translateY(5vh);
+    opacity: 0; }
+  to { -webkit-transform: none; transform: none;
+    opacity: 1; } }
+
+@keyframes FadeIn { from { -webkit-transform: translateY(5vh); transform: translateY(5vh);
+    opacity: 0; }
+  to { -webkit-transform: none; transform: none;
+    opacity: 1; } }
+
+/* ---------------------------- Item bank styles ---------------------------- */
+#div_itemPicker { background-color: #474e5d; display: -webkit-box; display: -ms-flexbox; display: flex; border-radius: 10px; padding: 6px; margin-top: 5px; max-width: 90%; overflow-x: auto; scrollbar-width: thin; scrollbar-color: #ffd900 #474e5d; }
+
+/* Scroll bar styling for Chromium based browsers */
+#div_itemPicker::-webkit-scrollbar { width: 12px; }
+
+#div_itemPicker::-webkit-scrollbar-track { background: #474e5d; }
+
+#div_itemPicker::-webkit-scrollbar-thumb { background-color: #ffd900; border-radius: 20px; border: 3px solid #474e5d; }
+
+/* ------------------------------- Item stacks ------------------------------ */
+.itemStack { position: relative; width: 7.5vh; -webkit-box-flex: 0; -ms-flex: 0 0 7.5vh; flex: 0 0 7.5vh; }
+
+.emptyStack { -webkit-filter: opacity(0.2) grayscale(1); filter: opacity(0.2) grayscale(1); -webkit-box-ordinal-group: 101; -ms-flex-order: 100; order: 100; }
+
+.selectedStack { filter: grayscale(0%); -webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(-4px -4px 0 green); filter: drop-shadow(1px 1px 0 black) drop-shadow(-4px -4px 0 green); }
+
+.stackCounter { pointer-events: none; background-color: #ffd900; color: black; font-weight: bold; font-size: 16px; position: absolute; bottom: 1vh; right: 1vh; padding-left: 5px; padding-right: 5px; border-radius: 3px; }
+
+/* ------------------------------- Game ID div ------------------------------ */
+#gameID { background-color: #474e5d46; border-radius: 8px; padding: 2px; color: white; position: absolute; bottom: 10vh; }
+
+.help-icon { position: absolute; top: 100px; background-color: #e4e4e4; }
+
+@media screen and (max-aspect-ratio: 1 / 1) { .help-icon { top: calc(100px + 10vh); } }
