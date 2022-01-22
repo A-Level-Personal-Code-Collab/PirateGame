@@ -6,7 +6,7 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Thu Dec 30 2021
+Last Modified: Sat Jan 22 2022
 Modified By: Will Hall
 -----
 HISTORY:
@@ -27,7 +27,7 @@ Date      	By	Comments
 
 {% block title %}Game Sheet{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="../static/css/playing_online/sheet_builder.css">
+<link rel="stylesheet" href="../static/css/sheet_builder.css">
 <link rel="stylesheet" href="../static/css/global/popup.css">
 <link rel="stylesheet" href="../static/css/playing_online/game_global.css">
 <script src="../static/js/game/sheet_builder.js" defer></script>
@@ -41,6 +41,9 @@ Date      	By	Comments
 {% endblock %}
 
 {% block body %}
+<div id="gameHeader">
+    <h2>Game ID: {{gameID}}</h2>
+</div>
 <div id="div_sheetArea">
     <!--Draw grid based on code sent from python-->
     <div id="div_itemPicker">
@@ -58,9 +61,6 @@ Date      	By	Comments
         <div class="itemStack" id="div_m200Stack"><div class="gridItems" id="M200"><img draggable="false" src="../static/img/items/set2/M200.png" class="gridItems"/></div><span class="stackCounter" id="M200_counter">99</span></div>
     </div>
     <img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="updateHelp('Place each item where you want it on your grid - in the end, the spinner selection is random so it matters little where items are placed. Long press or right click to remove an item from your grid. <br><br>Tip: Double click the 200s to auto-fill them.'); showHelp()">
-    <div id="gameID">
-        <h2>Game ID: {{gameID}}</h2>
-    </div>
     <div id="div_coordinateGrid">
         {{grid}}
     </div>
