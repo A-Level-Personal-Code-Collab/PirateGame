@@ -7,8 +7,8 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Dec 24 2021
-# Modified By: Adam O'Neill
+# Last Modified: Sat Jan 22 2022
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
@@ -294,7 +294,8 @@ def versioninfo(version):
 @gameplay.validators.pageControlValidate
 def lobby(session):
     # Redirect away if the user does not have correct cookies
-    if request.cookies.get("SID") == None:
+    sid = request.cookies.get("SID")
+    if sid == None:
         return redirect("/error?code=NOSID")
 
     try:
@@ -304,13 +305,14 @@ def lobby(session):
             return redirect(f"/playing_online/game?gid={gameID}")
         host_id = gameLine.host_id
         hostNick = database.get_user(session,host_id).user_nickname
+        myNick = database.get_user(session,sid).user_nickname
         host_content = ""
         # Renders host-only controls if the user is the host
         if gameplay.validators().isHost(session,request.cookies.get("SID"), request.args.get("gid")):
             host_content = Markup(render_template(
                 "playing_online/host_only/host_only_lobby.html"))
 
-        return render_template("playing_online/lobby.html", host_only_content=host_content, gameID=gameID, hostNick=hostNick)
+        return render_template("playing_online/lobby.html", host_only_content=host_content, gameID=gameID, myNick=myNick, hostNick=hostNick)
     except AttributeError:  # Redirect away if game does not exist
         return redirect("/error?code=GAMEINVALID")
 

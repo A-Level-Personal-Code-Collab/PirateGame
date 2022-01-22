@@ -15,12 +15,15 @@
  * 2022-01-11	WH	Initial data from old game_global file
  */
 
+ @import "../../variables";
+
 .gameSubheader
 {
+   display: flex;
    background-color: #474e5d;
    color: white;
-   height: 4vh;
-   line-height: 4vh;
+   height: 6vh;
+   line-height: 6vh;
    min-height: max-content;
    margin-bottom: 1vh;
    position: relative;
@@ -29,10 +32,46 @@
    border-bottom: white;
 }
 
-.gameHeaderTitle
+.gameHeaderContent
 {
-   vertical-align: middle;
-   display: inline-block;
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+   text-align: center;
+
+   @media #{$mobile-vp}
+   {
+      justify-content: center;
+   }
+
+}
+
+.gameHeaderControls
+{
+   align-self: flex-end;
+   display: flex;
+   margin-left: 5px;
+
+   .gameHeaderButton
+   {
+      height: 5vh;
+      margin: 0.5vh;
+      background-color: rgba(255, 255, 255, 0.178);
+      padding: 0 10px;
+      border: rgb(43, 43, 43) solid 1px;
+      border-radius: 4px;
+   }
+
+   .gameButton
+   {      
+      @media #{$widescreen-vp}, #{$landscape-vp-max} and #{$landscape-vp}
+      {
+         font-size: unset;
+         height: 5vh;
+         margin: 0.5vh;
+      }
+      
+   }
 }
 
 #div_headerControls
