@@ -4,8 +4,8 @@
  * Created Date: Monday, August 9th 2021, 12:12:44 pm
  * Author: Will Hall
  * -----
- * Last Modified: Tue Dec 21 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Sat Jan 22 2022
+ * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
  * ------------------------------------
@@ -27,7 +27,7 @@
  const btn_BeginGame = document.getElementById("start_button");
  const mcontrol_btn = document.getElementById("ipt_musicControl")
  const musicPlayer = new Audio(`${window.location.origin}/static/audio/lobby_backing.ogg`)
- const MIN_USERS = 3;
+ const MIN_USERS = 1;
 
  var socket = io.connect(SOCKETIO_ADDRESS, {transports: ["websocket"]}); //Connects to server's socket server
  var musicState = true;

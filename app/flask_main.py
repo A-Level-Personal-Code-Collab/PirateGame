@@ -333,7 +333,9 @@ def game(session):
         hostNick = database.get_user(session,hostID).user_nickname
 
         # Gets grid information from relevant database
-        gridSerial = database.get_user(session,userID).user_grid
+        user = database.get_user(session,userID)
+        gridSerial = user.user_grid
+        myNick = user.user_nickname
         gridSettingsJSON = json.loads(gameLine.grid_settings)
         gridX = int(gridSettingsJSON["GRID_X"])
         IMAGE_URLS = {  # Defines the locations of the images associated with the following items
@@ -354,9 +356,9 @@ def game(session):
 
         #-#
         if gameplay.validators().isHost(session,userID, gameID):
-            return render_template("playing_online/host_only/playing_online_host.html", grid=usersGrid, hostNick=hostNick, mySID=userID)
+            return render_template("playing_online/host_only/playing_online_host.html", grid=usersGrid, myNick=myNick, hostNick=hostNick, mySID=userID)
         else:
-            return render_template("playing_online/online_game.html", grid=usersGrid, hostNick=hostNick, mySID=userID)
+            return render_template("playing_online/online_game.html", grid=usersGrid, myNick=myNick, hostNick=hostNick, mySID=userID)
     except AttributeError:
         return redirect("/error?code=GAMEINVALID")
 

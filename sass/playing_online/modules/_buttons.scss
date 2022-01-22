@@ -29,7 +29,7 @@
     padding: 10px;
     vertical-align: middle;
     font-family: 'Rock Salt', cursive;
-    width: max-content;
+    min-width: max-content;
 
     span{ /* span is used so the arrow is a separate entity from the text */
         transition: 0.5s;
