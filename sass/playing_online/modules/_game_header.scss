@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2022 Lime Parallelogram
  * -----
- * Last Modified: Sat Jan 22 2022
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2022-01-23	WH	Added standard styling for the gameID and nickname boxes
  * 2022-01-11	WH	Initial data from old game_global file
  */
 
@@ -60,6 +61,7 @@
       padding: 0 10px;
       border: rgb(43, 43, 43) solid 1px;
       border-radius: 4px;
+      align-self: flex-end;
    }
 
    .gameButton
@@ -67,8 +69,10 @@
       @media #{$widescreen-vp}, #{$landscape-vp-max} and #{$landscape-vp}
       {
          font-size: unset;
+         padding: 0 5px;
          height: 5vh;
          margin: 0.5vh;
+         width: max-content;
       }
       
    }
@@ -81,4 +85,17 @@
    transform: translate(0,50%);
    display: inline-block;
    right: 3%;
+}
+
+#hostNickContainer{
+   margin-left: 1vw;
+   max-height: 7vw;
+   text-align: left;
+}
+
+#gameIDContainer
+{
+   @media #{$mobile-vp} {
+       display: none;
+   }
 }

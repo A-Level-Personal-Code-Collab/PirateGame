@@ -6,12 +6,13 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sat Jan 22 2022
+Last Modified: Sun Jan 23 2022
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-01-23	WH	Switched to using standardized game header
 2021-12-30	WH	Added help popup
 2021-12-24	AO	Added Game ID 
 2021-12-24	WH	Added button to move on to lobby
@@ -39,9 +40,12 @@ Date      	By	Comments
 {% endblock %}
 
 {% block body %}
-<div class="gameSubheader">
-    <h2>Game ID: {{gameID}}</h2>
-</div>
+<div id="div_sheetBuilderHeader" class="gameSubheader">
+    <div class="gameHeaderContent">
+        <div id="hostNickContainer"><h1 id="hostNick">{{ myNick }}</h1></div>
+        <div id="gameIDContainer"><h1 id="gameID">{{ gameID  }}</h1></div>
+    </div>
+</div>.
 <div id="div_sheetArea">
     <!--Draw grid based on code sent from python-->
     <div id="div_itemPicker">

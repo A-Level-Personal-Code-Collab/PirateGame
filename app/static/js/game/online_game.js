@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Sat Jan 22 2022
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -204,10 +204,8 @@
  //Updates the game log panel
  function log_update(data)
  {
-     console.log(data);
      var text = data["entry"]
      var delay = data["delay"]
-     console.log(text)
      text = text.replace(`!<${MY_SID}>`,"YOU") //Replaces your name with 'YOU'
 
      //Handles replacement of SID's with nicknames
@@ -295,7 +293,6 @@
          var explanation = data["explanation"]
          updateHelp(explanation)
          var invalidRetals = data["invalidRetals"].split(",")
-         console.log(invalidRetals)
 
          //Get HTML elements from page
          var actionText = document.getElementById("h3_action_emphasis_text");
@@ -319,6 +316,7 @@
                  targetText.innerHTML = "YOU";
 
                  retaliated = false;
+                 ////retaliations_area.innerHTML = `<img src="/static/img/tmp-asset.png" onClick="retaliation_declare('commit')" class="retaliationOption" alt="surrender">`;
                  retaliations.forEach((a) => {
                     if (invalidRetals.includes(a["type"])) //Checks if a given retaliation is disallowed by the event in question
                     {

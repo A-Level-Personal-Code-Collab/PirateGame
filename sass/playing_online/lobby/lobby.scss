@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2022 Lime Parallelogram
  * -----
- * Last Modified: Sat Jan 22 2022
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -43,53 +43,6 @@
         flex-wrap: nowrap;
         min-width: 150px;
     }
-    
-    #hostNickContainer{
-        margin-left: 1vw;
-        max-height: 7vw;
-        text-align: left;
-    }
-
-    #gameIDContainer
-    {
-        @media #{$mobile-vp} {
-            display: none;
-        }
-    }
-    
-    
-     /*//=========================================================//*/
-     /*^ Buttons ^*/
-    
-     .actionButton{
-        border: none;
-        cursor: pointer;
-        background-color: #ffd900;
-        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.535);
-        padding: 1vw;
-        color: rgb(145, 145, 145);
-        border-radius: 8px;
-        margin-right: 10px;
-        height: 3.5vw;
-        width: auto;
-        min-width: 45px;
-      }
-    
-      .actionButton:hover{
-        background-color: #fade3d;
-      }
-    
-      .actionButton:active:not(:disabled){
-        background-color: #fade3d;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.274);
-        transform: translateY(0.1vh);
-      }
-    
-      .actionButton:disabled{
-          background-color: darkgray;
-          cursor: not-allowed;
-      }
-    
     
      /*//=========================================================//*/
      /*^ Names list ^*/

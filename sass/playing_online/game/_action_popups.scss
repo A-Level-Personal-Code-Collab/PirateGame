@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2022 Lime Parallelogram
  * -----
- * Last Modified: Tue Jan 11 2022
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
  * ----------	---	---------------------------------------------------------
+ * 2022-01-23	WH	Fixed mirror not being disabled
  * 2022-01-11	WH	Initial data from old online_game file
  */
  @import "./loading_dots";
@@ -56,7 +57,7 @@
          padding: 5px;
      }
 
-     &:disabled
+     &.disabled
      {
          pointer-events: none;
          filter: blur(1px) grayscale(100%);

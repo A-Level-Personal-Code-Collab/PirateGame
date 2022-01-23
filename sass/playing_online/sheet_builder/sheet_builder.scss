@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2022 Lime Parallelogram
  * -----
- * Last Modified: Sat Jan 22 2022
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -244,21 +244,10 @@
    }
    
    /* ------------------------------- Game ID div ------------------------------ */
-   
-   #gameID{
-       background-color: #474e5d46;
-       border-radius: 8px;
-       padding: 2px;
-       color: white;
-       position: absolute;
-       bottom: 10vh;
-       
-   }
-   
    .help-icon
    {
        position: absolute;
-       top: 100px;
+       top: 150px;
        background-color: rgb(228, 228, 228);
    }
    
