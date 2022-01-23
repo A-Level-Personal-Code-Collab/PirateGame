@@ -6,12 +6,13 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Wed Dec 29 2021
+# Last Modified: Sun Jan 23 2022
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2022-01-23	WH	Added check function to determine if a user with a given nickname already exists
 # 2021-11-19	WH	Created session getter decorator for other files
 # 2021-11-19	WH	Allowed all functions to accept a session as a parameter and use this to perform functions
 # 2021-11-19	WH	Removed global session
@@ -140,6 +141,15 @@ def get_players(session,gameID):
 def delete_players(session,gameID):
     session.query(activeUsers).filter(activeUsers.user_game_id==int(gameID)).delete()
     session.commit()
+
+#---------------#
+#Checks and validations
+@db_action
+def isUsernameTaken(session,gameID,username): #Checks if a user with a given username already exists
+    matchingUsers = session.query(activeUsers).filter(activeUsers.user_game_id==gameID,activeUsers.user_nickname==username).count()
+    if matchingUsers > 0:
+        return True
+    return False
 
 #---------------#
 #Delete old users and games from the database

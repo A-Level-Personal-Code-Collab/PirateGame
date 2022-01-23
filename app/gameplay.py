@@ -6,7 +6,7 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Dec 20 2021
+# Last Modified: Sun Jan 23 2022
 # Modified By: Will Hall
 # -----
 # HISTORY:
@@ -48,7 +48,7 @@ usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 
 #---------------#
-GAME_VERSION = "1.0.0(B)"
+GAME_VERSION = "1.0.1(B)"
 
 #=========================================================#
 #^ Game generaion systems ^#

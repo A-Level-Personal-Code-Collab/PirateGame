@@ -6,12 +6,13 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Thu Dec 30 2021
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date          By    Comments
  * ----------    ---    ---------------------------------------------------------
+ * 2022-01-23	WH	Fixed client already open on mobile
  * 2021-12-27	WH	Popup uses fixed mode for mobile screens
  * 2021-12-20	WH	Added styling for the new site-wide help box
  * 2021-10-27	WH	Improved responsive centring
@@ -94,30 +95,16 @@
      transform: translate(-50%, 0);
  }
 
-  /*//=========================================================//*/
- /*^ Help popup ^*/
- .help-image
+ #div_gameopen_popup
  {
-     height: 20px;
+     top: 50vh;
+     transform: translate(-50%, -50%);
  }
 
- #help_box
+ @media (max-aspect-ratio: 1/1)
  {
-     position: fixed;
-     top: 50%;
-     translate: 0 -50% ;
-     border: solid 1px black;
-     padding: 0;
-     padding-bottom: 5px;
-     box-shadow: 10px 10px 10px rgb(180, 180, 180);
- }
-
- #help_box > .popupHeader
- {
-     border-bottom-left-radius: 0;
-     border-bottom-right-radius: 0;
- }
- #help_box > .popupBody
- {
-     padding: 5px;
+    #div_gameopen_popup
+    {
+        width: 90%
+    }
  }

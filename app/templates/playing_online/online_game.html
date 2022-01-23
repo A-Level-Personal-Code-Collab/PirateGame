@@ -6,12 +6,13 @@ Description: The main game play screen
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Dec 27 2021
+Last Modified: Sun Jan 23 2022
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-01-23	WH	Switched to using standardized game header
 2021-12-27	WH	Moved functionality buttons to main page not header
 2021-12-20	WH	Added help button and help box to target picker popup
 2021-11-09	WH	Money values no longer list
@@ -33,9 +34,7 @@ Date      	By	Comments
 
 {% block title %}Playing Pirate Game{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="../static/css/playing_online/online_game.css">
-<link rel="stylesheet" href="../static/css/playing_online/game_global.css">
-<link rel="stylesheet" href="../static/css/global/popup.css">
+<link rel="stylesheet" href="../static/css/online_game.css">
 <link href="https://fonts.googleapis.com/css2?family=Frijole&display=swap" rel="stylesheet"> 
 <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet"> 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
@@ -52,7 +51,10 @@ Date      	By	Comments
 
 {% block body%}
     <div class="gameSubheader" id="div_gameHeader">
-        <div class="fittyContainer"><h1 class="gameHeaderTitle">{{ hostNick }}'s Pirate Game</h1></div>
+        <div class="gameHeaderContent">
+            <div id="hostNickContainer"><h1 id="hostNick">{{ myNick }}</h1></div>
+            <div id="gameIDContainer"><h1 id="gameID">{{ gameID  }}</h1></div>
+        </div>
     </div>
     <div id="div_gameDataGroup">
         {{ grid }}

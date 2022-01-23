@@ -6,12 +6,13 @@ Description: The actual play grid for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Thu Dec 30 2021
+Last Modified: Sun Jan 23 2022
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-01-23	WH	Switched to using standardized game header
 2021-12-30	WH	Added help popup
 2021-12-24	AO	Added Game ID 
 2021-12-24	WH	Added button to move on to lobby
@@ -27,9 +28,7 @@ Date      	By	Comments
 
 {% block title %}Game Sheet{% endblock %}
 {% block head %}
-<link rel="stylesheet" href="../static/css/playing_online/sheet_builder.css">
-<link rel="stylesheet" href="../static/css/global/popup.css">
-<link rel="stylesheet" href="../static/css/playing_online/game_global.css">
+<link rel="stylesheet" href="../static/css/sheet_builder.css">
 <script src="../static/js/game/sheet_builder.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/fitty.min.js"></script>
@@ -41,6 +40,12 @@ Date      	By	Comments
 {% endblock %}
 
 {% block body %}
+<div id="div_sheetBuilderHeader" class="gameSubheader">
+    <div class="gameHeaderContent">
+        <div id="hostNickContainer"><h1 id="hostNick">{{ myNick }}</h1></div>
+        <div id="gameIDContainer"><h1 id="gameID">{{ gameID  }}</h1></div>
+    </div>
+</div>.
 <div id="div_sheetArea">
     <!--Draw grid based on code sent from python-->
     <div id="div_itemPicker">
@@ -58,14 +63,11 @@ Date      	By	Comments
         <div class="itemStack" id="div_m200Stack"><div class="gridItems" id="M200"><img draggable="false" src="../static/img/items/set2/M200.png" class="gridItems"/></div><span class="stackCounter" id="M200_counter">99</span></div>
     </div>
     <img alt="help icon" title="Get Help" src="/static/img/icons/help.png" class="help-icon" onClick="updateHelp('Place each item where you want it on your grid - in the end, the spinner selection is random so it matters little where items are placed. Long press or right click to remove an item from your grid. <br><br>Tip: Double click the 200s to auto-fill them.'); showHelp()">
-    <div id="gameID">
-        <h2>Game ID: {{gameID}}</h2>
-    </div>
     <div id="div_coordinateGrid">
         {{grid}}
     </div>
 
-    <button disabled id="btn_toLobby" onclick="send_grid()" name="submit_button" type="submit" class="gameButton"><span>To Lobby</span></button>
+    <button disabled id="btn_toLobby" onclick="send_grid()" name="submit_button" type="submit" class="gameButton mobileAlways"><span>To Lobby</span></button>
 
     <div id="div_squareControls"><div onclick="deleteItem()" class="squareControlButton">X</div></div>
 </div>

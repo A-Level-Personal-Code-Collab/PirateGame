@@ -1,0 +1,21 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/modules/_variables.scss
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Tuesday, January 11th 2022, 9:00:13 pm
+ * Description: The single place for setting variables for the sass files
+ * Author: Will Hall
+ * Copyright (c) 2022 Lime Parallelogram
+ * -----
+ * Last Modified: Sat Jan 22 2022
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ */
+$button-colour: #ffd900;
+
+$mobile-vp: (max-aspect-ratio: 1/1);
+$landscape-vp: (min-aspect-ratio: 1/1);
+$landscape-vp-max: (max-aspect-ratio: 16/10);
+$widescreen-vp: (min-aspect-ratio: 16/10)

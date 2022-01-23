@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2021 Lime Parallelogram
  * -----
- * Last Modified: Thu Dec 30 2021
+ * Last Modified: Sat Jan 22 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -20,34 +20,6 @@
  * 2021-09-02	WH	   Added CSS for new controls housing DIV
  * 2021-08-28	WH	   Added title styling
  */
-
- .gameSubheader
- {
-    background-color: #474e5d;
-    color: white;
-    height: 8vh;
-    min-height: max-content;
-    margin-bottom: 1vh;
-    position: relative;
-    text-align: center;
-    line-height: 8vh;
-    padding: 0 15px;
- }
-
- .gameHeaderTitle
- {
-    vertical-align: middle;
-    display: inline-block;
- }
-
- #div_headerControls
- {
-    position: absolute;
-    top: -50%;
-    transform: translate(0,50%);
-    display: inline-block;
-    right: 3%;
- }
 
  /* ------------------------ Global site game buttons ------------------------ */
  .gameButton {
@@ -113,22 +85,4 @@
        translate: 0 300px;
    }
    
- }
-
- /* -------------------------------- Help icon ------------------------------- */
- .help-icon
- {
-     width: 32px;
-     position: absolute;
-     border-radius: 50%;
-     translate: 0 5px;
-     right: 15px;
-     padding: 4px;
-     border: solid 0.2px rgb(192, 192, 192);
-     cursor: help;
-     transition: 0.1s;
- }
- .help-icon:hover
- {
-     transform: scale(1.3);
  }

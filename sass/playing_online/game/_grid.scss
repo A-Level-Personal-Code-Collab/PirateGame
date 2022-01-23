@@ -1,0 +1,132 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/playing_online/game/_grid.scss
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Tuesday, January 11th 2022, 9:29:58 pm
+ * Description: The settings for the actual gameplay grid
+ * Author: Will Hall
+ * Copyright (c) 2022 Lime Parallelogram
+ * -----
+ * Last Modified: Sun Jan 16 2022
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2022-01-11	WH	Initial data from old online_game file
+ */
+
+ /* ---------------------------- Grid table itself --------------------------- */
+#tbl_playGrid
+{
+    align-self: flex-start;
+    position: relative;
+    border-spacing: 0;
+    border-collapse: collapse;
+    height: 1000px;
+    max-height: calc(var(--vh, 1vh) * 70);
+    aspect-ratio: 1/1;
+    max-width: 100%;
+
+    @media #{$widescreen-vp}
+    {
+        max-width: calc(var(--vh, 1vh) * 70);
+    }
+
+    @media #{$landscape-vp}
+    {
+        width: 70vh;
+    }
+}
+
+/* ----------------- The table cells that images are inside ----------------- */
+.gridSquare
+{
+    border: 3px solid black;
+    margin: 0;
+    padding: 0.5vh;
+    text-align: center;
+    vertical-align: middle;
+
+    &.completed
+    {
+        background-color: rgba(172, 172, 172, 0.705);
+        filter: blur(0.5px) grayscale(100%);
+    }
+
+    &.selected
+    {
+        filter: none;
+        background-color: rgb(228, 135, 135);
+        animation: square-picker 0.2s;
+    }
+
+}
+
+/* ------------------------------- Grid images ------------------------------ */
+.gridItems
+{
+    pointer-events: none;
+    width: 100%;
+    
+}
+
+ /* ---------------------- Grid square spinner animation --------------------- */
+ @keyframes square-picker {
+    0% { opacity: 0.7; transform: scale(1); }
+    100% { opacity: 0.7; transform: scale(1.1); }
+}
+
+
+
+/* -------------------------- Not currently used -------------------------- */
+/* -------- Shaking animation for the items that you need to declare -------- */
+.seekingAttention
+{
+    pointer-events: all;
+    cursor: pointer;
+    transform: scale(1.8);
+    animation: seeking-attention 3s linear infinite forwards;
+
+    &:hover
+    {
+        filter: opacity(0.4);
+    }
+}
+
+@keyframes seeking-attention {
+    5% {
+        transform: translateY(15px) scale(1.6);
+    }
+    10% {
+        transform: rotate(15deg) translateX(10px) scale(2.4);
+    }
+    15% {
+        transform: rotate(-18deg) translateX(-18px) scale(2.6);
+    }
+    20%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+    25%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+
+    30% {
+        transform: translateY(25px) scale(1.6);
+    }
+    35% {
+        transform: rotate(-55deg) translateX(-30px) scale(2.6);
+    }
+    40% {
+        transform: rotate(8deg) translateX(8px) scale(2.4);
+    }
+    45%
+    {
+        transform: rotate(0deg) translateY(0) translateX(0) scale(1.8);
+    }
+
+}
+
+
+
