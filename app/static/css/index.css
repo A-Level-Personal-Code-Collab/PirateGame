@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sat Nov 13 2021
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -112,7 +112,6 @@
     flex: 1 1 0;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     margin: 1vh;
-    height: fit-content;
     text-align: center;
     padding: 1vh;
 }
