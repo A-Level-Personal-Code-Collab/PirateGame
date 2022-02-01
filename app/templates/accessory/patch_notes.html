@@ -6,17 +6,18 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Fri Dec 31 2021
-Modified By: Adam O'Neill
+Last Modified: Tue Feb 01 2022
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-02-01	WH	Patch notes list now generated dynamically
 -->
 {% extends "base.html" %} 
 
 {% block head %}
-    <link rel="stylesheet" href="../static/css/accessory_page/patch_notes.css">
+    <link rel="stylesheet" href="/static/css/accessory_page/patch_notes.css">
     <title>Patch Notes</title>
 {% endblock %}
 
@@ -25,10 +26,9 @@ Date      	By	Comments
         <h1>All patch notes</h1>
     </div>
     <div class="notes_container"> <!-- All Notes-->
-        <li><a href="/patch_notes/0-0-0(B)">Beta 0.0.0</a></li>
-        <li><a href="/patch_notes/0-1-0(B)">Beta 0.1.0</a></li>
-        <li><a href="/patch_notes/0-1-1(B)">Beta 0.1.1</a></li>
-        <li><a href="/patch_notes/1-0-0(B)">Beta 1.0.0</a></li>
+        {%for version in allReleases%}
+            <li><a href="{{version['versionUrl']}}">{{ version['versionName'] }}</a></li>
+        {% endfor %}
     </div>
 
 {% endblock %}

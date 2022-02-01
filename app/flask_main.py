@@ -7,12 +7,14 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Sun Jan 23 2022
+# Last Modified: Tue Feb 01 2022
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2022-02-01	WH	Patch notes page now subsection of about page
+# 2022-02-01	WH	Handles new OOP approach to patch notes
 # 2022-01-23	WH	Added parseing system for required extra header data to client
 # 2022-01-23	WH	Added check for if username is taken
 # 2021-12-24	AO	Game ID is passed as a variable to sheet builder
@@ -71,6 +73,7 @@
 #=========================================================#
 #^ Imports Modules ^#
 from flask import Flask, render_template, Markup, send_file, request, make_response, redirect
+from markdown import markdown
 import json
 import time
 
@@ -105,8 +108,8 @@ def inject_version():
 def index(session):
     TotalGames = database.statistics.getTotalGames(session)
     CalcActiveGames = database.statistics.calcActiveGames(session)
-    version_url = "/patch_notes/" + gameplay.GAME_VERSION.replace(".","-") #Parse the game version into the patch notes url
-    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, version_url=version_url, overview=gameplay.parsers().parseVersionOverview())
+    release = gameplay.parsers.patchNotes()
+    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, releaseData=release.getReleaseJSON())
 
 #---------------#
 # Error pages
@@ -280,16 +283,16 @@ def about_page():
     return render_template("accessory/about.html")
 
 #---------------#
-@app.route("/patch_notes")
+@app.route("/about/patch_notes")
 def patch_notes():
-    return render_template("accessory/patch_notes.html")
+    return render_template("accessory/patch_notes.html", allReleases=gameplay.parsers.getVersions())
 
-@app.route("/patch_notes/<version>")
+@app.route("/about/patch_notes/release/<version>")
 def versioninfo(version):
     try:
-        f=open(f"static/patchnotes/{version}.txt","r") 
-        displayhtml = gameplay.parsers.convertTxtToHtml(f)
-        return render_template("accessory/patch_notes_base.html", body=displayhtml, title=version)
+        release = gameplay.parsers.patchNotes(version)
+
+        return render_template("accessory/patch_notes_base.html", body=release.convertTxtToHtml(), title=version)
     except:
         return redirect("/error?code=VERSIONINVALID")
 

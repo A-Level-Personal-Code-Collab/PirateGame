@@ -1,5 +1,0 @@
-First line is the header
-~ is a description
-^Is a title 
-- is a bullet
-#16 number references an issue Test (has to be within a bullet point)

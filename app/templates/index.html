@@ -6,12 +6,13 @@ Description: The main welcome file for the pirate game
 Author: Will Hall
 Copyright (c) 2021 Lime Parallelogram
 -----
-Last Modified: Sun Jan 23 2022
+Last Modified: Tue Feb 01 2022
 Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-02-01	WH	All release information is loaded dynamically
 2021-11-12	WH	Version information loaded from server and parsed from text files.
 2021-10-30	WH	Added Ko-Fi support option
 2021-10-30	WH	Added social media buttons to other news section
@@ -54,15 +55,15 @@ Date      	By	Comments
                 <h3>Version News and [eye] patch notes</h3>
                 <br>
                 <div id="div_currentVersion">
-                    <h3>Version {{version}}</h3>
+                    <h3>{{ releaseData['releaseTitle'] }}</h3>
                     <div id="div_versionFlex">
-                        <img id="img_releaseCelebration" src="../static/img/release-art/safari.png" alt="Logo with party blower">
-                        <div class="release_summery">{{ overview }}
-                            <br>Read the release notes in full <a href="{{ version_url }}">here</a>.
+                        <img id="img_releaseCelebration" src="{{ releaseData['releaseIllustration'] }}" alt="Release art work">
+                        <div class="release_summery">{{ releaseData['releaseOverview'] }}
+                            <br>Read the release notes in full <a href="{{ releaseData['releaseUrl'] }}">here</a>.
                         </div>
                     </div>
                 </div>
-                <p>All patch notes can be viewed <a href="/patch_notes">here</a>.</p>
+                <p>All patch notes can be viewed <a href="/about/patch_notes">here</a>.</p>
             </div>
         </div>
         <div class="news_container">
