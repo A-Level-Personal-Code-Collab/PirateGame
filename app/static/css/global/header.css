@@ -6,7 +6,7 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Thu Dec 30 2021
+ * Last Modified: Sun Jan 16 2022
  * Modified By: Will Hall
  * Details: added ease to header hover
  * HISTORY:
@@ -15,7 +15,7 @@
  */
 *{
     margin: 0;
-    
+    -webkit-appearance: none;
 }
 
 

@@ -6,12 +6,15 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Mon Dec 20 2021
+# Last Modified: Tue Feb 01 2022
 # Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2022-02-01	WH	Patch notes processor now has image facility
+# 2022-02-01	WH	Patch notes processor now handles markdown formatted text
+# 2022-02-01	WH	Created class for patch notes processor
 # 2021-11-19	WH	Modified all functions that use the database to accept a session parameter
 # 2021-11-15	WH	Results now stored in database as JSON object
 # 2021-11-12	WH	Added functionality to extract patch notes overview from files
@@ -34,9 +37,11 @@
 #=========================================================#
 #^ Imports required modules ^#
 from io import TextIOBase
-from os import link
+import os
 import time
 from flask import Markup, request, redirect
+import markdown
+import re
 from string import Template
 import random
 
@@ -48,7 +53,7 @@ usersTBL = database.activeUsers
 gamesTBL = database.activeGames
 
 #---------------#
-GAME_VERSION = "1.0.0(B)"
+GAME_VERSION = "1.1.0"
 
 #=========================================================#
 #^ Game generaion systems ^#
@@ -286,60 +291,70 @@ class parsers:
             exec(e) #Executes the string expression
         
         return self.vCash, self.vBank, self.pCash, self.pBank
-
-    #---------------#
-    #Converts patch notes text files to HTML pages
-    def convertTxtToHtml(file):
-        title = file.readline().strip()#works
-        body = file.readlines()
-        htmltext = ""
-        htmltext = htmltext + '<div class="header">' + title + "</div>"
-        htmltext = htmltext + "<div class=notes_container>"
-        for line in body:
-            # check if it starts with a ~ # or -
-            if line[0] == "^": # checks if header
-                htmltext = htmltext + "<br>"
-                htmltext = htmltext + "<h3>" + line[1:] + "</h3>" # [1:] is used to slice the first letter off
-
-            elif line[0] == "~": # description
-                htmltext = htmltext + "<p>" + line[1:] + "</p>"
-
-            elif line[0] == "-": # Bullet point
-                htmltext = htmltext + "<li>" + line[1:] + "</li>"
-
-            if "#" in line: # github issue
-                hash = line.find("#")
-                notint=0
-                linkstr = line[hash+1:]
-                for character in linkstr:
-                    if character.isdigit() != True:
-                        notint = linkstr.find(character)
-                        break
-                if not notint == 0:    
-                    issueref = linkstr[:notint]
-                else:
-                    issueref = linkstr
-
-
-                htmltext = htmltext.replace("#"+issueref , f"<a href=https://github.com/A-Level-Personal-Code-Collab/PirateGame/issues/{issueref}>#{issueref}</a>")
-
-        htmltext = htmltext + "</div>" 
-        
-        return Markup(htmltext)
     
-    #---------------#
-    #Extract the overview information from the patch notes file
-    def parseVersionOverview(self):
-        PATCH_NOTES_PATH = "static/patchnotes/"
-        self.gamefile = PATCH_NOTES_PATH + GAME_VERSION.replace(".","-") + ".txt"
-        with open(self.gamefile, 'r') as file:
-            self.filedat = file.read()
-        
-        self.overviewStart = self.filedat.find("^Overview") + 11
-        self.overviewEnd = self.filedat[self.overviewStart:].find("^") - 1
+    class patchNotes:
+        def __init__(self,version=GAME_VERSION): #Reads patch notes file (Default version = current version)
+            self.gamefile = "static/patchnotes/" + version.replace(".","-") + ".md"
+            self.releaseURL = "/about/patch_notes/release/" + version.replace(".","-")
 
-        return self.filedat[self.overviewStart:self.overviewEnd+self.overviewStart]
+            with open(self.gamefile, 'r') as file:
+                self.releaseTitle = file.readline()[4:]
+                self.filedat = file.read()
+
+        #---------------#
+        #Converts patch notes text files to HTML pages
+        def convertTxtToHtml(self):
+            #Locate Issue numbers and add their links to markdown
+            searchText = self.filedat
+            allIssues = [m.start() for m in re.finditer('Issue #', self.filedat)] #Find all instances of issues in the page
+
+            #Check all issues and fix them
+            for issue in allIssues:
+                issueText = searchText[issue:issue+11]
+                issueNumber = issueText[-4:]
+                while not issueNumber[len(issueNumber)-1].isdigit():
+                    issueNumber = issueNumber[:-1]
+                    issueText = issueText [:-1]
+
+                self.filedat = self.filedat.replace(issueText,f"[{issueText}](https://github.com/A-Level-Personal-Code-Collab/PirateGame/issues/{issueNumber})")               
+
+            #Convert modified markdown to issue page
+            htmlText = markdown.markdown(self.filedat)
+            return Markup(htmlText)
+
+        #---------------#
+        #Extract the overview information from the patch notes file
+        def getReleaseOverview(self):
+            self.overviewStart = self.filedat.find("## Overview") + 12
+            self.overviewEnd = self.filedat[self.overviewStart:].find("##") - 1
+
+            return self.filedat[self.overviewStart:self.overviewEnd+self.overviewStart]
     
+        #---------------#
+        #Extract version illustration image
+        def getReleaseIllustration(self):
+            self.imageStart = self.filedat.find("![Release Illustration](") + 24
+            self.imageEnd = self.filedat[self.imageStart:].find(")")
+
+            return self.filedat[self.imageStart:self.imageEnd+self.imageStart]
+
+        #---------------#
+        # Gets a compiled JSON with information about the release for the home page
+        def getReleaseJSON(self):
+            self.releaseDictionary = {"releaseTitle": self.releaseTitle, "releaseOverview": self.getReleaseOverview(), "releaseIllustration": self.getReleaseIllustration(), "releaseUrl": self.releaseURL}
+            return self.releaseDictionary
+
+    def getVersions():
+        versions = []
+        for version in os.listdir("static/patchnotes"):
+            versionNumber = version[:-3].replace("-",".")
+
+            if versionNumber != "key": #Ignore key.md file
+                versions.append({"versionId": versionNumber.replace(".",""),"versionUrl": "/about/patch_notes/release/"+version[:-3], "versionName": "Release "+versionNumber})
+        
+        versions.sort(key= lambda item: item.get("versionId"))
+        return versions
+
     #---------------#
     #Get the error message from a given code
     def getERROR(self,code):

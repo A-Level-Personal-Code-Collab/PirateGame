@@ -4,7 +4,7 @@
  * Created Date: Saturday, August 28th 2021, 3:12:37 pm
  * Author: Will Hall
  * -----
- * Last Modified: Wed Dec 29 2021
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2021 Lime Parallelogram
@@ -114,11 +114,19 @@
 
     /*---------------*/
     //Restrict height of the game information boxes to the height of the grid
-    fitty(".gameHeaderTitle", {maxSize: 50})
+    ////fitty(".gameHeaderTitle", {maxSize: 50})
     ////document.getElementById("div_gameDataGroup").style.maxHeight = document.getElementById("tbl_playGrid").offsetHeight.toString()+"px"
 
     //Use for testing seeking attention animation
     ////document.querySelector(".gridItems").classList.add("seekingAttention");
+
+    // Wait for images to load in then fix the log size
+    setTimeout(function() {
+        // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+        let logHeight = document.getElementById("div_gameLog").offsetHeight;
+        // Then we set the value in the --vh custom property to the root of the document
+        document.documentElement.style.setProperty('--lh', `${logHeight-6}px`);
+    },200);
 
  }
 
@@ -128,6 +136,15 @@
  //Lights up a selected square and greys-out the old one
  function select_square(serialSquareNum)
  {
+     // Ensure other things on the screen are hidden
+     targetPickerPopup.style.display="none"; //Hide target picker popup again
+     targetSelector = false; //Disable other popup inhibiting
+     declareButton.disabled = true; //Update the declare button back to disabled state
+     declareAction = "";
+     waitingForActionPopup.style.display="none";
+     animationPopup.style.display = "none";
+
+     //Run animations
      const RUN_TIMES = 30;
      const INTERVAL = 100;
 
@@ -187,10 +204,8 @@
  //Updates the game log panel
  function log_update(data)
  {
-     console.log(data);
      var text = data["entry"]
      var delay = data["delay"]
-     console.log(text)
      text = text.replace(`!<${MY_SID}>`,"YOU") //Replaces your name with 'YOU'
 
      //Handles replacement of SID's with nicknames
@@ -278,7 +293,6 @@
          var explanation = data["explanation"]
          updateHelp(explanation)
          var invalidRetals = data["invalidRetals"].split(",")
-         console.log(invalidRetals)
 
          //Get HTML elements from page
          var actionText = document.getElementById("h3_action_emphasis_text");
@@ -302,6 +316,7 @@
                  targetText.innerHTML = "YOU";
 
                  retaliated = false;
+                 ////retaliations_area.innerHTML = `<img src="/static/img/tmp-asset.png" onClick="retaliation_declare('commit')" class="retaliationOption" alt="surrender">`;
                  retaliations.forEach((a) => {
                     if (invalidRetals.includes(a["type"])) //Checks if a given retaliation is disallowed by the event in question
                     {

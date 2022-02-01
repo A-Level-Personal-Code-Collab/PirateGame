@@ -6,12 +6,13 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Wed Dec 22 2021
-Modified By: Ollie Burroughs
+Last Modified: Wed Jan 26 2022
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-01-26	WH	Modified some mistakes on the tutorial page and improve language and communication.
 -->
 {% extends "base.html" %}
 
@@ -30,17 +31,11 @@ Date      	By	Comments
             <div class="container">
                 <h3>Rules</h3>
                 <br>
-                <p>The Pirate Game is an activity where each person in the game, on their Pirate game
-                worksheet, places a set of symbols and values in a typically 6 by 6 blank grid. The grid is
-                labelled A-F across the columns and 1-6 down the rows. Therefore, you could place
-                a 'shield' in A6, a '1000' in C4 etc.  The activity then host presses next round. The system will cross of squares each turn. If they get cash
+                <p>The Pirate Game is an online multiplayer activity where each person in the game, on their own mobile device, places a set of symbols into a [typically] 6x6 blank grid. The grid is
+                labelled A-F and 1-6 down. Therefore, you could, for example, place 'shield' in the square with reference A6, a '£1000 Note' in C4 etc. The host will then spin the spinner to move to the next round
                 the game will add this to their 'money' and this is kept as a running total throughout the game.
-                If they get a symbol, there is a particular purpose to each of these and they need to
-                act accordingly. 
-                Any of the actions listed can be adapted (or abandoned) according to the group size,
-                age of players or personal preference.
-                Oh, the winner is the player at the end of the activity that has the highest amount of money when
-                both their 'bank' and their ongoing money are combined.</p>
+                The square that has been chosen by the spinner will be indicated on your grid and the game will act according to the item placed within it. For example, a £1000 note will increase your cash while the 'kill' item will allow you to chose a an unfortunate target whose money will be reset to 0.
+                The winner is the player at the end of the activity that has the highest amount of money when both their 'bank' and their ongoing money are combined.</p>
             </div>
         </div>
             <div class="card">
@@ -64,47 +59,28 @@ Date      	By	Comments
                             </tr>
                             <tr>
                                 <td><img src="../static/img/items/set2/gift.png" alt="gift"></td>
-                                <td><span>Gift </span><p>  - This allows the player to give a 'present' of 1000 pounds to another
-                                    individual (they must click who they want to give the 1000 pounds to)</p></td>
+                                <td><span>Gift </span><p>  - This allows the player to give a 'present' of £1000 to another player of your choice. This money is not deducted from your own balance.</p></td>
                             </tr>
                             <tr>
                                 <td><img src="../static/img/items/set2/swap.png" alt="Swap"></td>
-                                <td><span>Swap </span><p> - This allows the player to swap their money with another person's.</p></td>
+                                <td><span>Swap </span><p> - This allows the player to swap their money with another person's balance.</p></td>
                             </tr>
-                            <!--<tr>
-                                <td><img src="../static/img/Next.png" alt="Next"></td>
-                                <td><span>Next </span><p> - This symbol allows the player to pick the next grid ref to be selected.</p></td>
-                            </tr>-->
                             <tr>
                                 <td><img src="../static/img/items/set2/shield.png" alt="Shield"></td>
-                                <td><span>Shield </span><p> - This symbol allows the player to 'block' any wrong doing to them and once
-                                    this is crossed off in their grid should be placed in the 'shield' section on their
-                                    grid. It can be used at any time once got but only once!</p></td> <!--Update the grammar for the game-->
+                                <td><span>Shield </span><p> - This symbol allows the player to 'block' any incoming action against them. Once collected from the grid it can be used at any time - but only once.</p></td> <!--Update the grammar for the game-->
                             </tr>
                             <tr>
                                 <td><img src="../static/img/items/set2/mirror.png" alt="Mirror"></td>
-                                <td><span>Mirror</span><p> - This symbol allows the player to 'mirror' any wrong doing to them back to the
-                                    person that was doing the wrong doing. Once this is crossed off in their grid it will be placed in the 
-                                    retaliations. It can be used at any time once
-                                    got but only once! The mirror allows whatever was going to happen to the individual
-                                    to happen to the attacking player. i.e. if someone wanted to 'rob' me of my money and
-                                    I used my mirror then I would 'rob' their money! Note: Using it on a 'swap' would be completely pointless!</p></td>
+                                <td><span>Mirror</span><p> - Allows a player to reverse any incoming action against the player that initiated it. This means that they fell the consequences of the action instead of you. Once collected from the grid it may be used at any time - but only once. If a mirror is used against you, you can not then use a mirror or shield against that. Swap actions may not be mirrored as this would still be swap.</p></td>
                             </tr>
                             <tr>
                                 <td><img src="../static/img/items/set2/bomb.png" alt="Bomb"></td>
-                                <td><span>Bomb</span><p> - If the player is unlucky enough to get this symbol in their grid reference their active money
-                                    will go to 0.</p></td>
+                                <td><span>Bomb</span><p> - Your own money is reset to 0. This may be neither shielded nor mirrored at any point.</p></td>
                             </tr>
-                            <!--<tr>
-                                <td><img src="../static/img/X2.png" alt ="X2"></td>
-                                <td><span>X2</span><p> - This symbol doubles the players current score</p></td>
-                            </tr> -->
                             <tr>
                                 <td><img src="../static/img/items/set2/bank.png" alt="Bank"></td>
-                                <td><span>Bank</span><p> - This symbol allows all active money the player has to be banked (these points
-                                    are then safe for the rest of the game and cannot be stolen or wiped out!</p></td>
+                                <td><span>Bank</span><p> - All of the player's money is placed in the bank. When in the bank the money is invulnerable - it may not be altered by either another player's actions or by bombs.</p></td>
                             </tr>
-
 
                         </table>
                     </div>

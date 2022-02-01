@@ -6,7 +6,7 @@
  * Author: Will Hall
  * Copyright (c) 2022 Lime Parallelogram
  * -----
- * Last Modified: Tue Jan 11 2022
+ * Last Modified: Sun Jan 23 2022
  * Modified By: Will Hall
  * -----
  * HISTORY:
@@ -46,7 +46,7 @@
     
     &:hover:not(:disabled),&:active:not(:disabled) span{ /* Makes space for the arrow*/
         background-color: #fce250;
-        padding-left: 35px;
+        padding-right: 35px;
     }
     
     &:hover span::after{ /* When it is hovered on it shows the arrow and moves it */ 
@@ -66,14 +66,33 @@
             visibility: hidden;
             translate: 0 300px;
         }
+
+        &.mobileAlways
+        {
+            visibility: hidden;
+            translate: 0 300px;
+        }
     }
 
     @media #{$mobile-vp} {
         visibility: visible;
         position: fixed;
-        transform: translateX(-50%);
         bottom: 2vh;
         width: 90vw;
+        left: 5vw;
         margin: 0;
     }
+
+    @media #{$landscape-vp} and #{$landscape-vp-max},  #{$widescreen-vp}
+    {
+        &.mobileAlways
+        {
+            visibility: visible;
+            position: fixed;
+            bottom: 2vh;
+            width: 50vw;
+            margin: 0;
+        }
+    }
+    
 }

@@ -7,12 +7,16 @@
 # Author: Will Hall
 # Copyright (c) 2021 Lime Parallelogram
 # -----
-# Last Modified: Fri Dec 24 2021
-# Modified By: Adam O'Neill
+# Last Modified: Tue Feb 01 2022
+# Modified By: Will Hall
 # -----
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2022-02-01	WH	Patch notes page now subsection of about page
+# 2022-02-01	WH	Handles new OOP approach to patch notes
+# 2022-01-23	WH	Added parseing system for required extra header data to client
+# 2022-01-23	WH	Added check for if username is taken
 # 2021-12-24	AO	Game ID is passed as a variable to sheet builder
 # 2021-11-19	WH	Added session getter decorator to all requests that use the database and then accept the session and pass it on to any database functions 
 # 2021-11-13	WH	Fixed parsing issue for results page 
@@ -69,6 +73,7 @@
 #=========================================================#
 #^ Imports Modules ^#
 from flask import Flask, render_template, Markup, send_file, request, make_response, redirect
+from markdown import markdown
 import json
 import time
 
@@ -103,8 +108,8 @@ def inject_version():
 def index(session):
     TotalGames = database.statistics.getTotalGames(session)
     CalcActiveGames = database.statistics.calcActiveGames(session)
-    version_url = "/patch_notes/" + gameplay.GAME_VERSION.replace(".","-") #Parse the game version into the patch notes url
-    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, version_url=version_url, overview=gameplay.parsers().parseVersionOverview())
+    release = gameplay.parsers.patchNotes()
+    return render_template("index.html", currentActiveGames=CalcActiveGames, totalGames=TotalGames, releaseData=release.getReleaseJSON())
 
 #---------------#
 # Error pages
@@ -153,22 +158,26 @@ def play_game(session):
         #---------------#
         if gameplay.validators().gameIDValidate(session,gameID):
             if gameplay.validators().nicknameValidate(nickname):
-                # Saves user details to database
-                userSID = gameplay.generators().generate_SID(session)
+                if not database.isUsernameTaken(session,gameID,nickname):
+                    # Saves user details to database
+                    userSID = gameplay.generators().generate_SID(session)
 
-                deletionTime = database.get_deletion_time() # Get the deletion time
+                    deletionTime = database.get_deletion_time() # Get the deletion time
 
-                # Build new database entry using base class
-                newUserActivate = usersTBL(user_id=userSID, user_nickname=nickname, user_game_id=gameID, is_host=False, deletion_time=deletionTime)
-                session.add(newUserActivate)
-                session.commit()
+                    # Build new database entry using base class
+                    newUserActivate = usersTBL(user_id=userSID, user_nickname=nickname, user_game_id=gameID, is_host=False, deletion_time=deletionTime)
+                    session.add(newUserActivate)
+                    session.commit()
 
-                #-#
-                # Move on to sheet builder page
-                response = redirect(f"/playing_online/sheet_builder?gid={gameID}")
-                # Save SID for later use
-                response.set_cookie("SID", str(userSID))
-                return response
+                    #-#
+                    # Move on to sheet builder page
+                    response = redirect(f"/playing_online/sheet_builder?gid={gameID}")
+                    # Save SID for later use
+                    response.set_cookie("SID", str(userSID))
+                    return response
+
+                else:
+                    nicknameError = "inputError"
             else:
                 nicknameError = "inputError"
         else:
@@ -231,6 +240,7 @@ def new_game(session):
 def game_sheet(session):
     # Load values from client provided info
     userSID = request.cookies.get("SID")  # Loads from client cookies
+    myNick = database.get_user(session,userSID).user_nickname
     gameID = request.args.get("gid")  # Loads from URL bar
 
     # If a user's sheet is already full, move them on
@@ -260,7 +270,7 @@ def game_sheet(session):
 
     gridHTML = gameplay.generators().html.buildEditableGrid(gridJSON["GRID_X"], gridJSON["GRID_Y"])  # Builds grid using values from loaded JSON
 
-    return render_template("playing_online/sheet_builder.html", grid=gridHTML, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON, gameID = gameID)
+    return render_template("playing_online/sheet_builder.html", grid=gridHTML, myNick=myNick, itemsMaxJSON=itemsJSON, gridSizeJSON=gridJSON, gameID=gameID)
 
 #---------------#
 @app.route("/tutorial")
@@ -273,16 +283,16 @@ def about_page():
     return render_template("accessory/about.html")
 
 #---------------#
-@app.route("/patch_notes")
+@app.route("/about/patch_notes")
 def patch_notes():
-    return render_template("accessory/patch_notes.html")
+    return render_template("accessory/patch_notes.html", allReleases=gameplay.parsers.getVersions())
 
-@app.route("/patch_notes/<version>")
+@app.route("/about/patch_notes/release/<version>")
 def versioninfo(version):
     try:
-        f=open(f"static/patchnotes/{version}.txt","r") 
-        displayhtml = gameplay.parsers.convertTxtToHtml(f)
-        return render_template("accessory/patch_notes_base.html", body=displayhtml, title=version)
+        release = gameplay.parsers.patchNotes(version)
+
+        return render_template("accessory/patch_notes_base.html", body=release.convertTxtToHtml(), title=version)
     except:
         return redirect("/error?code=VERSIONINVALID")
 
@@ -294,7 +304,8 @@ def versioninfo(version):
 @gameplay.validators.pageControlValidate
 def lobby(session):
     # Redirect away if the user does not have correct cookies
-    if request.cookies.get("SID") == None:
+    sid = request.cookies.get("SID")
+    if sid == None:
         return redirect("/error?code=NOSID")
 
     try:
@@ -304,13 +315,14 @@ def lobby(session):
             return redirect(f"/playing_online/game?gid={gameID}")
         host_id = gameLine.host_id
         hostNick = database.get_user(session,host_id).user_nickname
+        myNick = database.get_user(session,sid).user_nickname
         host_content = ""
         # Renders host-only controls if the user is the host
         if gameplay.validators().isHost(session,request.cookies.get("SID"), request.args.get("gid")):
             host_content = Markup(render_template(
                 "playing_online/host_only/host_only_lobby.html"))
 
-        return render_template("playing_online/lobby.html", host_only_content=host_content, gameID=gameID, hostNick=hostNick)
+        return render_template("playing_online/lobby.html", host_only_content=host_content, gameID=gameID, myNick=myNick, hostNick=hostNick)
     except AttributeError:  # Redirect away if game does not exist
         return redirect("/error?code=GAMEINVALID")
 
@@ -331,7 +343,9 @@ def game(session):
         hostNick = database.get_user(session,hostID).user_nickname
 
         # Gets grid information from relevant database
-        gridSerial = database.get_user(session,userID).user_grid
+        user = database.get_user(session,userID)
+        gridSerial = user.user_grid
+        myNick = user.user_nickname
         gridSettingsJSON = json.loads(gameLine.grid_settings)
         gridX = int(gridSettingsJSON["GRID_X"])
         IMAGE_URLS = {  # Defines the locations of the images associated with the following items
@@ -352,9 +366,9 @@ def game(session):
 
         #-#
         if gameplay.validators().isHost(session,userID, gameID):
-            return render_template("playing_online/host_only/playing_online_host.html", grid=usersGrid, hostNick=hostNick, mySID=userID)
+            return render_template("playing_online/host_only/playing_online_host.html", grid=usersGrid, myNick=myNick, hostNick=hostNick, mySID=userID, gameID=gameID)
         else:
-            return render_template("playing_online/online_game.html", grid=usersGrid, hostNick=hostNick, mySID=userID)
+            return render_template("playing_online/online_game.html", grid=usersGrid, myNick=myNick, hostNick=hostNick, mySID=userID, gameID=gameID)
     except AttributeError:
         return redirect("/error?code=GAMEINVALID")
 
