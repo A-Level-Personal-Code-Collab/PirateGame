@@ -6,8 +6,8 @@ Description:
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
-Last Modified: Mon Nov 08 2021
-Modified By: Adam O'Neill
+Last Modified: Tue Feb 01 2022
+Modified By: Will Hall
 -----
 HISTORY:
 Date      	By	Comments
@@ -17,12 +17,15 @@ Date      	By	Comments
 {% extends "base.html" %} 
 
 {% block head %}
-    <link rel="stylesheet" href="/static/css/accessory_page/patch_notes.css">
-    <title>{{title}}</title>
+    <link rel="stylesheet" href="/static/css/patchnotes.css">
+    <title>Release : {{title}}</title>
 {% endblock %}
 
 {% block body %}
-    {{body}}
+    <div class="notesHeader"> {{ title }}</div>
+    <div class="notesContainer">
+        {{ body }}
+    </div>
 {% endblock %}
 
 

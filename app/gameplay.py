@@ -12,6 +12,8 @@
 # HISTORY:
 # Date      	By	Comments
 # ----------	---	---------------------------------------------------------
+# 2022-02-01	WH	Added release date information to patch notes files
+# 2022-02-01	WH	Fixed title now sent with patch notes text
 # 2022-02-01	WH	Patch notes processor now has image facility
 # 2022-02-01	WH	Patch notes processor now handles markdown formatted text
 # 2022-02-01	WH	Created class for patch notes processor
@@ -292,14 +294,18 @@ class parsers:
         
         return self.vCash, self.vBank, self.pCash, self.pBank
     
+    #---------------#
+    # Handles patch notes for a specified version
     class patchNotes:
         def __init__(self,version=GAME_VERSION): #Reads patch notes file (Default version = current version)
             self.gamefile = "static/patchnotes/" + version.replace(".","-") + ".md"
             self.releaseURL = "/about/patch_notes/release/" + version.replace(".","-")
 
             with open(self.gamefile, 'r') as file:
-                self.releaseTitle = file.readline()[4:]
-                self.filedat = file.read()
+                self.releaseTitle = file.readline()[3:]
+                self.releaseDate = file.readline()[5:]
+                self.releaseDate = self.releaseDate if "Release Date" in self.releaseDate else "" #Validate release date line
+                self.filedat = "##### " + self.releaseDate + file.read()
 
         #---------------#
         #Converts patch notes text files to HTML pages
@@ -344,15 +350,29 @@ class parsers:
             self.releaseDictionary = {"releaseTitle": self.releaseTitle, "releaseOverview": self.getReleaseOverview(), "releaseIllustration": self.getReleaseIllustration(), "releaseUrl": self.releaseURL}
             return self.releaseDictionary
 
+        #---------------#
+        #Returns the release title to
+        def getReleaseTitle(self):
+            return self.releaseTitle
+
+        #---------------#
+        #Returns the release title to
+        def getReleaseDate(self):
+            return self.releaseDate
+
+    #---------------#
+    #Returns a list of all version information to JINJA
     def getVersions():
         versions = []
         for version in os.listdir("static/patchnotes"):
             versionNumber = version[:-3].replace("-",".")
+            versionObject = parsers.patchNotes(versionNumber)
 
             if versionNumber != "key": #Ignore key.md file
-                versions.append({"versionId": versionNumber.replace(".",""),"versionUrl": "/about/patch_notes/release/"+version[:-3], "versionName": "Release "+versionNumber})
+                versions.append({"versionId": versionNumber.replace(".",""),"versionUrl": "/about/patch_notes/release/"+version[:-3], "versionName": versionObject.getReleaseTitle(), "versionDate": versionObject.getReleaseDate(), "versionIllustration": versionObject.getReleaseIllustration(), "versionOverview": versionObject.getReleaseOverview()})
         
         versions.sort(key= lambda item: item.get("versionId"))
+        versions.reverse()
         return versions
 
     #---------------#

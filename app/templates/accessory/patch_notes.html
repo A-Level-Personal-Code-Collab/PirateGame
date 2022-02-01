@@ -1,8 +1,8 @@
 <!--
-File: c:\Adam\Coding\PirateGame\templates\accessory/patch_notes.html
-Project: c:\Adam\Coding\PirateGame\templates
+File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/templates/accessory/patch_notes.html
+Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
 Created Date: Saturday, October 23rd 2021, 3:31:23 pm
-Description: 
+Description: The main patch notes list page
 Author: Adam O'Neill
 Copyright (c) 2021 Adam O'Neill
 -----
@@ -12,23 +12,30 @@ Modified By: Will Hall
 HISTORY:
 Date      	By	Comments
 ----------	---	---------------------------------------------------------
+2022-02-01	WH	Added release date and version overview to version list
 2022-02-01	WH	Patch notes list now generated dynamically
 -->
 {% extends "base.html" %} 
 
 {% block head %}
-    <link rel="stylesheet" href="/static/css/accessory_page/patch_notes.css">
+    <link rel="stylesheet" href="/static/css/patchnotes.css">
     <title>Patch Notes</title>
 {% endblock %}
 
 {% block body %}
-    <div class="header">
+    <div class="notesHeader">
         <h1>All patch notes</h1>
     </div>
-    <div class="notes_container"> <!-- All Notes-->
-        {%for version in allReleases%}
-            <li><a href="{{version['versionUrl']}}">{{ version['versionName'] }}</a></li>
-        {% endfor %}
+    <div class="notesContainer"> <!-- All Notes-->
+        <ul class="versionList">
+            {%for version in allReleases%}
+                <li class="releaseItem">
+                    <h6>{{ version['versionDate'] }}</h6>
+                    <a class="releaseLink" href="{{version['versionUrl']}}">{{ version['versionName'] }}</a>
+                    <p class="releaseOverview">{{ version['versionOverview']}}</p>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
 
 {% endblock %}

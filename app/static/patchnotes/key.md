@@ -1,4 +1,5 @@
 ## The release title is at the top with a heading 2
+##### Release Date : This information must be placed on line 2
 ![Release Illustration](Image URL HERE) - This shows an image being added and this image is shown on the home screen.
 
 ### Overview

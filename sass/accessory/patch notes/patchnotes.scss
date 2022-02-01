@@ -1,0 +1,81 @@
+/*
+ * File: https://github.com/A-Level-Personal-Code-Collab/PirateGame/sass/accessory/patchnotes.scss
+ * Project: https://github.com/A-Level-Personal-Code-Collab/PirateGame
+ * Created Date: Tuesday, February 1st 2022, 10:00:52 am
+ * Description: The patch notes pages styling information
+ * Author: Will Hall
+ * Copyright (c) 2022 Lime Parallelogram
+ * -----
+ * Last Modified: Tue Feb 01 2022
+ * Modified By: Will Hall
+ * -----
+ * HISTORY:
+ * Date      	By	Comments
+ * ----------	---	---------------------------------------------------------
+ * 2022-02-01	WH	Added styling for overview text and release art work
+ * 2022-02-01	WH	Added improved styling for patch notes list
+ */
+@import "../../variables";
+
+.notesHeader {
+    background-color: $secondar-header-colour;
+    padding: 3vh;
+    color: white;
+    font-size: 200%;
+}
+
+.versionList
+{
+    list-style: none;
+}
+
+/* List items that define each bugfix that occurred */
+.releaseItem
+{
+    border-bottom: lightgray solid 1px;
+    margin-bottom: 15px;
+    font-size: 20px;
+
+    .releaseOverview
+    {
+        font-size: 15px;
+    }
+
+    .releaseLink
+    {
+        color: $link-colour;
+    }
+
+    .releaseLink:hover
+    {
+        color: $button-colour;
+        text-decoration: underline;
+    }
+}
+
+/* Outer container for all information on notes page */
+.notesContainer {
+    text-align: left;
+    box-shadow: 0 4px 8px 0 rgba(17, 15, 15, 0.2);
+    margin: 1vh 15vw;
+    width: 70vw;
+    padding: 1vw 2vw;
+
+    @media screen and #{$mobile-vp}
+    {
+        width: calc(90vw - 16px);
+        max-width: 90vw;
+        margin: 1vh 5vw;
+    }
+}
+
+/* Centering for illustration and overview text*/
+img[alt="Release Illustration"]
+{
+    width: 20%;
+    min-width: 250px;
+}
+
+p {
+    text-align: center;
+}

@@ -73,7 +73,6 @@
 #=========================================================#
 #^ Imports Modules ^#
 from flask import Flask, render_template, Markup, send_file, request, make_response, redirect
-from markdown import markdown
 import json
 import time
 
@@ -292,7 +291,7 @@ def versioninfo(version):
     try:
         release = gameplay.parsers.patchNotes(version)
 
-        return render_template("accessory/patch_notes_base.html", body=release.convertTxtToHtml(), title=version)
+        return render_template("accessory/patch_notes_base.html", body=release.convertTxtToHtml(), title=release.getReleaseTitle())
     except:
         return redirect("/error?code=VERSIONINVALID")
 
