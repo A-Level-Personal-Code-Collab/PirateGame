@@ -1,0 +1,14 @@
+/* You can add global styles to this file, and also import other style files */
+/* Variables */
+:root {
+    --button-colour: #ffd900;
+    --colour-primary: #ffd900;
+    --colour-primary-opacity: #ffd90085;
+    --colour-secondary: #474e5d;
+
+    --mobile-vp: (max-aspect-ratio: 1/1);
+    --landscape-vp: (min-aspect-ratio: 1/1);
+    --landscape-vp-max: (max-aspect-ratio: 16/10);
+    --widescreen-vp: (min-aspect-ratio: 16/10);
+  }
+

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<div class="banner">
+    <div class="banner_text">
+        <h1>Pirate Game</h1>
+        <p>Welcome to the 21st century Pirate Game</p>
+        <form method="GET" action="/playing_online">
+            <button type="submit" class="banner_button" style="vertical-align:middle ;"><span>Play Pirate Game </span></button>
+        </form>
+        <div class="active_stats"> <!-- Active game stats, total game stats -->
+            <table>
+                <tr>
+                    <th>Number of active games</th> <!-- Active games -->
+                    <th>{{currentActiveGames}}</th>
+                </tr>
+                <tr>
+                    <th>Total number of games</th><!-- total games -->
+                    <th>{{totalGames}}</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="banner_image">
+        <img src="assets/img/logos/logo.png">
+    </div>
+</div>
+<h2>Pirate Game News...</h2>
+<div id="news_section">
+    <div class="news_container">
+        <app-news></app-news>
+    </div>
+    <div class="news_container">
+        <app-social></app-social>            
+    </div>
+</div>

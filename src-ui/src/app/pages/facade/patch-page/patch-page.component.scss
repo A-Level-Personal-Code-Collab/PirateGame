@@ -1,0 +1,56 @@
+.main_content {
+    margin: 2vh 10%;
+}
+.contents {
+    table {
+        border-spacing: 1vh;
+        border-collapse: separate;
+        min-width: 40%;
+    }
+
+    .release {
+        border-radius: 4px;
+
+        cursor: pointer;
+        transition: 0.3s;
+        &:hover {
+            text-decoration: underline;
+            scale: 1.01;
+        }
+
+        td {
+            padding: 8px;
+            margin-bottom: 1vh;
+        
+            &.releaseNo {
+                color: rgb(167, 167, 167);
+                text-align: right;
+            }
+
+            &.title {
+                border-left: 1px solid black;
+                border-radius: 6px;
+            }
+        }
+        
+    }
+}
+
+.versions {
+    .versionCard {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        
+        width: 70%;
+        margin-top: 2vh;
+        padding: 3vh;
+        padding-top: 1vh;
+
+        .versionHeader {
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        h4 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    }
+}

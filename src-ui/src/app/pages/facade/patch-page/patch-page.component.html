@@ -1,0 +1,26 @@
+<app-banner mainTitle="Patch Notes" subtitle="What has changed?"></app-banner>
+
+<div class="main_content">
+    <div class="contents">
+        <h2>Releases</h2>
+        <table>
+            <tr *ngFor="let release of releases;" class="release" (click)="jumpTo(release['versionNo'])">
+                <td class="releaseNo">{{release["versionNo"]}}</td> <td class="title">{{ release["title"] }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="versions">
+        <h2>All Versions</h2>
+        <div class="versionCard" *ngFor="let release of releases;" id="{{ release['versionNo']}}">
+            <h3 class="versionHeader">Version {{ release["versionNo"] }} - {{ release["title"] }}</h3>
+            <h4>Overview</h4>
+            <p>{{ release["overview"] }}</p>
+            <div *ngFor="let page of release['pageChanges']" class="changes">
+                <h4>{{ page["title"] }}</h4>
+                <ul>
+                    <li *ngFor="let change of page['changes']">{{ change }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

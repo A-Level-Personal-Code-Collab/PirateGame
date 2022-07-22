@@ -1,0 +1,50 @@
+a:link {
+    text-decoration: none;
+}
+
+#mainHeader {
+    overflow: hidden;
+    margin: none;
+    background-color: #ffd900;
+    display: flex;
+    
+    /* size of the header on the page */ 
+    padding: 20px; 
+    height: 37px;
+
+    /* Handle links */
+    a {
+        /* Link text */
+        color: black;
+        text-align: center;
+        line-height: 20px;
+        font-size: 18px;
+        font-family: sans-serif;
+        font-weight: bold;
+
+        padding: 12px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: gray;
+        }
+
+        &:active {
+            background-color: dimgray;
+            color: white;
+        }
+
+        &.split {
+            margin-left: auto;
+        }
+    }
+}
+
+
+.beta-warning
+{
+    text-align: center;
+    background-color: #B94A3E;
+    color: white;
+}

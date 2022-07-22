@@ -1,0 +1,32 @@
+
+/* Card contains the details */
+.card {
+    margin: 4vh;
+    padding: 3vh;
+
+    flex-direction: column;
+    flex-basis: 80%;
+
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
+    @media screen and (max-width: 800px) {
+        margin: 1vh;
+        flex-basis: 90%;
+    }
+}
+
+/* Table that lists all of the symbols in the game */
+#table_symbols {
+    tr {
+        margin: 2vh;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    img {
+        height: auto;    
+        max-width: 50%;
+    }
+}

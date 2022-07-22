@@ -1,0 +1,64 @@
+/* Containers for main paragraphs */
+.about_container {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    
+    height: fit-content;
+    
+    margin: 2vh;
+    padding: 3vw;
+}
+
+/* Containers for The Team information */
+.about_card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    flex:1;
+
+    padding:2vw;
+    margin: 8px;
+
+    line-height: 3.2vh;
+    height: 50vh;
+    min-height: 200px;
+}
+
+#div_devs, #div_credits {
+    display: flex;
+
+    @media screen and (max-width: 600px)
+    {
+        flex-direction: column;
+    }
+}
+
+/* 'Project Details' box */
+#div_aboutContent
+{
+    display: flex;
+
+    @media (max-aspect-ratio: 1/1) {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Set the background images on each of the credits boxes */
+#artwork_card{
+    background-image:  url("/assets/img/LobbyBackground.jpeg");
+    background-size: cover;
+}
+
+#music_card{
+    background-image: url("/assets/img/background/charlie_about.png");
+    background-size: cover;
+}
+
+#will_card{
+    background-image: url("/assets/img/background/will_about.png");
+    background-position: center center;
+}
+
+/* Make paragraph spacing larger */
+.br {
+    display: block;
+    margin-bottom: 1.5vh;
+}

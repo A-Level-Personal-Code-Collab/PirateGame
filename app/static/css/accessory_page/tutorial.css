@@ -6,8 +6,8 @@
  * Author: Adam O'Neill
  * Copyright (c) 2021 Adam O'Neill
  * -----
- * Last Modified: Sun Dec 19 2021
- * Modified By: Adam O'Neill
+ * Last Modified: Fri Jul 22 2022
+ * Modified By: Will Hall
  * -----
  * HISTORY:
  * Date      	By	Comments
@@ -19,12 +19,7 @@
     max-width: 50%;
 }
 
-.card {
-    margin: 4vh;
-    flex-direction: column;
-    flex-basis: 80%;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
+
 
 .row{
     margin-right: 10%;
