@@ -13,6 +13,7 @@ import { TutorialComponent } from './components/facade/tutorial/tutorial.compone
 import { BannerComponent } from './components/global/banner/banner.component';
 import { TutorialPageComponent } from './pages/facade/tutorial-page/tutorial-page.component';
 import { PatchPageComponent } from './pages/facade/patch-page/patch-page.component';
+import { PlayStartComponent } from './pages/play-start/play-start.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { PatchPageComponent } from './pages/facade/patch-page/patch-page.compone
     TutorialComponent,
     BannerComponent,
     TutorialPageComponent,
-    PatchPageComponent
+    PatchPageComponent,
+    PlayStartComponent
   ],
   imports: [
     BrowserModule,

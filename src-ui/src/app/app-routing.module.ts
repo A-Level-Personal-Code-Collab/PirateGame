@@ -4,9 +4,11 @@ import { AboutComponent } from './pages/facade/about-page/about.component';
 import { IndexComponent } from './pages/facade/index-page/index.component';
 import { PatchPageComponent } from './pages/facade/patch-page/patch-page.component';
 import { TutorialPageComponent } from './pages/facade/tutorial-page/tutorial-page.component';
+import { PlayStartComponent } from './pages/play-start/play-start.component';
 
 const routes: Routes = [
   {path: "", component: IndexComponent},
+  {path: "play", component: PlayStartComponent},
   {path: "about", component: AboutComponent},
   {path: "tutorial", component: TutorialPageComponent},
   {path: "patch_notes", component: PatchPageComponent}

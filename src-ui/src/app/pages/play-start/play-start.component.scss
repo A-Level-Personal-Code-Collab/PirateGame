@@ -1,0 +1,41 @@
+@import 'src/vars';
+
+.card_container {
+    display: flex;
+    position: relative;
+    min-height: 40vh;
+    height:100%;
+    
+    @media screen and (max-width: $mobile-breakpoint) {
+        flex-direction: column;
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    flex-basis:100%;
+
+    text-align: center;
+
+    margin: 2vh;
+    padding:  2vh 2vw;
+
+    h2 {
+        margin: 0;
+    }
+}
+
+#ipt_gameID {
+    font-size: 25px;
+    text-align: center;
+    padding: 10px;
+    max-width: 200px;
+    margin: auto;
+}
+
+#a_createGame {
+    margin-top: auto;
+}

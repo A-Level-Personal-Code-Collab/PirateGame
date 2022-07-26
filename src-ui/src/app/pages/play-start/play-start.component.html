@@ -1,0 +1,19 @@
+<app-banner mainTitle="Play Pirate Game" subtitle="Join or create a game. "></app-banner>
+<div class="card_container">
+    <!-- Join Existing game -->
+    <div class="card">
+        <h2>Join Game</h2>
+        <br>
+        <p>Use a GameID to join an existing <b>Pirate Game</b>. Ask the host for this information.</p>
+        <input type="text" placeholder="Game ID" id="ipt_gameID">
+        <button class="spanned_button large" disabled><span>Join Now </span></button>
+    </div>
+
+    <!-- Start a Pirate Game -->
+    <div class="card">
+        <h2>New Game</h2>
+        <br>
+        <p>Host your own game of <b>Pirate Game</b>. A GameID will be automatically generated for you.</p>
+        <a href="play/new" class="spanned_button large" id="a_createGame"><span>Create Game </span></a>
+    </div>
+</div>

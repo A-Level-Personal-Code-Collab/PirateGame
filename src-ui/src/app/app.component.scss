@@ -1,5 +1,9 @@
+@import "buttons";
+
 body
 {
-    margin: 0; /*Ensure that body extends to edges - required for most applications */
+    margin: 0; /* Ensure that body extends to edges - required for most applications */
+    font-family: 'Exo 2', sans-serif;
+    font-size: 18px;
 }
 

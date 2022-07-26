@@ -10,12 +10,16 @@ In order to install the necessary libraries on your machine, first clone the rep
 Simply run ```ng serve``` from within the src-ui directory
 
 ### Port Progress
-✅ Accessory and facade pages (missing live counters)
-❌ Patch notes (front-end complete but need notes loaded from server)
-❌ Create new game
-❌ Join game
-❌ Sheet builder
-❌ Lobby
-❌ Gameplay
-❌ Results
-❌ Deployment scripts
+| Status | Page | Notes |
+|--------|------|-------|
+🏗️|Index Page|missing live counters & patch notes for latest release|
+✅|About Page||
+✅|Tutorial page ||
+🏗️| Patch notes | front-end complete but need notes loaded from server
+❌| Create new game
+❌| Join game | front page to enter GameID located at /play
+❌| Sheet builder
+❌| Lobby
+❌| Gameplay
+❌| Results
+❌| Deployment scripts
