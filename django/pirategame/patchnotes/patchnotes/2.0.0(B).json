@@ -1,0 +1,13 @@
+{
+    "title": "Version 2.0.0(B) - Angular",
+    "overview": "This version, while showing only subtle changes to the user, represents a major change in codebase. The pirate game was originally written in vanilla HTML, CSS and JS with a flask webserver. The code is now using a javascript framework called Angular to improve the code.",
+    "version": "2.0.0(B)",
+    "blocks": [
+        {
+            "title": "Block 1",
+            "changes": [
+                "change1"
+            ]
+        }
+    ]
+}

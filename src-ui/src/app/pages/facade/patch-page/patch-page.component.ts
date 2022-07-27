@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { PatchnotesService, Version } from 'src/app/services/patchnotes.service';
 
 @Component({
   selector: 'app-patch-page',
@@ -8,10 +9,14 @@ import { Router } from '@angular/router';
 })
 export class PatchPageComponent implements OnInit {
   // Test releases
-  releases = [{"versionNo": "TEST", "title": "Test Release"},{"versionNo": "TEST2", "title": "Test Release Number 2", "overview":"Release overview", "pageChanges": [{"title" : "Page1", "changes": ["change 1"]}]}]
-  constructor(private router: Router) { }
+  releases: Array<Version> = [];
+
+  constructor(private router: Router, private patchnotesService: PatchnotesService) { }
 
   ngOnInit(): void {
+    this.patchnotesService.getAllPatchnotes().subscribe((data) => {
+      this.releases = data;
+    })
   }
 
   // Jump to version information

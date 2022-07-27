@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'status',
     'master',
+    'patchnotes',
 ]
 
 MIDDLEWARE = [

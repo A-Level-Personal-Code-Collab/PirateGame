@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GlobalService } from 'src/app/services/global.service';
+import { PatchnotesService, Version } from 'src/app/services/patchnotes.service';
 import { StatsService, Statistic, AvailableStats } from 'src/app/services/stats.service';
 
 @Component({

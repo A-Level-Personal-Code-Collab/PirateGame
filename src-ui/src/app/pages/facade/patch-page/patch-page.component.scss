@@ -1,3 +1,5 @@
+@import 'src/vars';
+
 .main_content {
     margin: 2vh 10%;
 }
@@ -37,10 +39,13 @@
 }
 
 .versions {
+    display: flex;
+    flex-direction: column;
+
     .versionCard {
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         
-        width: 70%;
+        flex-basis: 70%;
         margin-top: 2vh;
         padding: 3vh;
         padding-top: 1vh;

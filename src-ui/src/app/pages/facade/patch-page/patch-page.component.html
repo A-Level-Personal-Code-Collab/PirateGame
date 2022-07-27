@@ -4,18 +4,18 @@
     <div class="contents">
         <h2>Releases</h2>
         <table>
-            <tr *ngFor="let release of releases;" class="release" (click)="jumpTo(release['versionNo'])">
-                <td class="releaseNo">{{release["versionNo"]}}</td> <td class="title">{{ release["title"] }}</td>
+            <tr *ngFor="let release of releases;" class="release" (click)="jumpTo(release.version)">
+                <td class="releaseNo">{{release.version}}</td> <td class="title">{{ release.title }}</td>
             </tr>
         </table>
     </div>
     <div class="versions">
         <h2>All Versions</h2>
-        <div class="versionCard" *ngFor="let release of releases;" id="{{ release['versionNo']}}">
-            <h3 class="versionHeader">Version {{ release["versionNo"] }} - {{ release["title"] }}</h3>
+        <div class="versionCard" *ngFor="let release of releases;" id="{{ release.version }}">
+            <h3 class="versionHeader">Version {{ release.version }} - {{ release.title }}</h3>
             <h4>Overview</h4>
-            <p>{{ release["overview"] }}</p>
-            <div *ngFor="let page of release['pageChanges']" class="changes">
+            <p>{{ release.overview }}</p>
+            <div *ngFor="let page of release.blocks" class="changes">
                 <h4>{{ page["title"] }}</h4>
                 <ul>
                     <li *ngFor="let change of page['changes']">{{ change }}</li>

@@ -17,8 +17,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import urlJoin from 'url-join'
-
-const BASE_URL = "http://localhost:8000/"
+import { GlobalService } from './global.service';
 
 export interface Statistic {
     stat_value: number;
@@ -38,13 +37,13 @@ export class StatsService {
   constructor(private http: HttpClient) { }
 
   getStat(stat_name : string) {
-    let request_url = urlJoin(BASE_URL,"/api/stats",stat_name);
+    let request_url = urlJoin(GlobalService.BASE_URL,"/api/stats",stat_name);
     return this.http.get<Statistic>(request_url);
   }
 
   // Get a dictionary of all available statistics
   getAllStats() {
-    let request_url = urlJoin(BASE_URL,"/api/stats");
+    let request_url = urlJoin(GlobalService.BASE_URL,"/api/stats");
     return this.http.get<AvailableStats>(request_url);
   }
 }

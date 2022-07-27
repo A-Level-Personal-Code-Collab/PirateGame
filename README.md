@@ -15,10 +15,10 @@ You must also run ```python django/pirategame/manage.py runserver``` to start th
 ### Port Progress
 | Status | Page | Notes |
 |--------|------|-------|
-🏗️|Index Page|missing counter for active games & patch notes for latest release|
+✅|Index Page||
 ✅|About Page||
 ✅|Tutorial page ||
-🏗️| Patch notes | front-end complete but need notes loaded from server
+✅| Patch notes | Backdated patch notes not transcribed
 ❌| Create new game
 ❌| Join game | front page to enter GameID located at /play
 ❌| Sheet builder
