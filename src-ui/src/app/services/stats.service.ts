@@ -4,7 +4,7 @@
  * Created Date: Tuesday, July 26th 2022, 5:40:31 pm
  * Author: Will Hall
  * -----
- * Last Modified: Tue Jul 26 2022
+ * Last Modified: Wed Jul 27 2022
  * Modified By: Will Hall
  * -----
  * Copyright (c) 2022 Lime Parallelogram
@@ -24,6 +24,12 @@ export interface Statistic {
     stat_value: number;
 }
 
+// Interface that shows all statistics that come in from the server
+export interface AvailableStats {
+  total_games: number;
+  current_games: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,8 +39,13 @@ export class StatsService {
 
   getStat(stat_name : string) {
     let request_url = urlJoin(BASE_URL,"/api/stats",stat_name);
-    console.log(request_url)
     return this.http.get<Statistic>(request_url);
+  }
+
+  // Get a dictionary of all available statistics
+  getAllStats() {
+    let request_url = urlJoin(BASE_URL,"/api/stats");
+    return this.http.get<AvailableStats>(request_url);
   }
 }
 

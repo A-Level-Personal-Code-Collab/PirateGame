@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StatsService, Statistic } from 'src/app/services/stats.service';
+import { StatsService, Statistic, AvailableStats } from 'src/app/services/stats.service';
 
 @Component({
   selector: 'app-index',
@@ -13,7 +13,11 @@ export class IndexComponent implements OnInit {
   constructor(private statsService: StatsService) {}
 
   ngOnInit(): void {
-    this.statsService.getStat("/total_games").subscribe((data: Statistic) => this.totalGames = data.stat_value)
+    // Update home page statistics
+    this.statsService.getAllStats().subscribe((data: AvailableStats) => {
+      this.totalGames = data.total_games;
+      this.currentActiveGames = data.current_games
+    });
   }
 
 }
