@@ -2,6 +2,7 @@
 
 .main_content {
     margin: 2vh 10%;
+    min-height: 200vh;
 }
 .contents {
     table {
@@ -58,4 +59,27 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
     }
+}
+
+#div_toTop {
+    width: 64px;
+    height: 64px;
+    border-radius: 32px;
+
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+
+    background-color: $colour-primary;
+
+    cursor: pointer;
+    transition: 0.2s;
+    &:hover {
+        transform: rotate(-30deg);
+        font-size: 48px;
+    }
+
+    font-size: 40px;
+    line-height: 64px;
+    text-align: center;
 }

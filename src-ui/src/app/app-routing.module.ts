@@ -1,10 +1,17 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, ExtraOptions } from '@angular/router';
 import { AboutComponent } from './pages/facade/about-page/about.component';
 import { IndexComponent } from './pages/facade/index-page/index.component';
 import { PatchPageComponent } from './pages/facade/patch-page/patch-page.component';
 import { TutorialPageComponent } from './pages/facade/tutorial-page/tutorial-page.component';
 import { PlayStartComponent } from './pages/play-start/play-start.component';
+
+// Extra options to allow scrolling to specific fragment
+const routerOptions: ExtraOptions = {
+  scrollPositionRestoration: 'enabled',
+  anchorScrolling: 'enabled',
+  scrollOffset: [0, 48],
+};
 
 const routes: Routes = [
   {path: "", component: IndexComponent},
@@ -15,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, routerOptions)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

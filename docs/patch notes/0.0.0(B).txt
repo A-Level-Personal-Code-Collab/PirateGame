@@ -1,0 +1,44 @@
+Version 0.0.0(B)
+^Overview
+~This is our very first deployment of the game and thus, literally everything is brand new! Read through the below list to see the key features of this release! Information given in these notes may be incomplete or nondescript as notes were not recorded during development. Future versions will see better logging.
+-Added index homepage Added PirateGame logo (Image Credit: Jack Hegarty)
+-Added active games counters
+-Added patch notes and release information panel
+-Added social information and links
+^Tutorial
+-Added tutorial page
+-Added overview of all game actions in tutorial
+^Join Game
+-Added join game functionality
+-Added functionality to create a new game
+-Added functionality to accept spaces in nicknames
+-Added popup to warn users of the effect of joining more than one game
+^About
+-Added about page to show authors of the PirateGame
+-Added information about the game itself
+^Grid Builder
+-Renamed page to sheet builder
+-Created grid functionality
+-Added javascript to allow for dragging
+-Added event for popup to submit the data to the server
+-Added browser leave page confirmation
+^Lobby
+-Added lobby page
+-Added socketio transport functionality
+-Added handling for user updates
+-Added music playback and accompanying controls (Music Credit: Charlie Kay)
+-Added minimum user count of 3
+^Game
+-Added gameplay page
+-Added function to draw a users grid again in uneditable form
+-Added cash, bank and log boxes to screen
+-Added target picker and action popups to HTML
+-Added js handling of all socket events
+-Added functionality to display server errors as alerts
+-Added select square animation
+^Results
+-Added results page
+-Added python functionality to build up runners up table
+-Added podium drawing functionality
+-Add cash values to podium
+-Once a results page has been access the game is qued for deletion and all game's users are deleted

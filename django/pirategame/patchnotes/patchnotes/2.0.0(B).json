@@ -1,12 +1,31 @@
 {
-    "title": "Version 2.0.0(B) - Angular",
+    "title": " Version 2.0.0(B) - Angular",
     "overview": "This version, while showing only subtle changes to the user, represents a major change in codebase. The pirate game was originally written in vanilla HTML, CSS and JS with a flask webserver. The code is now using a javascript framework called Angular to improve the code.",
     "version": "2.0.0(B)",
     "blocks": [
         {
-            "title": "Block 1",
+            "title": " Index Page\n",
             "changes": [
-                "change1"
+                "Created index page component",
+                "Now makes API calls to load statistics on page load",
+                "Play game button standardized to match other large buttons"
+            ]
+        },
+        {
+            "title": " Patch Notes\n",
+            "changes": [
+                "Patch notes for each version now contained within single page",
+                "Contents of releases now more attractive",
+                "Contents items can be clicked to move to the relevant location on the page",
+                "Added button to immediately return to page top"
+            ]
+        },
+        {
+            "title": " Play\n",
+            "changes": [
+                "Differences between 'Join Game' and 'New Game' edited to increase clarity",
+                "GameID input box now larger",
+                "Nickname input now moved to dedicated page"
             ]
         }
     ]

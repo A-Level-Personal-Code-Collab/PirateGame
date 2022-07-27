@@ -1,0 +1,52 @@
+{
+    "title": "Version 1.0.1(B) - Safari Update",
+    "blocks": [
+        {
+            "title": "Site-Wide",
+            "changes": [
+                "Play game button removed from header so header not broken on mobile"
+            ]
+        },
+        {
+            "title": "Accessory Pages",
+            "changes": [
+                "Twitter link on home page fixed (Issue #205)",
+                "Both information cards on home page now are always equal height"
+            ]
+        },
+        {
+            "title": "Sheet builder",
+            "changes": [
+                "CSS Re-written to use SCSS",
+                "Help popup wider on mobile so it remains on screen (Issue #210)",
+                "New cartoon-style old-paper background (credit: Jack Hegarty)",
+                "Ripped paper scrap covers entire back of grid"
+            ]
+        },
+        {
+            "title": "Join Game",
+            "changes": [
+                "Users may no longer join a game with a nickname that is already in that game (Issue #206)"
+            ]
+        },
+        {
+            "title": "Lobby",
+            "changes": [
+                "CSS Re-written to use SCSS",
+                "Start game button now uses universal game button style (Issue #212)",
+                "Media start/stop button new un-obtrusive style",
+                "Secondary header now shows your nickname instead of host's name (shows gameID also on desktop/tablet)"
+            ]
+        },
+        {
+            "title": "Game",
+            "changes": [
+                "CSS Re-written to use SCSS",
+                "Secondary header now shows the same in game as in lobby",
+                "Item grid no longer stretched on IOS / MacOS devices (Issue #207)"
+            ]
+        }
+    ],
+    "overview": "Safari Update. After our previous update which introduced mobile support to the pirate game, we were pretty confident that the wind was in our sails for mobile piratein'. After deployment, it transpired Apple devices had been given the black spot and had not seen shore of these improvements. We roped in a few favours and got some apple devices to test on so you can sail on your lavish iPhone without needing an eye-patch on both eyes.",
+    "version": "1.0.1(B)"
+}

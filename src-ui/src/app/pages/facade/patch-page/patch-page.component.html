@@ -10,7 +10,7 @@
         </table>
     </div>
     <div class="versions">
-        <h2>All Versions</h2>
+        <h2 id="latest">All Versions</h2>
         <div class="versionCard" *ngFor="let release of releases;" id="{{ release.version }}">
             <h3 class="versionHeader">Version {{ release.version }} - {{ release.title }}</h3>
             <h4>Overview</h4>
@@ -23,4 +23,5 @@
             </div>
         </div>
     </div>
+    <div id="div_toTop" (click)="jumpTo('')"><i class="material-icons" >arrow_upward</i></div>
 </div>

@@ -1,0 +1,13 @@
+{
+    "title": "Version 0.1.1(B)",
+    "blocks": [
+        {
+            "title": "Fixes",
+            "changes": [
+                "Removed single, global database session in favour of creating one for every single request and destroying it afterwards"
+            ]
+        }
+    ],
+    "overview": "Urgent bugfix update to address the database errors that would sometimes occur when attempting to travel from the lobby to the playing online page (See issue #172)",
+    "version": "0.1.1(B)"
+}
