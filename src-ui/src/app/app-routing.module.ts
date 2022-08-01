@@ -4,7 +4,8 @@ import { AboutComponent } from './pages/facade/about-page/about.component';
 import { IndexComponent } from './pages/facade/index-page/index.component';
 import { PatchPageComponent } from './pages/facade/patch-page/patch-page.component';
 import { TutorialPageComponent } from './pages/facade/tutorial-page/tutorial-page.component';
-import { PlayStartComponent } from './pages/play-start/play-start.component';
+import { PlayStartComponent } from './pages/play/play-start/play-start.component';
+import { PlayCreateComponent } from './pages/play/play-create/play-create.component';
 
 // Extra options to allow scrolling to specific fragment
 const routerOptions: ExtraOptions = {
@@ -16,6 +17,7 @@ const routerOptions: ExtraOptions = {
 const routes: Routes = [
   {path: "", component: IndexComponent},
   {path: "play", component: PlayStartComponent},
+  {path: "play/create", component: PlayCreateComponent},
   {path: "about", component: AboutComponent},
   {path: "tutorial", component: TutorialPageComponent},
   {path: "patch_notes", component: PatchPageComponent}

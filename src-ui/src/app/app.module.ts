@@ -14,7 +14,9 @@ import { TutorialComponent } from './components/facade/tutorial/tutorial.compone
 import { BannerComponent } from './components/global/banner/banner.component';
 import { TutorialPageComponent } from './pages/facade/tutorial-page/tutorial-page.component';
 import { PatchPageComponent } from './pages/facade/patch-page/patch-page.component';
-import { PlayStartComponent } from './pages/play-start/play-start.component';
+import { PlayStartComponent } from './pages/play/play-start/play-start.component';
+import { PlayCreateComponent } from './pages/play/play-create/play-create.component';
+import { PgToggleComponent } from './widgets/pg-toggle/pg-toggle.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { PlayStartComponent } from './pages/play-start/play-start.component';
     BannerComponent,
     TutorialPageComponent,
     PatchPageComponent,
-    PlayStartComponent
+    PlayStartComponent,
+    PlayCreateComponent,
+    PgToggleComponent
   ],
   imports: [
     BrowserModule,

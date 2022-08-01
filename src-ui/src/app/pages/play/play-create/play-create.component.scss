@@ -1,0 +1,69 @@
+@import 'src/vars';
+.main-content {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+    padding: 5vh;
+
+    .card {
+        display: flex;
+        flex-direction: column;
+
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
+        padding: 30px;
+        margin: 20px;
+
+        .title {
+            margin: 8px 0 14px 0;
+            font-size: 28px;
+            color: $colour-secondary;
+        }
+
+        .settings {
+            $row_height: 32px;
+
+            .row {
+                display: flex;
+                align-items: center;
+                margin: 14px;
+
+                @media screen and (max-width: $mobile-breakpoint) {
+                    flex-direction: column;
+                    text-align: center;
+                }
+                
+            }
+
+            .label {
+                margin-right: 15px;
+                line-height: $row_height;
+            }
+
+            input[type=text] {
+                width: 100%;
+                font-size: 24px;
+                padding: 4px;
+                min-width: 0px;
+            }
+        }
+        
+    }
+
+    #info {
+        flex-grow: 1;
+    }
+
+    #profile {
+        flex-grow: 3;
+    }
+
+    #game {
+        flex-grow: 2;
+    }
+
+    #projector {
+        flex-grow: 1;
+    }
+}
