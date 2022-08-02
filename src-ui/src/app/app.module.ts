@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,7 @@ import { PatchPageComponent } from './pages/facade/patch-page/patch-page.compone
 import { PlayStartComponent } from './pages/play/play-start/play-start.component';
 import { PlayCreateComponent } from './pages/play/play-create/play-create.component';
 import { PgToggleComponent } from './widgets/pg-toggle/pg-toggle.component';
+import { NicknameInputComponent } from './widgets/nickname-input/nickname-input.component';
 
 @NgModule({
   declarations: [
@@ -33,12 +35,14 @@ import { PgToggleComponent } from './widgets/pg-toggle/pg-toggle.component';
     PatchPageComponent,
     PlayStartComponent,
     PlayCreateComponent,
-    PgToggleComponent
+    PgToggleComponent,
+    NicknameInputComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

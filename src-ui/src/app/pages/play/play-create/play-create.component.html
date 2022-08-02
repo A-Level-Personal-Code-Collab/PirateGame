@@ -2,15 +2,15 @@
     <div class="card" id="info">
         <h1 class="title">Information</h1>
         Create your own game. Once you click start, you will be given a Game-ID.<br>Provide this to your players and they will be able to join.
-        <button class="spanned_button large" id="submit"><span>Create Game </span></button>
+        <button class="spanned_button large" id="submit" [disabled]="!button_enable? true : null"><span>Create Game </span></button>
     </div>
     <div class="card" id="profile">
         <h1 class="title">My Profile</h1>
         <div class="settings">
             <div class="row">
-                <span class="label">I would like to participate? </span><app-pg-toggle [default]="true" id="participate"></app-pg-toggle>
+                <span class="label">I would like to participate? </span><app-pg-toggle [default]="true" [(checked)]="game_settings.host_participate" (checkedChange)="checkValues()"></app-pg-toggle>
             </div>
-            <div class="row"><span class="label">Nickname: </span><input type="text"></div>
+            <div class="row"><span class="label">Nickname: </span><app-nickname-input (textChange)="game_settings.host_nickname = $event.text; game_settings.nickname_valid = $event.valid; checkValues() "></app-nickname-input></div>
         </div>
     </div>
     <div class="card" id="game">
@@ -22,7 +22,7 @@
         If you are participating in the game, choose to open a second window do display game stats on the big screen.
         <div class="settings">
             <div class="row">
-                <span class="label">Open Projector View</span><app-pg-toggle id="projector"></app-pg-toggle>
+                <span class="label">Open Projector View</span><app-pg-toggle [(checked)]="game_settings.open_projector" (checkedChange)="checkValues()"></app-pg-toggle>
             </div>
         </div>
     </div>

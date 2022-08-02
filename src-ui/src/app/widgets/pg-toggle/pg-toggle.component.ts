@@ -8,22 +8,17 @@ import { Component, EventEmitter, OnInit, Output, Input, ElementRef } from '@ang
 export class PgToggleComponent implements OnInit {
   @Input() default: boolean = false;
 
-  @Output() interactions = new EventEmitter()
+  @Output() checkedChange = new EventEmitter<boolean>();
 
-  @Input() checked: Boolean = false;
+  @Input() checked: boolean = false;
 
   constructor(private elt: ElementRef) { }
 
   ngOnInit(): void {
-    if (this.default) {
-      console.log(this.default)
-    }
   }
 
   checkChanged(event: any) {
-    this.checked = event.target.checked
-    this.interactions.emit(this.checked)
-
+    this.checkedChange.emit(this.checked)
   }
 
 }
