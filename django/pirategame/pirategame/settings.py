@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'status',
     'master',
     'patchnotes',
+    'game',
+    'player',
 ]
 
 MIDDLEWARE = [
