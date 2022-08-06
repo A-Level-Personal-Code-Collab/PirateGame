@@ -7,6 +7,7 @@ export type playerSettings = {
   player_is_participating: boolean;
   player_is_host: boolean;
   player_game?: string;
+  player_id?: string,
 
   // Not used on server
   nickname_valid: boolean;
@@ -21,5 +22,9 @@ export class PlayerService {
 
   createPlayer(player: playerSettings) {
     return this.serverService.post("http://localhost:8000/api/player/", player, {observe: 'response'})
+  }
+
+  getPlayer(player_id: string) {
+    return this.serverService.get("http://localhost:8000/api/player/"+player_id)
   }
 }

@@ -19,6 +19,9 @@ import { PlayStartComponent } from './pages/play/play-start/play-start.component
 import { PlayCreateComponent } from './pages/play/play-create/play-create.component';
 import { PgToggleComponent } from './widgets/pg-toggle/pg-toggle.component';
 import { NicknameInputComponent } from './widgets/nickname-input/nickname-input.component';
+import { GameBaseComponent } from './pages/play/game/game-base/game-base.component';
+import { PlayJoinComponent } from './pages/play/play-join/play-join.component';
+import { SheetBuilderComponent } from './pages/play/game/sheet-builder/sheet-builder.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,10 @@ import { NicknameInputComponent } from './widgets/nickname-input/nickname-input.
     PlayStartComponent,
     PlayCreateComponent,
     PgToggleComponent,
-    NicknameInputComponent
+    NicknameInputComponent,
+    GameBaseComponent,
+    PlayJoinComponent,
+    SheetBuilderComponent
   ],
   imports: [
     BrowserModule,

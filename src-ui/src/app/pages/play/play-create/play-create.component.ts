@@ -72,6 +72,7 @@ export class PlayCreateComponent implements OnInit {
     this.playerService.createPlayer(this.player_settings).subscribe({
       next: (server_response) => {
       if (server_response.status == 201) {
+        this.player_settings.player_id = (<playerSettings>server_response.body).player_id
         this.toNextStep()
       }},
       error: error => alert("Server Error, Could not create player.") })
@@ -80,7 +81,11 @@ export class PlayCreateComponent implements OnInit {
   /* ------------------------- Move user to next page ------------------------- */
   toNextStep() {
     console.log("Will now move to sheet builder")
-    //// this.routerService.navigate(["/play/builder"])
+    if (this.player_settings.player_id) {
+      localStorage.setItem("player_id", this.player_settings.player_id)
+      this.routerService.navigate(["/play/game/builder"])
+    }
+    
   }
 
 }
