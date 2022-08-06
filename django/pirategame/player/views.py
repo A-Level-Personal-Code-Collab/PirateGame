@@ -1,9 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import ScopedRateThrottle
 
 from .serializers import PlayerSerializer
-class PlayerView(APIView):
+class CreatePlayerView(APIView):
+    # Client game creation limited at 2/min to limit possibility of silliness
+    throttle_classes = [ScopedRateThrottle]
+    throttle_rate = "create"
+
     def post(self,request):
         serializer = PlayerSerializer(data=request.data)
 

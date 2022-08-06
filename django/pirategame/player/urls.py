@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import PlayerView
+from .views import CreatePlayerView
 
 urlpatterns = [
-    path('', PlayerView.as_view())
+    path('', CreatePlayerView.as_view())
 ]
