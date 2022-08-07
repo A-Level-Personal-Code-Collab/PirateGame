@@ -5,8 +5,8 @@
         <h2>Join Game</h2>
         <br>
         <p>Use a GameID to join an existing <b>Pirate Game</b>. Ask the host for this information.</p>
-        <input type="text" placeholder="Game ID" id="ipt_gameID">
-        <button class="spanned_button large" disabled><span>Join Now </span></button>
+        <input maxlength=8 [(ngModel)]="input_game_id" (input)="validateID()" type="text" placeholder="Game ID" id="ipt_gameID">
+        <button class="spanned_button large" [disabled]="!this.id_valid? true: null" (click)="nextPhase()"><span>Join Now </span></button>
     </div>
 
     <!-- Start a Pirate Game -->

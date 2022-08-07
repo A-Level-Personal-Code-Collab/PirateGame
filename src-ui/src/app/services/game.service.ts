@@ -31,4 +31,8 @@ export class GameService {
     return this.serverService.post("http://localhost:8000/api/game/",gameData, {observe: 'response'})
 
   }
+
+  getGame(gameID: string) {
+    return this.serverService.get("http://localhost:8000/api/game/"+gameID, {observe: "response"})
+  }
 }
