@@ -35,6 +35,7 @@ export class PlayCreateComponent implements OnInit {
   };
 
   button_enable = false;
+  disable_class = "";
 
   constructor(private gameService: GameService, private playerService: PlayerService, private routerService: Router) { }
 
@@ -44,6 +45,7 @@ export class PlayCreateComponent implements OnInit {
   checkValues() {
     // Check if the user is participating
     this.button_enable = this.player_settings.nickname_valid;
+    if (!this.player_settings.player_is_participating) {this.disable_class = "disabled"} else { this.disable_class = ""}
 
   }
 

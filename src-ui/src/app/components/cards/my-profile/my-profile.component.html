@@ -1,0 +1,8 @@
+<app-base-card id="profile" title="My Profile">
+    <div class="row">
+        <span class="label">I would like to participate? </span><app-pg-toggle [default]="true" [(checked)]="player_settings.player_is_participating" (checkedChange)="emitChanged()"></app-pg-toggle>
+    </div>
+    <div class="row">
+        <span class="label">Nickname: </span><app-nickname-input (textChange)="player_settings.player_nickname = $event.text; player_settings.nickname_valid = $event.valid; emitChanged() "></app-nickname-input>
+    </div>
+</app-base-card>

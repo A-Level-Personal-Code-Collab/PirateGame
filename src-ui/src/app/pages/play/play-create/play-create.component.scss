@@ -6,50 +6,8 @@
 
     padding: 5vh;
 
-    .card {
+    app-base-component {
         display: flex;
-        flex-direction: column;
-
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-
-        padding: 30px;
-        margin: 20px;
-
-        .title {
-            margin: 8px 0 14px 0;
-            font-size: 28px;
-            color: $colour-secondary;
-        }
-
-        .settings {
-            $row_height: 32px;
-
-            .row {
-                display: flex;
-                align-items: center;
-                margin: 14px;
-
-                @media screen and (max-width: $mobile-breakpoint) {
-                    flex-direction: column;
-                    text-align: center;
-                }
-                
-            }
-
-            .label {
-                margin-right: 15px;
-                line-height: $row_height;
-            }
-
-        }
-
-        &.disabled {
-            background-color: #ffffff;
-            opacity: .5;
-            background: repeating-linear-gradient( 45deg, #e9e9e9, #e9e9e9 3.5px, #ffffff 3.5px, #ffffff 17.5px );
-            pointer-events: none;
-        }
-        
     }
 
     #info {

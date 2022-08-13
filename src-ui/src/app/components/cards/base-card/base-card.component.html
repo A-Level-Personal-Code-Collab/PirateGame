@@ -1,0 +1,10 @@
+<div class="card-container">
+    <div class="card">
+        <h1 class="title">{{title}}</h1>
+        <div [innerHTML]="description"></div>
+
+        <div class="settings">
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>

@@ -22,6 +22,8 @@ import { NicknameInputComponent } from './widgets/nickname-input/nickname-input.
 import { GameBaseComponent } from './pages/play/game/game-base/game-base.component';
 import { PlayJoinComponent } from './pages/play/play-join/play-join.component';
 import { SheetBuilderComponent } from './pages/play/game/sheet-builder/sheet-builder.component';
+import { MyProfileComponent } from './components/cards/my-profile/my-profile.component';
+import { BaseCardComponent } from './components/cards/base-card/base-card.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { SheetBuilderComponent } from './pages/play/game/sheet-builder/sheet-bui
     NicknameInputComponent,
     GameBaseComponent,
     PlayJoinComponent,
-    SheetBuilderComponent
+    SheetBuilderComponent,
+    MyProfileComponent,
+    BaseCardComponent
   ],
   imports: [
     BrowserModule,
