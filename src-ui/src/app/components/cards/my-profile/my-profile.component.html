@@ -1,8 +1,12 @@
 <app-base-card id="profile" title="My Profile">
     <div class="row">
-        <span class="label">I would like to participate? </span><app-pg-toggle [default]="true" [(checked)]="player_settings.player_is_participating" (checkedChange)="emitChanged()"></app-pg-toggle>
+        <span class="label">I would like to participate? </span><app-pg-toggle [default]="true" [(checked)]="player_settings.player_is_participating" (checkedChange)="emitChanged()"></app-pg-toggle>  
     </div>
-    <div class="row">
-        <span class="label">Nickname: </span><app-nickname-input (textChange)="player_settings.player_nickname = $event.text; player_settings.nickname_valid = $event.valid; emitChanged() "></app-nickname-input>
+
+    <!-- Information text explaining about what happens if you are not participating -->
+    <div class="setting_info" *ngIf="!player_settings.player_is_participating">*You are not participating, this will open an overview window;<br>perfect for displaying on a projector.</div>
+
+    <div class="row" [ngClass]="{'disabled':(player_settings.player_is_participating==false && player_settings.player_is_host==false)===true}"> <!-- Disable nickname input when not participating and not the host -->
+        <span class="label">Nickname: </span><app-nickname-input (textChange)="player_settings.player_nickname = $event.text; player_settings.nickname_valid = $event.valid; emitChanged() " ></app-nickname-input>
     </div>
 </app-base-card>

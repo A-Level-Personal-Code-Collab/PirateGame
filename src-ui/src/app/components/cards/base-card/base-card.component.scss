@@ -36,12 +36,31 @@
                 flex-direction: column;
                 text-align: center;
             }
+
+            &.disabled {
+                position: relative;
+                pointer-events: none;
+                color: lightgray;
+                
+                input {
+                    border-color: lightgray;
+                    background-color: rgba(230, 230, 230, 0.856);
+                }
+
+            }
             
         }
 
         .label {
             margin-right: 15px;
             line-height: $row_height;
+        }
+
+        .setting_info {
+            color: gray;
+            font-size: 14px;
+
+            margin-left: 20px;
         }
 
     }

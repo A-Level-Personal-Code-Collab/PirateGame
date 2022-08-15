@@ -1,0 +1,29 @@
+@import 'src/vars';
+
+.main-content {
+    display: flex;
+    justify-content: center;
+    margin: 2%;
+}
+
+.settings {
+    $row_height: 32px;
+
+    .row {
+        display: flex;
+        align-items: center;
+        margin: 14px;
+
+        @media screen and (max-width: $mobile-breakpoint) {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+    }
+
+    .label {
+        margin-right: 15px;
+        line-height: $row_height;
+    }
+
+}
