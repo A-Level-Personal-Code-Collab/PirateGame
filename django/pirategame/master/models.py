@@ -16,6 +16,9 @@ class Game(models.Model):
 
         super().save(**kwargs)
 
+    def __str__(self):
+        return f"{self.game_id} ({self.game_title})"
+
 class Player(models.Model):
     """Keeps track of all of the currently online players"""
     def money_default():
@@ -25,7 +28,7 @@ class Player(models.Model):
         return {"available": []}
 
     player_id = models.IntegerField(primary_key=True)
-    player_nickname = models.CharField(max_length=15)
+    player_nickname = models.CharField(max_length=15, default="projector")
     player_game = models.ForeignKey(Game,on_delete=models.CASCADE)
     player_is_host = models.BooleanField(default=False)
     player_is_participating = models.BooleanField(default=True)
@@ -38,6 +41,9 @@ class Player(models.Model):
         self.player_id = Generate.player_id()
 
         super().save(**kwargs)
+
+    def __str__(self):
+        return f"{self.player_id} ({self.player_nickname})"
 
 class Generate:
     def game_id():

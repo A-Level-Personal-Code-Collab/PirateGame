@@ -1,3 +1,9 @@
 <div class="main-content">
-    <app-my-profile></app-my-profile>
+    <div class="cards_centre">
+        <app-my-profile [(player_settings)]="player_settings"></app-my-profile>
+        <app-base-card title="Ready to Pillage & Plunder?">
+            <button class="spanned_button large" id="submit" (click)="submitPlayer()" [disabled]="(!player_settings.nickname_valid && player_settings.player_is_participating)"><span>Lets Play </span></button>
+        </app-base-card>
+    </div>
+    
 </div>

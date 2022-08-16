@@ -1,10 +1,17 @@
 @import 'src/vars';
 
 .main-content {
-    display: flex;
-    justify-content: center;
+    text-align: center;
+
     margin: 2%;
+
 }
+
+.cards_centre {
+    display: inline-flex;
+    flex-direction: column;
+}
+
 
 .settings {
     $row_height: 32px;
