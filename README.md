@@ -19,10 +19,13 @@ You must also run ```python django/pirategame/manage.py runserver``` to start th
 ✅|About Page||
 ✅|Tutorial page ||
 ✅| Patch notes | Backdated patch notes not transcribed
-❌| Create new game
-❌| Join game | front page to enter GameID located at /play
+✅| Create new game
+✅| Join game | front page to enter GameID located at /play
 ❌| Sheet builder
 ❌| Lobby
 ❌| Gameplay
 ❌| Results
 ❌| Deployment scripts
+
+### The following new features are being worked on
+🏗️ Projector view to display game progress on a big screen

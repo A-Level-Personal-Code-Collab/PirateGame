@@ -1,2 +1,5 @@
 # Ignore the __pycahce__ folder in commits
 __pycache__/
+
+# Ignore changes within database
+db.sqlite3
