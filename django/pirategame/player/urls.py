@@ -1,7 +1,8 @@
 from django.urls import path
 
-from .views import CreatePlayerView
+from .views import PlayerView
 
 urlpatterns = [
-    path('', CreatePlayerView.as_view())
+    path('', PlayerView.as_view()),
+    path('<player_id>', PlayerView.as_view()),
 ]
